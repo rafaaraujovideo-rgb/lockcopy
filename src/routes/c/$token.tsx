@@ -103,7 +103,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
   const [saved, setSaved] = useState<"" | "a guardar…" | "guardado" | "erro ao guardar">("");
   const [uploads, setUploads] = useState<string[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
-  const first = useRef(true);
+  const lastSaved = useRef(sub?.value_text ?? "");
   const locked = status === "approved";
 
   useEffect(() => {
@@ -111,11 +111,12 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
   }, [sub?.status]);
 
   useEffect(() => {
-    if (first.current) { first.current = false; return; }
+    if (text === lastSaved.current || locked) return;
     setSaved("a guardar…");
     const t = setTimeout(async () => {
       try {
         const r = await portalSave({ data: { token, fieldId: field.id, text } });
+        lastSaved.current = text;
         setStatus(r.status as SubmissionStatus);
         setSaved("guardado");
       } catch (e) {
@@ -124,7 +125,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
       }
     }, 800);
     return () => clearTimeout(t);
-  }, [text, token, field.id]);
+  }, [text, token, field.id, locked]);
 
   const onFiles = async (list: FileList | null) => {
     if (!list) return;
