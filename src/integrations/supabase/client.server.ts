@@ -59,10 +59,16 @@ export function createServerSupabase(
  */
 export function createAdminSupabase(): SupabaseClient<Database> {
   const { url } = readKeys();
-  const key = (process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "").trim();
+  // O cofre de segredos reserva o prefixo SUPABASE_, por isso a chave do
+  // serviço entra como LOCKCOPY_DB_SECRET_KEY (aceita o nome antigo se existir).
+  const key = (
+    process.env["LOCKCOPY_DB_SECRET_KEY"] ??
+    process.env["SUPABASE_SERVICE_ROLE_KEY"] ??
+    ""
+  ).trim();
 
   if (!url || !key) {
-    throw new Error("Servidor sem SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY.");
+    throw new Error("Servidor sem SUPABASE_URL / LOCKCOPY_DB_SECRET_KEY.");
   }
 
   return createClient<Database>(url, key, {

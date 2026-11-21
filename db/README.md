@@ -87,7 +87,7 @@ promover.
 |---|---|---|
 | `VITE_SUPABASE_URL` | browser | endereço do projeto |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | browser | leituras e portal |
-| `SUPABASE_SERVICE_ROLE_KEY` | só servidor | webhooks, purga, imagens |
+| `LOCKCOPY_DB_SECRET_KEY` | só servidor | webhooks, purga, imagens (aceita também `SUPABASE_SERVICE_ROLE_KEY`) |
 
 A chave de serviço nunca vai para o browser nem para o repositório.
 
