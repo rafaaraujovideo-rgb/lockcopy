@@ -20,4 +20,6 @@
 - [x] Stripe configurado (modo real): planos Solo/Agency mensal e anual, webhook ligado à pré-visualização, chaves guardadas. Ao publicar, mudar o webhook e `APP_URL` para o domínio final.
 
 ## Bloqueios
-- Emails reais e webhook do Stripe: o servidor precisa da chave secreta da base de dados. O cofre de segredos reserva o prefixo `SUPABASE_`, por isso entra como `LOCKCOPY_DB_SECRET_KEY` (o código aceita o nome antigo `SUPABASE_SERVICE_ROLE_KEY` como alternativa).
+- [x] Chave secreta do Supabase guardada; fila de emails envia pelo Brevo (teste enviado com sucesso). Remetente atual: o Gmail verificado no Brevo; trocar por um email do domínio quando houver.
+- [ ] Primeiro checkout real no Stripe (modo real) — não testado por mim.
+- [ ] Voltar a ligar 'Confirm email' no Supabase antes de publicar.
