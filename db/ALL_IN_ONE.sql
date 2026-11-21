@@ -1,8 +1,22 @@
 -- =====================================================================
--- Lockcopy — 0001 esquema base
--- Copiar para o SQL Editor de um projeto Supabase próprio e executar.
--- Ordem: 0001 → 0006. Não é uma migração do Lovable Cloud.
+-- Lockcopy — instalação completa (0001 → 0006 num só ficheiro)
+-- Copiar TODO este ficheiro para o SQL Editor de um projeto Supabase
+-- próprio e carregar em Run. Não é uma migração do Lovable Cloud.
+--
+-- Corre uma única vez. Se já estiver instalado, pára à partida com
+-- uma mensagem clara em vez de rebentar a meio.
+-- Pré-requisito: bucket privado `client-uploads` criado antes (db/README.md).
 -- =====================================================================
+
+do $$
+begin
+  if exists (
+    select 1 from pg_tables
+    where schemaname = 'public' and tablename in ('organizations', 'requests', 'submission_files')
+  ) then
+    raise exception 'Lockcopy já está instalado nesta base de dados — não corras o script outra vez sem apagar as tabelas primeiro.';
+  end if;
+end $$;
 
 begin;
 
@@ -1765,3 +1779,13 @@ set section_id = excluded.section_id, label = excluded.label,
     allowed_mime = excluded.allowed_mime, order_index = excluded.order_index;
 
 commit;
+
+-- ---------------------------------------------------------------------
+-- Verificação rápida: se estes números aparecerem, a instalação ficou completa.
+-- ---------------------------------------------------------------------
+select
+  (select count(*) from pg_tables where schemaname = 'public')                       as tabelas,
+  (select count(*) from pg_policies where schemaname = 'public')                     as politicas_rls,
+  (select count(*) from pg_policies where schemaname = 'storage')                    as politicas_storage,
+  (select count(*) from public.plan_limits)                                          as planos,
+  (select count(*) from public.templates where is_active)                            as modelos_ativos;

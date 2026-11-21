@@ -3,9 +3,24 @@
 Estes ficheiros são para um projeto Supabase criado e gerido por ti.
 Não são migrações do Lovable Cloud: o Cloud continua desligado neste projeto.
 
-## Ordem de execução
+## Como correr
 
-No SQL Editor do teu projeto Supabase, correr por esta ordem:
+**Recomendado:** no SQL Editor do projeto, criar uma query nova, colar TODO o
+conteúdo de `ALL_IN_ONE.sql` e carregar em **Run**. É a junção exata dos seis
+ficheiros, pela mesma ordem, cada um na sua transação.
+
+Antes de colar: criar o bucket `client-uploads` (ver abaixo), porque as
+políticas de storage apontam para ele.
+
+No fim, a última query mostra um resumo — tabelas, políticas de RLS, políticas
+de storage, planos e modelos ativos. Se os números aparecerem, a instalação
+ficou completa.
+
+O script pára à partida com uma mensagem clara se as tabelas já existirem,
+para não correr duas vezes por engano.
+
+Os seis ficheiros separados continuam disponíveis, se preferires correr um de
+cada vez:
 
 1. `0001_schema.sql` — tipos, tabelas, privilégios e RLS ligada
 2. `0002_functions.sql` — limites de plano, quota, papéis, filas
@@ -13,9 +28,6 @@ No SQL Editor do teu projeto Supabase, correr por esta ordem:
 4. `0004_portal.sql` — funções do portal público e da agência
 5. `0005_storage_policies.sql` — políticas do bucket de ficheiros
 6. `0006_seed_templates.sql` — limites por plano e os 4 modelos
-
-Cada ficheiro abre e fecha uma transação. Se um falhar, corrige e volta a
-correr só esse ficheiro.
 
 ## Bucket de ficheiros (fora do SQL)
 
@@ -81,16 +93,18 @@ A chave de serviço nunca vai para o browser nem para o repositório.
 
 ## Ainda por ligar
 
-O SQL está validado e a camada de ligação do lado da aplicação já existe
-(`src/integrations/supabase/client.ts`, `client.server.ts` e
-`src/lib/supabase-types.ts`), mas as páginas ainda correm com dados de exemplo
-em memória até o `.env` ter o URL e a chave publicável do teu projeto.
-Falta escrever o código que fala com este esquema:
+O SQL está validado, a camada de ligação existe (`src/integrations/supabase/`)
+e as funções de servidor já estão escritas: sessão, pedidos, revisão, portal
+(`src/lib/api.functions.ts`) e cobrança com webhook Stripe
+(`src/lib/billing.functions.ts`, `src/routes/api/public/stripe-webhook.ts`).
+Falta:
 
-1. Funções de servidor: sessão, criar conta de agência, criar pedido, rever.
-2. Portal do cliente a chamar `portal_load` / `portal_save` / upload direto.
-3. Rota `api/public/stripe-webhook` a verificar a assinatura e a chamar
-   `apply_subscription` e `start_trial`.
+1. Correr o SQL no teu projeto e criar o bucket `client-uploads`.
+2. Passar as páginas (`/app`, `/c/$token`, `/comecar`) da loja de demonstração
+   para as funções de servidor, com a loja como plano B enquanto não houver
+   sessão.
+3. Preencher as chaves Stripe (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+   `STRIPE_PRICE_SOLO`, `STRIPE_PRICE_AGENCY`) e apontar o webhook.
 4. Trabalhador de emails a usar `claim_notifications` + `finish_notification`.
 5. Trabalhador de imagens a usar `due_images` + `mark_image`.
 6. Purga a usar `due_purges` + `finish_purge`.
