@@ -16,6 +16,7 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppFaturacaoRouteImport } from './routes/app/faturacao'
 import { Route as AppNovoRouteImport } from './routes/app/novo'
 import { Route as CTokenRouteImport } from './routes/c/$token'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as AppPedidosIdRouteImport } from './routes/app/pedidos/$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +54,11 @@ const CTokenRoute = CTokenRouteImport.update({
   path: '/c/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppPedidosIdRoute = AppPedidosIdRouteImport.update({
   id: '/pedidos/$id',
   path: '/pedidos/$id',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
   '/app/': typeof AppIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/pedidos/$id': typeof AppPedidosIdRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
   '/app': typeof AppIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/pedidos/$id': typeof AppPedidosIdRoute
 }
 export interface FileRoutesById {
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
   '/app/': typeof AppIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/pedidos/$id': typeof AppPedidosIdRoute
 }
 export interface FileRouteTypes {
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/app/novo'
     | '/c/$token'
     | '/app/'
+    | '/api/public/stripe-webhook'
     | '/app/pedidos/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/app/novo'
     | '/c/$token'
     | '/app'
+    | '/api/public/stripe-webhook'
     | '/app/pedidos/$id'
   id:
     | '__root__'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/app/novo'
     | '/c/$token'
     | '/app/'
+    | '/api/public/stripe-webhook'
     | '/app/pedidos/$id'
   fileRoutesById: FileRoutesById
 }
@@ -126,6 +138,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   ComecarRoute: typeof ComecarRoute
   CTokenRoute: typeof CTokenRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/pedidos/$id': {
       id: '/app/pedidos/$id'
       path: '/pedidos/$id'
@@ -210,6 +230,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   ComecarRoute: ComecarRoute,
   CTokenRoute: CTokenRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

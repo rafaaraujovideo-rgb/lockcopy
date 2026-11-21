@@ -15,7 +15,7 @@ export type SubscriptionStatus = "trialing" | "active" | "past_due" | "canceled"
 export type DeletionStatus = "scheduled" | "running" | "done" | "failed";
 export type ActorKind = "agency" | "client" | "system";
 
-type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
+export type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
 type Table<Row> = {
   Row: Row;
@@ -232,6 +232,20 @@ export type Database = {
       };
       set_request_link: { Args: { _request: string; _revoke: boolean }; Returns: Json };
       send_reminder: { Args: { _request: string }; Returns: Json };
+      apply_subscription: {
+        Args: {
+          _org: string;
+          _sub_id?: string | null;
+          _status?: SubscriptionStatus | null;
+          _plan?: AppPlan | null;
+          _trial_ends?: string | null;
+          _period_ends?: string | null;
+          _grace_ends?: string | null;
+          _customer_id?: string | null;
+        };
+        Returns: undefined;
+      };
+      start_trial: { Args: { _org: string; _plan: AppPlan }; Returns: undefined };
     };
     Enums: {
       app_plan: AppPlan;
