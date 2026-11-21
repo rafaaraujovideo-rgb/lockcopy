@@ -16,139 +16,124 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const Logo = () => (
-  <span className="flex items-center gap-2 font-display text-3xl">
-    <span className="grid h-7 w-7 place-items-center rounded-md bg-accent text-sm text-accent-foreground">◆</span>
-    Lock<em className="-ml-2 text-accent">copy</em>
-  </span>
-);
-
 const rows: [string, string, string][] = [
-  ["Início", "Frase principal", "trancado"],
-  ["Início", "Fotografia de capa", "trancado"],
-  ["Sobre", "A vossa história", "ajuste"],
-  ["Serviços", "Lista e preços", "enviado"],
-  ["Contactos", "Logótipo SVG", "à espera"],
+  ["Início", "Frase principal", "Aprovado"],
+  ["Início", "Fotografia de capa", "Aprovado"],
+  ["Sobre", "A vossa história", "Ajuste pedido"],
+  ["Serviços", "Lista e preços", "Enviado"],
+  ["Contactos", "Logótipo (SVG)", "Em falta"],
 ];
 const tone: Record<string, string> = {
-  trancado: "bg-accent text-accent-foreground",
-  ajuste: "bg-destructive/20 text-destructive",
-  enviado: "bg-warn text-warn-foreground",
-  "à espera": "bg-ink-line text-ink-muted",
+  Aprovado: "bg-accent text-accent-foreground",
+  "Ajuste pedido": "bg-destructive/10 text-destructive",
+  Enviado: "bg-warn text-warn-foreground",
+  "Em falta": "bg-muted text-muted-foreground",
 };
 
 function Landing() {
   const [billing, setBilling] = useState<"month" | "year">("month");
   return (
     <div className="min-h-screen">
-      <div className="relative overflow-hidden bg-ink text-ink-foreground">
-        <div className="grid-ink pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-        <header className="relative mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
-          <Logo />
-          <nav className="flex items-center gap-5 text-sm text-ink-muted">
-            <a href="#precos" className="hidden hover:text-ink-foreground sm:inline">Preços</a>
-            <Link to="/app" className="hover:text-ink-foreground">Entrar</Link>
-            <Link to="/comecar" className="rounded-full bg-accent px-4 py-2 font-medium text-accent-foreground">Começar</Link>
-          </nav>
-        </header>
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+        <span className="flex items-center gap-2 text-lg font-semibold tracking-tight"><span className="h-2 w-2 rounded-full bg-seal" />Lockcopy</span>
+        <nav className="flex items-center gap-6 text-sm text-muted-foreground">
+          <a href="#como" className="hidden hover:text-foreground sm:inline">Como funciona</a>
+          <a href="#precos" className="hidden hover:text-foreground sm:inline">Preços</a>
+          <Link to="/app" className="hover:text-foreground">Entrar</Link>
+          <Link to="/comecar" className="rounded-full bg-primary px-4 py-2 font-medium text-primary-foreground">Experimentar</Link>
+        </nav>
+      </header>
 
-        <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pb-24 pt-12 md:grid-cols-[1.15fr_1fr] md:pt-20">
-          <div>
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-ink-line px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-accent">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Para freelancers e agências web
-            </p>
-            <h1 className="font-display text-6xl leading-[0.95] md:text-8xl">
-              Recolha o conteúdo.<br /><em className="text-accent">Tranque-o.</em> Publique.
-            </h1>
-            <p className="mt-8 max-w-lg text-lg text-ink-muted">
-              Um link por cliente, sem conta. Textos e ficheiros chegam página a página — você aprova, o conteúdo fica trancado e sai pronto para Webflow ou Framer.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Link to="/comecar" className="rounded-full bg-accent px-7 py-3.5 font-medium text-accent-foreground shadow-lime transition-transform hover:-translate-y-0.5">Começar teste de 14 dias →</Link>
-              <Link to="/c/$token" params={{ token: "demo-x7k2q9" }} className="rounded-full border border-ink-line px-7 py-3.5 hover:bg-ink-line">Ver o que o cliente vê</Link>
+      <section className="mx-auto max-w-4xl px-6 pb-16 pt-16 text-center md:pt-24">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Para freelancers e agências web</p>
+        <h1 className="mt-6 font-display text-5xl leading-[1.05] md:text-7xl">
+          Os conteúdos do cliente,<br /><em className="text-primary">organizados e aprovados.</em>
+        </h1>
+        <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
+          Envie um link. O cliente preenche textos e carrega ficheiros, página a página, sem criar conta. Você revê, aprova e exporta para Webflow ou Framer.
+        </p>
+        <div className="mt-9 flex flex-wrap justify-center gap-3">
+          <Link to="/comecar" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90">Começar teste de 14 dias</Link>
+          <Link to="/c/$token" params={{ token: "demo-x7k2q9" }} className="rounded-full border border-border bg-card px-6 py-3 text-sm hover:bg-muted">Ver o que o cliente vê</Link>
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">Cartão pedido no início. Nada é cobrado durante os 14 dias.</p>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 pb-24">
+        <div className="rounded-2xl border border-border bg-card shadow-float">
+          <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <div className="text-left">
+              <p className="text-sm font-medium">Clínica Sousa</p>
+              <p className="text-xs text-muted-foreground">Novo site institucional · prazo 1 dez</p>
             </div>
-            <p className="mt-4 font-mono text-xs text-ink-muted">Cartão pedido no início · 0 € cobrados durante 14 dias</p>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -inset-6 rounded-[2rem] bg-accent/10 blur-3xl" />
-            <div className="relative rounded-2xl border border-ink-line bg-ink p-1 shadow-2xl">
-              <div className="flex items-center justify-between rounded-t-xl px-4 py-3">
-                <span className="font-mono text-[11px] uppercase tracking-widest text-ink-muted">Clínica Sousa / Novo site</span>
-                <span className="font-mono text-[11px] text-accent">2 de 5 trancados</span>
-              </div>
-              <div className="mx-4 mb-3 h-1 rounded-full bg-ink-line"><div className="h-1 w-2/5 rounded-full bg-accent" /></div>
-              <div className="rounded-xl bg-ink-line/40">
-                {rows.map(([pg, f, s]) => (
-                  <div key={f} className="flex items-center justify-between border-b border-ink-line px-4 py-3.5 last:border-0">
-                    <div>
-                      <p className="font-mono text-[10px] uppercase tracking-widest text-ink-muted">{pg}</p>
-                      <p className="text-sm">{f}</p>
-                    </div>
-                    <span className={"rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider " + tone[s]}>
-                      {s === "trancado" ? "◆ " : ""}{s}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            <div className="flex items-center gap-3">
+              <div className="h-1.5 w-32 rounded-full bg-muted"><div className="h-1.5 w-2/5 rounded-full bg-seal" /></div>
+              <span className="text-xs text-muted-foreground">2 de 5</span>
             </div>
           </div>
-        </section>
-      </div>
-
-      <section className="mx-auto max-w-6xl px-5 py-24">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Como funciona</p>
-        <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-4">
-          {[
-            ["01", "Pedir", "Escolha um modelo: institucional, landing, e-commerce ou rebranding."],
-            ["02", "Recolher", "O cliente abre o link privado e preenche. Tudo grava sozinho."],
-            ["03", "Trancar", "Aprove campo a campo ou peça ajuste com nota. Aprovado fica fechado."],
-            ["04", "Exportar", "ZIP por página, CSV para Webflow e JSON para Framer."],
-          ].map(([n, t, d]) => (
-            <div key={n} className="bg-card p-7">
-              <span className="font-mono text-xs text-muted-foreground">{n}</span>
-              <h3 className="mt-6 font-display text-4xl">{t}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{d}</p>
+          {rows.map(([pg, f, s]) => (
+            <div key={f} className="flex items-center justify-between border-b border-border px-6 py-4 last:border-0">
+              <div className="flex items-baseline gap-4">
+                <span className="w-20 text-xs text-muted-foreground">{pg}</span>
+                <span className="text-sm">{f}</span>
+              </div>
+              <span className={"rounded-full px-2.5 py-0.5 text-xs font-medium " + tone[s]}>{s}</span>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="precos" className="mx-auto max-w-6xl px-5 pb-28">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-display text-6xl">Preços <em className="text-muted-foreground">simples</em></h2>
-          <div className="flex rounded-full border border-border bg-card p-1 text-sm">
+      <section id="como" className="border-y border-border bg-card">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-4">
+          {[
+            ["Modelos por página", "Institucional, landing, e-commerce e rebranding, prontos a enviar."],
+            ["Sem conta para o cliente", "Um link privado com gravação automática e envio de ficheiros."],
+            ["Revisão campo a campo", "Aprove ou peça ajuste com nota. O que é aprovado fica fechado."],
+            ["Exportação limpa", "ZIP por página, CSV para Webflow e JSON para Framer."],
+          ].map(([t, d], i) => (
+            <div key={t}>
+              <span className="text-xs text-muted-foreground">0{i + 1}</span>
+              <h3 className="mt-3 font-display text-2xl">{t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="precos" className="mx-auto max-w-4xl px-6 py-24">
+        <div className="text-center">
+          <h2 className="font-display text-5xl">Preços simples</h2>
+          <div className="mt-6 inline-flex rounded-full border border-border bg-card p-1 text-sm">
             {(["month", "year"] as const).map((b) => (
-              <button key={b} onClick={() => setBilling(b)} className={"rounded-full px-4 py-1.5 " + (billing === b ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>{b === "month" ? "Mensal" : "Anual"}</button>
+              <button key={b} onClick={() => setBilling(b)} className={"rounded-full px-4 py-1.5 transition-colors " + (billing === b ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>{b === "month" ? "Mensal" : "Anual"}</button>
             ))}
           </div>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           {(["solo", "agency"] as const).map((k) => {
             const p = PLANS[k];
-            const dark = k === "agency";
             return (
-              <div key={k} className={"rounded-2xl p-8 " + (dark ? "bg-ink text-ink-foreground" : "border border-border bg-card shadow-card")}>
+              <div key={k} className={"rounded-2xl border bg-card p-8 shadow-card " + (k === "agency" ? "border-primary/30" : "border-border")}>
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-4xl">{p.name}</h3>
-                  {dark && <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-accent-foreground">Mais escolhido</span>}
+                  <h3 className="text-sm font-medium">{p.name}</h3>
+                  {k === "agency" && <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs text-accent-foreground">Recomendado</span>}
                 </div>
-                <p className="mt-4"><span className="font-display text-7xl">${billing === "month" ? p.month : p.year}</span><span className={dark ? "text-ink-muted" : "text-muted-foreground"}>/{billing === "month" ? "mês" : "ano"}</span></p>
-                <ul className={"mt-6 space-y-2 text-sm " + (dark ? "text-ink-muted" : "text-muted-foreground")}>
-                  <li>◆ {p.requests} pedidos ativos</li><li>◆ {p.users} {p.users > 1 ? "utilizadores" : "utilizador"}</li><li>◆ {p.storageGb} GB de ficheiros</li>
+                <p className="mt-4"><span className="font-display text-6xl">${billing === "month" ? p.month : p.year}</span><span className="text-muted-foreground"> /{billing === "month" ? "mês" : "ano"}</span></p>
+                <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
+                  <li>{p.requests} pedidos ativos</li><li>{p.users} {p.users > 1 ? "utilizadores" : "utilizador"}</li><li>{p.storageGb} GB de ficheiros</li>
                 </ul>
-                <Link to="/comecar" search={{ plano: k, ciclo: billing }} className={"mt-8 block rounded-full py-3 text-center font-medium " + (dark ? "bg-accent text-accent-foreground" : "bg-primary text-primary-foreground")}>Experimentar 14 dias</Link>
+                <Link to="/comecar" search={{ plano: k, ciclo: billing }} className={"mt-8 block rounded-full py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground" : "border border-border hover:bg-muted")}>Experimentar 14 dias</Link>
               </div>
             );
           })}
         </div>
-        <p className="mt-5 font-mono text-xs text-muted-foreground">Durante o teste: 1 pedido ativo e 500 MB · preços sem impostos</p>
+        <p className="mt-5 text-center text-xs text-muted-foreground">Durante o teste: 1 pedido ativo e 500 MB. Preços sem impostos.</p>
       </section>
 
       <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-8 text-sm text-muted-foreground">
-          <span className="font-display text-xl text-foreground">Lockcopy™</span>
-          <span>Conteúdo do cliente, trancado e pronto.</span>
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-8 text-sm text-muted-foreground">
+          <span className="flex items-center gap-2 font-medium text-foreground"><span className="h-2 w-2 rounded-full bg-seal" />Lockcopy™</span>
+          <span>Conteúdo do cliente, aprovado e pronto.</span>
         </div>
       </footer>
     </div>
