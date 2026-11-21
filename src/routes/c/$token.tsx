@@ -6,7 +6,7 @@ import { Badge, Card, inputClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/c/$token")({
   head: () => ({
     meta: [
-      { title: "Enviar conteúdos do site — Brief" },
+      { title: "Enviar conteúdos do site — Lockcopy" },
       { name: "description", content: "Preencha os textos e carregue os ficheiros pedidos pela sua agência." },
       { property: "og:title", content: "Enviar conteúdos do site" },
       { property: "og:description", content: "Preencha os textos e carregue os ficheiros pedidos pela sua agência." },

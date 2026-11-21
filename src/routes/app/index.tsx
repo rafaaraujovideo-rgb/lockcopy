@@ -5,9 +5,9 @@ import { Badge, btnClass, Card, DemoNote } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/")({
   head: () => ({
     meta: [
-      { title: "Pedidos — Brief" },
+      { title: "Pedidos — Lockcopy" },
       { name: "description", content: "Acompanhe o progresso dos pedidos de conteúdo dos seus clientes." },
-      { property: "og:title", content: "Pedidos — Brief" },
+      { property: "og:title", content: "Pedidos — Lockcopy" },
       { property: "og:description", content: "Acompanhe o progresso dos pedidos de conteúdo." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

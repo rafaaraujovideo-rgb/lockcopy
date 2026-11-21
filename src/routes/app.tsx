@@ -11,7 +11,7 @@ function AppLayout() {
     <div className="min-h-screen">
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-5 py-3">
-          <Link to="/" className="mr-4 font-display text-xl font-bold">Brief<span className="text-primary">.</span></Link>
+          <Link to="/" className="mr-4 font-display text-xl font-bold">Lock<span className="text-primary">copy</span></Link>
           <Link to="/app" activeOptions={{ exact: true }} className={nav} activeProps={{ className: "bg-muted font-medium" }}>Pedidos</Link>
           <Link to="/app/novo" className={nav} activeProps={{ className: "bg-muted font-medium" }}>Novo pedido</Link>
           <Link to="/app/faturacao" className={nav} activeProps={{ className: "bg-muted font-medium" }}>Faturação</Link>

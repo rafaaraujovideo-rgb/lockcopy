@@ -12,9 +12,9 @@ export const Route = createFileRoute("/comecar")({
   }),
   head: () => ({
     meta: [
-      { title: "Começar teste de 14 dias — Brief" },
+      { title: "Começar teste de 14 dias — Lockcopy" },
       { name: "description", content: "Registe o cartão e comece 14 dias de teste sem cobrança." },
-      { property: "og:title", content: "Começar teste de 14 dias — Brief" },
+      { property: "og:title", content: "Começar teste de 14 dias — Lockcopy" },
       { property: "og:description", content: "Registe o cartão e comece 14 dias de teste sem cobrança." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

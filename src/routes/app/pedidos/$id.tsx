@@ -6,9 +6,9 @@ import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/pedidos/$id")({
   head: () => ({
     meta: [
-      { title: "Rever pedido — Brief" },
+      { title: "Rever pedido — Lockcopy" },
       { name: "description", content: "Reveja, aprove e exporte os conteúdos enviados pelo cliente." },
-      { property: "og:title", content: "Rever pedido — Brief" },
+      { property: "og:title", content: "Rever pedido — Lockcopy" },
       { property: "og:description", content: "Reveja, aprove e exporte os conteúdos do cliente." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

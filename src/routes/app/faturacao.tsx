@@ -5,9 +5,9 @@ import { Btn, Card, DemoNote, btnClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/faturacao")({
   head: () => ({
     meta: [
-      { title: "Faturação — Brief" },
+      { title: "Faturação — Lockcopy" },
       { name: "description", content: "Plano, teste, próxima cobrança e cancelamento." },
-      { property: "og:title", content: "Faturação — Brief" },
+      { property: "og:title", content: "Faturação — Lockcopy" },
       { property: "og:description", content: "Plano, teste, próxima cobrança e cancelamento." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

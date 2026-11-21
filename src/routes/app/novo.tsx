@@ -6,9 +6,9 @@ import { Btn, Card, inputClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/novo")({
   head: () => ({
     meta: [
-      { title: "Novo pedido — Brief" },
+      { title: "Novo pedido — Lockcopy" },
       { name: "description", content: "Crie um pedido de conteúdos a partir de um modelo." },
-      { property: "og:title", content: "Novo pedido — Brief" },
+      { property: "og:title", content: "Novo pedido — Lockcopy" },
       { property: "og:description", content: "Crie um pedido de conteúdos a partir de um modelo." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

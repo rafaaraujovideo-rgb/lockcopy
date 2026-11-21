@@ -6,9 +6,9 @@ import { btnClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Brief — pare de perseguir clientes por conteúdos" },
+      { title: "Lockcopy — pare de perseguir clientes por conteúdos" },
       { name: "description", content: "Checklists por página, uploads organizados e exportação para Webflow e Framer. Para freelancers e agências web." },
-      { property: "og:title", content: "Brief — pare de perseguir clientes por conteúdos" },
+      { property: "og:title", content: "Lockcopy — pare de perseguir clientes por conteúdos" },
       { property: "og:description", content: "Checklists por página, uploads organizados e exportação para Webflow e Framer." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -22,7 +22,7 @@ function Landing() {
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-        <span className="font-display text-2xl font-bold">Brief<span className="text-primary">.</span></span>
+        <span className="font-display text-2xl font-bold">Lock<span className="text-primary">copy</span></span>
         <nav className="flex items-center gap-4 text-sm">
           <a href="#precos" className="hidden sm:inline">Preços</a>
           <Link to="/app" className="hover:underline">Entrar</Link>
