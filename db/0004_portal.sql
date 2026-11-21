@@ -469,11 +469,11 @@ declare
 begin
   select * into s from public.submissions where field_id = _field;
   if not found then
-    raise exception 'sem_resposta — ainda não há resposta neste campo.' using errcode = '42501';
+    raise exception 'no_answer — there is no answer in this field yet.' using errcode = '42501';
   end if;
 
   if not public.request_in_org(s.request_id) then
-    raise exception 'sem_permissoes — sem acesso a este pedido.' using errcode = '42501';
+    raise exception 'no_permission — no access to this request.' using errcode = '42501';
   end if;
 
   select * into r from public.requests where id = s.request_id;
@@ -490,7 +490,7 @@ begin
             jsonb_build_object('field_id', _field, 'label', f.label));
   elsif _decision = 'adjust' then
     if btrim(coalesce(_note, '')) = '' then
-      raise exception 'nota_obrigatoria — explicite o que precisa de ser corrigido.'
+      raise exception 'note_required — explain what needs to be fixed.'
         using errcode = '22001';
     end if;
 
@@ -505,11 +505,11 @@ begin
 
     insert into public.notifications (org_id, request_id, channel, kind, recipient, subject, body)
     values (r.org_id, r.id, 'email', 'ajuste', r.client_email,
-            'A agência precisa de um ajuste num conteúdo',
-            'A agência pediu uma correção em "' || f.label || '": ' || left(_note, 2000)
-            || ' — abra o seu link para enviar de novo.');
+            'The agency needs a change to one piece of content',
+            'The agency asked for a fix in "' || f.label || '": ' || left(_note, 2000)
+            || ' — open your link to send it again.');
   else
-    raise exception 'decisao_invalida — use approve ou adjust.'
+    raise exception 'invalid_decision — use approve or adjust.'
       using errcode = '22001';
   end if;
 
@@ -532,7 +532,7 @@ declare
   r public.requests;
 begin
   if not public.request_in_org(_request) then
-    raise exception 'sem_permissoes — sem acesso a este pedido.' using errcode = '42501';
+    raise exception 'no_permission — no access to this request.' using errcode = '42501';
   end if;
 
   update public.requests
@@ -567,7 +567,7 @@ declare
   n uuid;
 begin
   if not public.request_in_org(_request) then
-    raise exception 'sem_permissoes — sem acesso a este pedido.' using errcode = '42501';
+    raise exception 'no_permission — no access to this request.' using errcode = '42501';
   end if;
 
   select * into r from public.requests where id = _request;
@@ -578,9 +578,9 @@ begin
 
   n := public.enqueue_notification(
     r.org_id, r.id, 'email', r.client_email,
-    'Faltam conteúdos para o seu site',
-    'Faltam ' || missing || ' itens. Pode enviar tudo pelo link que já tem — continua aberto até '
-      || to_char(r.expires_at, 'DD/MM/YYYY') || '.'
+    'Content still missing for your website',
+    'There are ' || missing || ' items left. You can send everything through the link you already have — it stays open until '
+      || to_char(r.expires_at, 'DD Mon YYYY') || '.'
   );
 
   insert into public.request_events (request_id, org_id, actor, actor_user_id, kind, detail)
