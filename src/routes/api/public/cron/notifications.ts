@@ -8,12 +8,12 @@ import { createFileRoute } from "@tanstack/react-router";
  * tem de enviar `Authorization: Bearer <CRON_SECRET>`.
  *
  * Fluxo: reivindica notificações pendentes (claim_notifications), envia cada
- * uma via Resend e marca o resultado (finish_notification). Sem RESEND_API_KEY
+ * uma via Brevo e marca o resultado (finish_notification). Sem BREVO_API_KEY
  * as notificações são marcadas como falhadas com erro explícito, para não
  * fingirem envio.
  */
 
-const RESEND_URL = "https://api.resend.com/emails";
+const BREVO_URL = "https://api.brevo.com/v3/smtp/email";
 
 type Notification = {
   id: string;
@@ -30,20 +30,29 @@ function unauthorized() {
   });
 }
 
+function parseFrom(from: string): { name?: string; email: string } {
+  const m = /^\s*(?:"?([^"<]*)"?\s*)?<([^>]+)>\s*$/.exec(from);
+  if (m && m[2]) {
+    const name = (m[1] ?? "").trim();
+    return name ? { name, email: m[2].trim() } : { email: m[2].trim() };
+  }
+  return { email: from.trim() };
+}
+
 async function sendEmail(from: string, apiKey: string, n: Notification): Promise<string | null> {
-  const res = await fetch(RESEND_URL, {
+  const res = await fetch(BREVO_URL, {
     method: "POST",
-    headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
+    headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
     body: JSON.stringify({
-      from,
-      to: [n.recipient],
+      sender: parseFrom(from),
+      to: [{ email: n.recipient }],
       subject: n.subject,
-      text: n.body,
+      textContent: n.body,
     }),
   });
   if (res.ok) return null;
   const detail = (await res.text()).slice(0, 300);
-  return `Resend ${res.status}: ${detail}`;
+  return `Brevo ${res.status}: ${detail}`;
 }
 
 export const Route = createFileRoute("/api/public/cron/notifications")({
@@ -65,7 +74,7 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
           });
         }
 
-        const apiKey = (process.env["RESEND_API_KEY"] ?? "").trim();
+        const apiKey = (process.env["BREVO_API_KEY"] ?? "").trim();
         const from = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <notificacoes@lockcopy.com>";
 
         const items = (batch ?? []) as unknown as Notification[];
@@ -76,7 +85,7 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
           if (n.channel !== "email") {
             err = `canal não suportado: ${n.channel}`;
           } else if (!apiKey) {
-            err = "RESEND_API_KEY não configurada no servidor.";
+            err = "BREVO_API_KEY não configurada no servidor.";
           } else {
             err = await sendEmail(from, apiKey, n);
           }

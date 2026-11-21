@@ -14,8 +14,8 @@
 - [x] `db/0007_webp.sql` corrido e corrigido.
 - [ ] Voltar a ligar "Confirm email" no Supabase.
 - [ ] Configurar cron externo para POST /api/public/cron/notifications com `CRON_SECRET`.
-- [ ] Chaves Stripe e Resend nas variáveis de ambiente.
+- [ ] Chaves Stripe e Brevo nas variáveis de ambiente.
 
 ## Bloqueios
-- Emails reais: precisa de `RESEND_API_KEY`.
+- Emails reais: precisa de `BREVO_API_KEY` (remetente verificado no Brevo).
 - Cobrança real: precisa de `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_SOLO`, `STRIPE_PRICE_AGENCY`, `STRIPE_PRICE_SOLO_YEAR`, `STRIPE_PRICE_AGENCY_YEAR` e `APP_URL`.
