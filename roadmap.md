@@ -13,9 +13,10 @@
 - [x] Fluxo completo testado com sessão real (agência, pedido, portal, upload+WebP, aprovar, ajuste, link, exportações).
 - [x] `db/0007_webp.sql` corrido e corrigido.
 - [ ] Voltar a ligar "Confirm email" no Supabase.
-- [ ] Configurar cron externo para POST /api/public/cron/notifications com `CRON_SECRET`.
-- [ ] Chaves Stripe e Brevo nas variáveis de ambiente.
+- [x] Cron externo configurado: POST /api/public/cron/notifications com `CRON_SECRET` (cron-job.org, URL dev).
+- [x] `BREVO_API_KEY` guardada no cofre de segredos.
+- [ ] Chaves Stripe nas variáveis de ambiente.
 
 ## Bloqueios
-- Emails reais: precisa de `BREVO_API_KEY` (remetente verificado no Brevo).
+- Emails reais e webhook do Stripe: o servidor precisa da chave secreta da base de dados. O cofre de segredos reserva o prefixo `SUPABASE_`, por isso entra como `LOCKCOPY_DB_SECRET_KEY` (o código aceita o nome antigo `SUPABASE_SERVICE_ROLE_KEY` como alternativa).
 - Cobrança real: precisa de `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_SOLO`, `STRIPE_PRICE_AGENCY`, `STRIPE_PRICE_SOLO_YEAR`, `STRIPE_PRICE_AGENCY_YEAR` e `APP_URL`.
