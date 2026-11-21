@@ -17,8 +17,7 @@
 - [ ] Voltar a ligar "Confirm email" no Supabase.
 - [x] Cron externo configurado: POST /api/public/cron/notifications com `CRON_SECRET` (cron-job.org, URL dev).
 - [x] `BREVO_API_KEY` guardada no cofre de segredos.
-- [ ] Chaves Stripe nas variáveis de ambiente.
+- [x] Stripe configurado (modo real): planos Solo/Agency mensal e anual, webhook ligado à pré-visualização, chaves guardadas. Ao publicar, mudar o webhook e `APP_URL` para o domínio final.
 
 ## Bloqueios
 - Emails reais e webhook do Stripe: o servidor precisa da chave secreta da base de dados. O cofre de segredos reserva o prefixo `SUPABASE_`, por isso entra como `LOCKCOPY_DB_SECRET_KEY` (o código aceita o nome antigo `SUPABASE_SERVICE_ROLE_KEY` como alternativa).
-- Cobrança real: precisa de `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_SOLO`, `STRIPE_PRICE_AGENCY`, `STRIPE_PRICE_SOLO_YEAR`, `STRIPE_PRICE_AGENCY_YEAR` e `APP_URL`.
