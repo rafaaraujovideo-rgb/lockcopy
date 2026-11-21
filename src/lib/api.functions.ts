@@ -131,7 +131,7 @@ export const getRequestDetail = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (error) throw new Error(error.message);
-    if (!request) throw new Error("Pedido não encontrado ou sem acesso.");
+    if (!request) throw new Error("Request not found or no access.");
 
     const [sections, fields, submissions, files, events] = await Promise.all([
       supabase
@@ -207,7 +207,7 @@ export const createRequest = createServerFn({ method: "POST" })
         .order("created_at", { ascending: true })
         .limit(1)
         .maybeSingle();
-      if (!membership) throw new Error("Sem organização associada a esta conta.");
+      if (!membership) throw new Error("No organization linked to this account.");
       orgId = membership.org_id;
     }
 

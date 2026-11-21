@@ -9,10 +9,10 @@ import { Btn, btnClass, Card } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/faturacao")({
   head: () => ({
     meta: [
-      { title: "Faturação — Lockcopy" },
-      { name: "description", content: "Plano, teste, próxima cobrança e cancelamento." },
-      { property: "og:title", content: "Faturação — Lockcopy" },
-      { property: "og:description", content: "Plano, teste, próxima cobrança e cancelamento." },
+      { title: "Billing — Lockcopy" },
+      { name: "description", content: "Plan, trial, next charge and cancellation." },
+      { property: "og:title", content: "Billing — Lockcopy" },
+      { property: "og:description", content: "Plan, trial, next charge and cancellation." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -21,13 +21,13 @@ export const Route = createFileRoute("/app/faturacao")({
 });
 
 const STATUS: Record<string, string> = {
-  trialing: "em teste",
-  active: "ativo",
-  past_due: "pagamento em falta (7 dias de tolerância)",
-  canceled: "cancelado",
-  incomplete: "por concluir",
+  trialing: "on trial",
+  active: "active",
+  past_due: "payment overdue (7-day grace period)",
+  canceled: "cancelled",
+  incomplete: "incomplete",
 };
-const PLAN_NAME: Record<string, string> = { teste: "Teste", solo: "Solo", agency: "Agency" };
+const PLAN_NAME: Record<string, string> = { teste: "Trial", solo: "Solo", agency: "Agency" };
 
 function Billing() {
   const ws = useWorkspace();
@@ -52,29 +52,29 @@ function Billing() {
 
   return (
     <div className="max-w-2xl space-y-4">
-      <h1 className="font-display text-4xl font-bold">Faturação</h1>
+      <h1 className="font-display text-4xl font-bold">Billing</h1>
       <Card className="space-y-2 text-sm">
-        <p><span className="text-muted-foreground">Plano:</span> <b>{PLAN_NAME[org.plan]}</b> · {STATUS[org.subscription_status] ?? org.subscription_status}</p>
-        {org.trial_ends_at && <p><span className="text-muted-foreground">Teste até:</span> <b>{fmtDate(org.trial_ends_at)}</b> — sem cobranças até lá</p>}
-        {org.current_period_ends_at && <p><span className="text-muted-foreground">Próxima renovação:</span> {fmtDate(org.current_period_ends_at)}</p>}
+        <p><span className="text-muted-foreground">Plan:</span> <b>{PLAN_NAME[org.plan]}</b> · {STATUS[org.subscription_status] ?? org.subscription_status}</p>
+        {org.trial_ends_at && <p><span className="text-muted-foreground">Trial until:</span> <b>{fmtDate(org.trial_ends_at)}</b> — no charges until then</p>}
+        {org.current_period_ends_at && <p><span className="text-muted-foreground">Next renewal:</span> {fmtDate(org.current_period_ends_at)}</p>}
         {limits && (
-          <p><span className="text-muted-foreground">Limites:</span> {limits.requests_limit} pedidos ativos · {limits.users_limit} utilizador(es) · {Math.round(limits.storage_bytes / 1e9)} GB</p>
+          <p><span className="text-muted-foreground">Limits:</span> {limits.requests_limit} active requests · {limits.users_limit} user(s) · {Math.round(limits.storage_bytes / 1e9)} GB</p>
         )}
-        <p><span className="text-muted-foreground">Espaço usado:</span> {(org.storage_used_bytes / 1e6).toFixed(0)} MB</p>
+        <p><span className="text-muted-foreground">Storage used:</span> {(org.storage_used_bytes / 1e6).toFixed(0)} MB</p>
       </Card>
       {!hasCard ? (
         <Card>
-          <p className="text-sm">Ainda não registou o cartão. O teste de 14 dias começa quando o fizer.</p>
-          <Link to="/comecar" className={btnClass + " mt-3"}>Registar cartão e começar 14 dias</Link>
+          <p className="text-sm">You haven't registered a card yet. The 14-day trial starts when you do.</p>
+          <Link to="/comecar" className={btnClass + " mt-3"}>Register card and start 14 days</Link>
         </Card>
       ) : (
         <Card className="space-y-2">
-          <Btn variant="outline" disabled={busy} onClick={manage}>{busy ? "A abrir…" : "Gerir cartão, faturas ou cancelar"}</Btn>
+          <Btn variant="outline" disabled={busy} onClick={manage}>{busy ? "Opening…" : "Manage card, invoices or cancel"}</Btn>
           {error && <p className="text-sm text-destructive">{error}</p>}
         </Card>
       )}
       <Card className="text-sm text-muted-foreground">
-        Falha de pagamento: 7 dias de tolerância sem bloquear pedidos em curso. Cancelamento: acesso até ao fim do período pago, com exportação disponível.
+        Failed payment: 7-day grace period without blocking ongoing requests. Cancellation: access until the end of the paid period, with export available.
       </Card>
     </div>
   );

@@ -3,18 +3,18 @@ import { Check, Copy, Link2, Lock, Upload, FileText, Image as ImageIcon, Downloa
 import { cn } from "@/lib/utils";
 
 const STEPS = [
-  { t: "Enviar link", d: "Escolha um modelo e partilhe um link privado." },
-  { t: "Cliente preenche", d: "Sem conta. Textos e ficheiros, página a página." },
-  { t: "Rever e aprovar", d: "Aprove campo a campo. O aprovado fica trancado." },
-  { t: "Exportar", d: "CSV para Webflow, JSON para Framer ou ZIP." },
+  { t: "Send the link", d: "Pick a template and share a private link." },
+  { t: "Client fills it in", d: "No account. Texts and files, page by page." },
+  { t: "Review and approve", d: "Approve field by field. Approved stays locked." },
+  { t: "Export", d: "CSV for Webflow, JSON for Framer or ZIP." },
 ];
 
 type St = "enviado" | "aprovado" | "ajuste";
 const FIELDS = [
-  { id: "hero", page: "Início", label: "Frase principal", value: "Clínica dentária no centro do Porto desde 1998." },
-  { id: "capa", page: "Início", label: "Fotografia de capa", value: "fachada.jpg · 2,1 MB" },
-  { id: "historia", page: "Sobre", label: "A vossa história", value: "Fundada pelo Dr. Sousa, a clínica…" },
-  { id: "logo", page: "Contactos", label: "Logótipo", value: "logo-sousa.svg · 48 KB" },
+  { id: "hero", page: "Home", label: "Main headline", value: "A family dental clinic in the city centre since 1998." },
+  { id: "capa", page: "Home", label: "Cover photo", value: "facade.jpg · 2.1 MB" },
+  { id: "historia", page: "About", label: "Your story", value: "Founded by Dr. Sousa, the clinic…" },
+  { id: "logo", page: "Contact", label: "Logo", value: "logo-sousa.svg · 48 KB" },
 ];
 const HERO_TEXT = FIELDS[0]!.value;
 
@@ -73,7 +73,7 @@ export function LandingDemo() {
         <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" />
           <span className="ml-3 rounded-md bg-muted px-3 py-1 text-xs text-muted-foreground">
-            {step === 1 ? "lockcopy.app/c/x7k2q9" : "lockcopy.app/app/pedidos/clinica-sousa"}
+            {step === 1 ? "lockcopy.app/c/x7k2q9" : "lockcopy.app/app/pedidos/sousa-clinic"}
           </span>
         </div>
 
@@ -81,15 +81,15 @@ export function LandingDemo() {
           {step === 0 && (
             <div className="space-y-5">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Novo pedido</p>
-                <h4 className="mt-1 text-xl font-bold">Clínica Sousa · Site institucional</h4>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">New request</p>
+                <h4 className="mt-1 text-xl font-bold">Sousa Clinic · Business website</h4>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
-                {["Institucional", "Landing page", "E-commerce"].map((m, i) => (
+                {["Business site", "Landing page", "E-commerce"].map((m, i) => (
                   <div key={m} className={cn("rounded-xl border p-4 text-sm", i === 0 ? "border-primary bg-primary/5" : "border-border")}>
                     <FileText className="h-4 w-4 text-muted-foreground" />
                     <p className="mt-2 font-medium">{m}</p>
-                    <p className="text-xs text-muted-foreground">{[7, 4, 9][i]} campos</p>
+                    <p className="text-xs text-muted-foreground">{[7, 4, 9][i]} fields</p>
                   </div>
                 ))}
               </div>
@@ -100,40 +100,40 @@ export function LandingDemo() {
                   onClick={() => { setCopied(true); setAuto(false); setTimeout(() => { setCopied(false); setStep(1); }, 900); }}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground"
                 >
-                  {copied ? <><Check className="h-3.5 w-3.5" /> Copiado</> : <><Copy className="h-3.5 w-3.5" /> Copiar link</>}
+                  {copied ? <><Check className="h-3.5 w-3.5" /> Copied</> : <><Copy className="h-3.5 w-3.5" /> Copy link</>}
                 </button>
               </div>
-              <p className="text-xs text-muted-foreground">Experimente: carregue em “Copiar link” para ver o que o cliente recebe.</p>
+              <p className="text-xs text-muted-foreground">Try it: click “Copy link” to see what the client receives.</p>
             </div>
           )}
 
           {step === 1 && (
             <div className="mx-auto max-w-md space-y-5">
               <div>
-                <p className="text-xs text-muted-foreground">Pedido de Estúdio Norte</p>
-                <h4 className="text-xl font-bold">Conteúdos do novo site</h4>
+                <p className="text-xs text-muted-foreground">Request from Norte Studio</p>
+                <h4 className="text-xl font-bold">Content for the new site</h4>
                 <div className="mt-3 h-1.5 rounded-full bg-muted"><div className="h-1.5 rounded-full bg-seal transition-all" style={{ width: `${20 + up * 0.4}%` }} /></div>
               </div>
               <label className="block">
-                <span className="text-sm font-medium">Frase principal</span>
+                <span className="text-sm font-medium">Main headline</span>
                 <div className="mt-1.5 rounded-lg border border-ring/40 bg-card px-3 py-2.5 text-sm ring-2 ring-ring/15">
                   {HERO_TEXT.slice(0, typed)}<span className="animate-caret ml-px inline-block h-4 w-px translate-y-0.5 bg-foreground" />
                 </div>
               </label>
               <div>
-                <span className="text-sm font-medium">Fotografia de capa</span>
+                <span className="text-sm font-medium">Cover photo</span>
                 <div className="mt-1.5 flex items-center gap-3 rounded-lg border border-dashed border-border p-3">
                   <div className="grid h-10 w-10 place-items-center rounded-md bg-muted"><ImageIcon className="h-4 w-4 text-muted-foreground" /></div>
                   <div className="flex-1">
-                    <div className="flex justify-between text-xs"><span>fachada.jpg</span><span className="text-muted-foreground">{up < 100 ? `${up}%` : "Enviado ✓"}</span></div>
+                    <div className="flex justify-between text-xs"><span>facade.jpg</span><span className="text-muted-foreground">{up < 100 ? `${up}%` : "Uploaded ✓"}</span></div>
                     <div className="mt-1.5 h-1 rounded-full bg-muted"><div className="h-1 rounded-full bg-primary transition-all" style={{ width: `${up}%` }} /></div>
                   </div>
                   <Upload className="h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Guardado automaticamente</span>
-                <button onClick={() => go(2)} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground"><Send className="h-3.5 w-3.5" /> Enviar à agência</button>
+                <span className="text-xs text-muted-foreground">Saved automatically</span>
+                <button onClick={() => go(2)} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground"><Send className="h-3.5 w-3.5" /> Send to agency</button>
               </div>
             </div>
           )}
@@ -141,8 +141,8 @@ export function LandingDemo() {
           {step === 2 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xl font-bold">Rever conteúdos</h4>
-                <span className="text-sm text-muted-foreground">{approved} de {FIELDS.length} aprovados</span>
+                <h4 className="text-xl font-bold">Review content</h4>
+                <span className="text-sm text-muted-foreground">{approved} of {FIELDS.length} approved</span>
               </div>
               <div className="h-1.5 rounded-full bg-muted"><div className="h-1.5 rounded-full bg-seal transition-all duration-500" style={{ width: `${(approved / FIELDS.length) * 100}%` }} /></div>
               <div className="divide-y divide-border rounded-xl border border-border">
@@ -155,27 +155,27 @@ export function LandingDemo() {
                         <p className="truncate text-sm">{f.value}</p>
                       </div>
                       {s === "aprovado" ? (
-                        <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "enviado" }); }} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground"><Lock className="h-3 w-3" /> Trancado</button>
+                        <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "enviado" }); }} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground"><Lock className="h-3 w-3" /> Locked</button>
                       ) : s === "ajuste" ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"><MessageSquare className="h-3 w-3" /> Ajuste pedido</span>
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"><MessageSquare className="h-3 w-3" /> Change requested</span>
                       ) : (
                         <div className="flex gap-1.5">
-                          <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "ajuste" }); }} className="rounded-lg border border-border px-2.5 py-1 text-xs hover:bg-muted">Pedir ajuste</button>
-                          <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "aprovado" }); }} className="rounded-lg bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground">Aprovar</button>
+                          <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "ajuste" }); }} className="rounded-lg border border-border px-2.5 py-1 text-xs hover:bg-muted">Request change</button>
+                          <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "aprovado" }); }} className="rounded-lg bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground">Approve</button>
                         </div>
                       )}
                     </div>
                   );
                 })}
               </div>
-              <p className="text-xs text-muted-foreground">Experimente: aprove os campos e veja-os ficar trancados.</p>
+              <p className="text-xs text-muted-foreground">Try it: approve fields and watch them lock.</p>
             </div>
           )}
 
           {step === 3 && (
             <div className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h4 className="text-xl font-bold">Exportar para o site</h4>
+                <h4 className="text-xl font-bold">Export to the site</h4>
                 <div className="inline-flex rounded-lg bg-muted p-1 text-xs">
                   {(["webflow", "framer", "zip"] as const).map((k) => (
                     <button key={k} onClick={() => { setAuto(false); setFmt(k); }} className={cn("rounded-md px-3 py-1.5 font-medium", fmt === k ? "bg-card shadow-sm" : "text-muted-foreground")}>
@@ -186,27 +186,27 @@ export function LandingDemo() {
               </div>
               <pre className="overflow-x-auto rounded-xl bg-primary p-4 font-mono text-xs leading-relaxed text-primary-foreground/90">
 {fmt === "webflow" && `page,field,value
-inicio,frase-principal,"Clínica dentária no centro do Porto desde 1998."
-inicio,fotografia-capa,assets/inicio/fachada.webp
-sobre,historia,"Fundada pelo Dr. Sousa, a clínica…"
-contactos,logotipo,assets/contactos/logo-sousa.svg`}
+home,main-headline,"A family dental clinic in the city centre since 1998."
+home,cover-photo,assets/home/facade.webp
+about,story,"Founded by Dr. Sousa, the clinic…"
+contact,logo,assets/contact/logo-sousa.svg`}
 {fmt === "framer" && `{
-  "inicio": {
-    "frasePrincipal": "Clínica dentária no centro do Porto desde 1998.",
-    "fotografiaCapa": "assets/inicio/fachada.webp"
+  "home": {
+    "mainHeadline": "A family dental clinic in the city centre since 1998.",
+    "coverPhoto": "assets/home/facade.webp"
   },
-  "sobre": { "historia": "Fundada pelo Dr. Sousa, a clínica…" }
+  "about": { "story": "Founded by Dr. Sousa, the clinic…" }
 }`}
-{fmt === "zip" && `clinica-sousa.zip
-├── inicio/
-│   ├── textos.md
-│   └── fachada.webp
-├── sobre/
-│   └── textos.md
-└── contactos/
+{fmt === "zip" && `sousa-clinic.zip
+├── home/
+│   ├── texts.md
+│   └── facade.webp
+├── about/
+│   └── texts.md
+└── contact/
     └── logo-sousa.svg`}
               </pre>
-              <button className="inline-flex items-center gap-2 rounded-lg bg-seal px-4 py-2 text-sm font-medium text-primary-foreground"><Download className="h-4 w-4" /> Descarregar</button>
+              <button className="inline-flex items-center gap-2 rounded-lg bg-seal px-4 py-2 text-sm font-medium text-primary-foreground"><Download className="h-4 w-4" /> Download</button>
             </div>
           )}
         </div>

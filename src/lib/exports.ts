@@ -64,7 +64,7 @@ export function zipEntries(x: ExportInput) {
   for (const s of x.sections)
     for (const f of s.fields)
       for (const file of x.files.filter((y) => y.field_id === f.id)) {
-        const base = `${slugify(s.title) || "pagina"}/${slugify(f.label) || "campo"}`;
+        const base = `${slugify(s.title) || "page"}/${slugify(f.label) || "field"}`;
         out.push({ zipPath: unique(`${base}/original/${file.file_name}`), storagePath: file.storage_path });
         if (file.webp_storage_path)
           out.push({ zipPath: unique(`${base}/webp/${file.file_name.replace(/\.[^.]+$/, "")}.webp`), storagePath: file.webp_storage_path });

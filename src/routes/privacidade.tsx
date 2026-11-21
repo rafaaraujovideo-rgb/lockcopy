@@ -3,10 +3,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/privacidade")({
   head: () => ({
     meta: [
-      { title: "Política de privacidade — Lockcopy" },
-      { name: "description", content: "Como a Lockcopy recolhe, usa e protege os dados das agências e dos clientes delas." },
-      { property: "og:title", content: "Política de privacidade — Lockcopy" },
-      { property: "og:description", content: "Como a Lockcopy recolhe, usa e protege os dados das agências e dos clientes delas." },
+      { title: "Privacy policy — Lockcopy" },
+      { name: "description", content: "How Lockcopy collects, uses and protects the data of agencies and their clients." },
+      { property: "og:title", content: "Privacy policy — Lockcopy" },
+      { property: "og:description", content: "How Lockcopy collects, uses and protects the data of agencies and their clients." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -16,52 +16,52 @@ export const Route = createFileRoute("/privacidade")({
 
 const sections: [string, string[]][] = [
   [
-    "Quem é responsável pelos dados",
+    "Who is responsible for the data",
     [
-      "A Lockcopy é a responsável pelo tratamento dos dados da conta da agência (nome, email, dados de faturação).",
-      "Pelos conteúdos que os clientes enviam através dos portais, a agência é a responsável pelo tratamento e a Lockcopy atua como subcontratante, nos termos do acordo de tratamento de dados (DPA).",
+      "Lockcopy is the data controller for the agency account data (name, email, billing details).",
+      "For the content clients submit through the portals, the agency is the data controller and Lockcopy acts as a processor, under the data processing agreement (DPA).",
     ],
   ],
   [
-    "Que dados recolhemos",
+    "What data we collect",
     [
-      "Conta: nome da agência, email e palavra-passe (guardada apenas como hash pelo fornecedor de autenticação).",
-      "Faturação: tratada pelo Stripe; a Lockcopy nunca vê nem guarda números de cartão.",
-      "Conteúdos dos pedidos: textos e ficheiros que os clientes enviam, mais o email do cliente para lembretes.",
-      "Dados técnicos: registos de acesso e erros, usados apenas para operar e proteger o serviço.",
+      "Account: agency name, email and password (stored only as a hash by the authentication provider).",
+      "Billing: handled by Stripe; Lockcopy never sees or stores card numbers.",
+      "Request content: texts and files clients submit, plus the client's email for reminders.",
+      "Technical data: access and error logs, used only to operate and protect the service.",
     ],
   ],
   [
-    "Para que usamos os dados",
+    "What we use the data for",
     [
-      "Prestar o serviço: criar pedidos, mostrar portais, guardar respostas e ficheiros, exportar conteúdos.",
-      "Enviar emails operacionais: confirmação de conta, lembretes de entrega e avisos de aprovação.",
-      "Cobrar a subscrição e cumprir obrigações fiscais.",
-      "Não vendemos dados, não mostramos publicidade e não usamos conteúdos dos clientes para treinar modelos.",
+      "Providing the service: creating requests, showing portals, storing answers and files, exporting content.",
+      "Sending operational emails: account confirmation, delivery reminders and approval notices.",
+      "Charging the subscription and meeting tax obligations.",
+      "We do not sell data, show advertising or use client content to train models.",
     ],
   ],
   [
-    "Onde ficam os dados e por quanto tempo",
+    "Where the data lives and for how long",
     [
-      "Os dados ficam numa base de dados PostgreSQL (Supabase) e os ficheiros num armazenamento privado com acesso por ligações assinadas de curta duração.",
-      "Os portais dos clientes têm prazo de validade e podem ser desligados pela agência a qualquer momento.",
-      "Quando um pedido é arquivado ou a conta é encerrada, os conteúdos são eliminados num prazo máximo de 90 dias, salvo obrigação legal em contrário.",
+      "Data lives in a PostgreSQL database (Supabase) and files in private storage accessed through short-lived signed URLs.",
+      "Client portals have an expiry date and can be switched off by the agency at any time.",
+      "When a request is archived or the account is closed, content is deleted within a maximum of 90 days, unless a legal obligation requires otherwise.",
     ],
   ],
   [
-    "Direitos das pessoas",
+    "People's rights",
     [
-      "Qualquer pessoa pode pedir acesso, retificação, apagamento, portabilidade ou oposição ao tratamento dos seus dados.",
-      "Para conteúdos enviados a uma agência, o pedido deve ser feito à agência; a Lockcopy ajuda a agência a cumpri-lo.",
-      "Para dados da conta Lockcopy, escreva para privacidade@lockcopy.com.",
-      "Tem ainda o direito de reclamar junto da CNPD (Comissão Nacional de Proteção de Dados).",
+      "Anyone can request access, rectification, erasure, portability or object to the processing of their data.",
+      "For content sent to an agency, the request must be made to the agency; Lockcopy helps the agency fulfil it.",
+      "For Lockcopy account data, write to privacy@lockcopy.com.",
+      "You also have the right to complain to your data protection authority.",
     ],
   ],
   [
-    "Segurança",
+    "Security",
     [
-      "Ligações cifradas (TLS), regras de acesso por linha na base de dados (RLS), tokens de portal aleatórios e revogáveis, e armazenamento privado para ficheiros.",
-      "O acesso administrativo é limitado ao estritamente necessário para operar o serviço.",
+      "Encrypted connections (TLS), row-level access rules in the database (RLS), random and revocable portal tokens, and private file storage.",
+      "Administrative access is limited to what is strictly necessary to operate the service.",
     ],
   ],
 ];
@@ -69,9 +69,9 @@ const sections: [string, string[]][] = [
 function Privacidade() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
-      <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Documento legal</p>
-      <h1 className="mt-3 font-display text-4xl font-bold">Política de privacidade</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Última atualização: 21 de novembro de 2026</p>
+      <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Legal document</p>
+      <h1 className="mt-3 font-display text-4xl font-bold">Privacy policy</h1>
+      <p className="mt-2 text-sm text-muted-foreground">Last updated: 21 November 2026</p>
       <div className="mt-10 space-y-10">
         {sections.map(([title, paras]) => (
           <section key={title}>
@@ -81,7 +81,7 @@ function Privacidade() {
         ))}
       </div>
       <p className="mt-12 text-sm text-muted-foreground">
-        Ver também: <Link to="/termos" className="underline hover:text-foreground">Termos de serviço</Link> · <Link to="/dpa" className="underline hover:text-foreground">Acordo de tratamento de dados</Link>
+        See also: <Link to="/termos" className="underline hover:text-foreground">Terms of service</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
       </p>
     </div>
   );

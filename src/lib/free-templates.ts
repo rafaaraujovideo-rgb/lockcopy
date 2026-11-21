@@ -12,55 +12,55 @@ export type FreeTemplate = {
 
 export const FREE_TEMPLATES: FreeTemplate[] = [
   {
-    slug: "site-institucional",
-    name: "Site institucional (5 páginas)",
-    description: "Início, Sobre, Serviços, Portfólio e Contactos — os textos e imagens essenciais de cada página.",
+    slug: "business-website",
+    name: "Business website (5 pages)",
+    description: "Home, About, Services, Portfolio and Contact — the essential texts and images for each page.",
     rows: [
-      ["Início", "Título principal (hero)", "texto", true, 90],
-      ["Início", "Subtítulo de apoio", "texto", true, 160],
-      ["Início", "Imagem principal", "imagem", true, ""],
-      ["Início", "Três benefícios curtos", "texto longo", true, 400],
-      ["Sobre", "História da empresa", "texto longo", true, 1200],
-      ["Sobre", "Fotografias da equipa", "imagem", false, ""],
-      ["Serviços", "Lista de serviços com descrição", "texto longo", true, 2000],
-      ["Serviços", "Tabela de preços (se existir)", "texto longo", false, 800],
-      ["Portfólio", "Projetos com legenda", "texto longo", true, 1500],
-      ["Portfólio", "Imagens dos projetos", "imagem", true, ""],
-      ["Contactos", "Morada, email e telefone", "texto", true, 200],
-      ["Contactos", "Horário de atendimento", "texto", false, 120],
+      ["Home", "Main headline (hero)", "text", true, 90],
+      ["Home", "Supporting subtitle", "text", true, 160],
+      ["Home", "Hero image", "image", true, ""],
+      ["Home", "Three short benefits", "long text", true, 400],
+      ["About", "Company story", "long text", true, 1200],
+      ["About", "Team photos", "image", false, ""],
+      ["Services", "List of services with description", "long text", true, 2000],
+      ["Services", "Pricing table (if any)", "long text", false, 800],
+      ["Portfolio", "Projects with caption", "long text", true, 1500],
+      ["Portfolio", "Project images", "image", true, ""],
+      ["Contact", "Address, email and phone", "text", true, 200],
+      ["Contact", "Opening hours", "text", false, 120],
     ],
   },
   {
-    slug: "loja-online",
-    name: "Loja online",
-    description: "Categorias, produtos, políticas e páginas de apoio para uma loja pronta a receber catálogo.",
+    slug: "online-store",
+    name: "Online store",
+    description: "Categories, products, policies and support pages for a store ready to receive a catalogue.",
     rows: [
-      ["Início", "Título e proposta de valor", "texto", true, 140],
-      ["Início", "Banner promocional", "imagem", false, ""],
-      ["Catálogo", "Lista de categorias", "texto longo", true, 600],
-      ["Produto", "Nome, descrição e preço por produto", "texto longo", true, 4000],
-      ["Produto", "Fotografias dos produtos", "imagem", true, ""],
-      ["Políticas", "Envios e prazos de entrega", "texto longo", true, 800],
-      ["Políticas", "Trocas e devoluções", "texto longo", true, 800],
-      ["Políticas", "Métodos de pagamento aceites", "texto", true, 200],
-      ["Apoio", "Perguntas frequentes", "texto longo", false, 2000],
-      ["Contactos", "Email e telefone de apoio", "texto", true, 200],
+      ["Home", "Headline and value proposition", "text", true, 140],
+      ["Home", "Promotional banner", "image", false, ""],
+      ["Catalogue", "List of categories", "long text", true, 600],
+      ["Product", "Name, description and price per product", "long text", true, 4000],
+      ["Product", "Product photos", "image", true, ""],
+      ["Policies", "Shipping and delivery times", "long text", true, 800],
+      ["Policies", "Exchanges and returns", "long text", true, 800],
+      ["Policies", "Accepted payment methods", "text", true, 200],
+      ["Support", "Frequently asked questions", "long text", false, 2000],
+      ["Contact", "Support email and phone", "text", true, 200],
     ],
   },
   {
     slug: "landing-page",
-    name: "Landing page de campanha",
-    description: "Uma página única focada em conversão: hero, prova social, oferta e chamada para ação.",
+    name: "Campaign landing page",
+    description: "A single conversion-focused page: hero, social proof, offer and call to action.",
     rows: [
-      ["Hero", "Título da campanha", "texto", true, 80],
-      ["Hero", "Subtítulo com a oferta", "texto", true, 160],
-      ["Hero", "Imagem ou vídeo principal", "imagem", true, ""],
-      ["Prova social", "Três testemunhos com nome e cargo", "texto longo", true, 900],
-      ["Prova social", "Logótipos de clientes", "imagem", false, ""],
-      ["Oferta", "O que está incluído", "texto longo", true, 800],
-      ["Oferta", "Preço e condições", "texto", true, 200],
-      ["FAQ", "Cinco perguntas frequentes", "texto longo", false, 1200],
-      ["CTA final", "Texto do botão e garantia", "texto", true, 120],
+      ["Hero", "Campaign headline", "text", true, 80],
+      ["Hero", "Subtitle with the offer", "text", true, 160],
+      ["Hero", "Main image or video", "image", true, ""],
+      ["Social proof", "Three testimonials with name and role", "long text", true, 900],
+      ["Social proof", "Client logos", "image", false, ""],
+      ["Offer", "What is included", "long text", true, 800],
+      ["Offer", "Price and conditions", "text", true, 200],
+      ["FAQ", "Five frequently asked questions", "long text", false, 1200],
+      ["Final CTA", "Button text and guarantee", "text", true, 120],
     ],
   },
 ];
@@ -71,7 +71,7 @@ function csvEscape(value: string | number | boolean): string {
 }
 
 export function templateCsv(t: FreeTemplate): string {
-  const header = "pagina;campo;tipo;obrigatorio;limite_caracteres";
+  const header = "page;field;type;required;char_limit";
   const lines = t.rows.map((r) => r.map((c) => csvEscape(c === "" ? "" : c)).join(";"));
   return [header, ...lines].join("\n");
 }
@@ -81,7 +81,7 @@ export function downloadTemplate(t: FreeTemplate) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `lockcopy-modelo-${t.slug}.csv`;
+  a.download = `lockcopy-template-${t.slug}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }

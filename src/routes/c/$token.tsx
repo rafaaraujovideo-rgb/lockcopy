@@ -10,10 +10,10 @@ import { Badge, Card, inputClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/c/$token")({
   head: () => ({
     meta: [
-      { title: "Enviar conteúdos do site — Lockcopy" },
-      { name: "description", content: "Preencha os textos e carregue os ficheiros pedidos pela sua agência." },
-      { property: "og:title", content: "Enviar conteúdos do site" },
-      { property: "og:description", content: "Preencha os textos e carregue os ficheiros pedidos pela sua agência." },
+      { title: "Send your website content — Lockcopy" },
+      { name: "description", content: "Fill in the texts and upload the files your agency asked for." },
+      { property: "og:title", content: "Send your website content" },
+      { property: "og:description", content: "Fill in the texts and upload the files your agency asked for." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -45,7 +45,7 @@ async function toWebp(file: File): Promise<Blob | null> {
 function Unavailable() {
   return (
     <div className="flex min-h-screen items-center justify-center px-5 text-center">
-      <div><h1 className="font-display text-3xl font-bold">Este link já não está disponível</h1><p className="mt-2 text-muted-foreground">Peça um novo link à sua agência.</p></div>
+      <div><h1 className="font-display text-3xl font-bold">This link is no longer available</h1><p className="mt-2 text-muted-foreground">Ask your agency for a new link.</p></div>
     </div>
   );
 }
@@ -62,7 +62,7 @@ function Portal() {
   });
 
   if (!valid || q.error) return <Unavailable />;
-  if (!q.data) return <p className="p-8 text-center text-sm text-muted-foreground">A abrir o pedido…</p>;
+  if (!q.data) return <p className="p-8 text-center text-sm text-muted-foreground">Opening the request…</p>;
 
   const p = q.data;
   const subs = new Map((p.submissions ?? []).map((s) => [s.field_id, s]));
@@ -74,7 +74,7 @@ function Portal() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto max-w-3xl px-5 py-3">
-          <p className="text-xs text-muted-foreground">{p.request.agency_name} · para {p.request.client_name} · entregar até {fmtDate(p.request.due_date)}</p>
+          <p className="text-xs text-muted-foreground">{p.request.agency_name} · for {p.request.client_name} · due {fmtDate(p.request.due_date)}</p>
           <div className="mt-1 flex items-center gap-3">
             <p className="font-display text-lg font-semibold">{p.request.title}</p>
             <div className="h-2 flex-1 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} /></div>
@@ -83,7 +83,7 @@ function Portal() {
         </div>
       </header>
       <main className="mx-auto max-w-3xl space-y-5 px-5 py-8">
-        <p className="text-sm text-muted-foreground">Tudo é guardado automaticamente. Pode sair e voltar mais tarde com este mesmo link.</p>
+        <p className="text-sm text-muted-foreground">Everything is saved automatically. You can leave and come back later with this same link.</p>
         {p.sections.map((s) => (
           <Card key={s.id}>
             <h2 className="font-display text-2xl font-semibold">{s.title}</h2>
@@ -100,7 +100,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
   const qc = useQueryClient();
   const [text, setText] = useState(sub?.value_text ?? "");
   const [status, setStatus] = useState<SubmissionStatus>((sub?.status as SubmissionStatus) ?? "pending");
-  const [saved, setSaved] = useState<"" | "a guardar…" | "guardado" | "erro ao guardar">("");
+  const [saved, setSaved] = useState<"" | "saving…" | "saved" | "error saving">("");
   const [uploads, setUploads] = useState<string[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const lastSaved = useRef(sub?.value_text ?? "");
@@ -112,15 +112,15 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
 
   useEffect(() => {
     if (text === lastSaved.current || locked) return;
-    setSaved("a guardar…");
+    setSaved("saving…");
     const t = setTimeout(async () => {
       try {
         const r = await portalSave({ data: { token, fieldId: field.id, text } });
         lastSaved.current = text;
         setStatus(r.status as SubmissionStatus);
-        setSaved("guardado");
+        setSaved("saved");
       } catch (e) {
-        setSaved("erro ao guardar");
+        setSaved("error saving");
         setErrors([friendlyError(e)]);
       }
     }, 800);
@@ -141,7 +141,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
     const supabase = getPortalSupabase();
     const { data: prefix, error: prefixError } = await supabase.rpc("portal_upload_prefix", { _token: token, _field: field.id });
     if (prefixError || !prefix) {
-      setErrors((e) => [...e, "Este link já não aceita ficheiros."]);
+      setErrors((e) => [...e, "This link no longer accepts files."]);
       return;
     }
     for (const file of ok) {
@@ -181,20 +181,20 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
         <span className="flex items-center gap-2 text-xs text-muted-foreground">{saved}<Badge s={answerLabel(status)} /></span>
       </div>
       {field.help_text && <p className="text-xs text-muted-foreground">{field.help_text}</p>}
-      {status === "rejected" && sub?.rejection_note && <p className="mt-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive">A agência pede: {sub.rejection_note}</p>}
-      {locked && <p className="mt-1 text-xs text-muted-foreground">Aprovado pela agência — já não precisa de mexer aqui.</p>}
+      {status === "rejected" && sub?.rejection_note && <p className="mt-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive">The agency asks: {sub.rejection_note}</p>}
+      {locked && <p className="mt-1 text-xs text-muted-foreground">Approved by the agency — nothing else needed here.</p>}
       {field.field_type === "textarea" && <textarea id={field.id} disabled={locked} rows={4} maxLength={field.char_limit ?? 20000} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
       {(field.field_type === "text" || field.field_type === "select") && <input id={field.id} disabled={locked} maxLength={field.char_limit ?? 20000} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
       {isFileField(field.field_type) && (
         <div className="mt-2 space-y-2">
           {!locked && (
             <label className="flex cursor-pointer flex-col items-center rounded-md border-2 border-dashed border-border p-5 text-sm text-muted-foreground hover:border-primary">
-              Escolher ficheiros (vários de uma vez)
-              <span className="text-xs">JPG, PNG, WebP, HEIC, SVG, GIF, PDF · até 50 MB</span>
+              Choose files (several at once)
+              <span className="text-xs">JPG, PNG, WebP, HEIC, SVG, GIF, PDF · up to 50 MB</span>
               <input id={field.id} type="file" multiple accept={accept} className="hidden" onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
             </label>
           )}
-          {uploads.map((n) => <p key={n} className="text-xs text-muted-foreground">A enviar {n}…</p>)}
+          {uploads.map((n) => <p key={n} className="text-xs text-muted-foreground">Uploading {n}…</p>)}
           <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id}>📎 {x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></li>)}</ul>
         </div>
       )}
@@ -202,4 +202,3 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
     </div>
   );
 }
-

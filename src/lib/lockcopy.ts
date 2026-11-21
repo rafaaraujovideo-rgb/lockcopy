@@ -3,38 +3,39 @@
 export type SubmissionStatus = "pending" | "submitted" | "approved" | "rejected";
 
 /** Estado da resposta → etiqueta mostrada ao utilizador. */
-export function answerLabel(status: SubmissionStatus | null | undefined): "vazio" | "enviado" | "aprovado" | "ajuste" {
+export function answerLabel(status: SubmissionStatus | null | undefined): "empty" | "sent" | "approved" | "adjust" {
   switch (status) {
     case "submitted":
-      return "enviado";
+      return "sent";
     case "approved":
-      return "aprovado";
+      return "approved";
     case "rejected":
-      return "ajuste";
+      return "adjust";
     default:
-      return "vazio";
+      return "empty";
   }
 }
 
-export function requestLinkState(r: { revoked_at: string | null; expires_at: string; status?: string }, now = new Date()): "ativo" | "revogado" | "expirado" {
-  if (r.revoked_at || r.status === "archived") return "revogado";
-  if (new Date(r.expires_at).getTime() <= now.getTime()) return "expirado";
-  return "ativo";
+export function requestLinkState(r: { revoked_at: string | null; expires_at: string; status?: string }, now = new Date()): "active" | "revoked" | "expired" {
+  if (r.revoked_at || r.status === "archived") return "revoked";
+  if (new Date(r.expires_at).getTime() <= now.getTime()) return "expired";
+  return "active";
 }
 
 export const isFileField = (type: string) => type === "image" || type === "file";
 
 export const fmtDate = (iso: string | null | undefined) =>
-  iso ? new Date(iso).toLocaleDateString("pt-PT", { day: "numeric", month: "short", year: "numeric" }) : "sem prazo";
+  iso ? new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "no deadline";
 
 export const fmtMb = (bytes: number) => `${(bytes / 1e6).toFixed(1)} MB`;
 
 export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
+
 /** Slug válido para a organização: 3–40 caracteres, minúsculas, números e hífenes. */
 export function orgSlug(name: string, suffix: string) {
-  const base = slugify(name).slice(0, 30).replace(/-+$/, "") || "agencia";
+  const base = slugify(name).slice(0, 30).replace(/-+$/, "") || "agency";
   return `${base.length < 2 ? base + "x" : base}-${suffix}`.slice(0, 40);
 }
 
@@ -46,14 +47,14 @@ export function friendlyError(e: unknown) {
 }
 
 const EVENT_TEXT: Record<string, string> = {
-  request_created: "Pedido criado",
-  text_saved: "Cliente atualizou um texto",
-  file_added: "Cliente carregou um ficheiro",
-  field_approved: "Agência aprovou um campo",
-  field_adjust_requested: "Agência pediu um ajuste",
-  link_revoked: "Link desligado",
-  link_reopened: "Link reativado",
-  reminder_sent: "Lembrete enviado",
+  request_created: "Request created",
+  text_saved: "Client updated a text",
+  file_added: "Client uploaded a file",
+  field_approved: "Agency approved a field",
+  field_adjust_requested: "Agency requested a change",
+  link_revoked: "Link switched off",
+  link_reopened: "Link reactivated",
+  reminder_sent: "Reminder sent",
 };
 
 export function eventText(kind: string, detail: unknown) {
@@ -70,8 +71,8 @@ export const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
 export function uploadProblem(file: { name: string; size: number; type: string }, allowed?: string[] | null) {
   const type = file.type || (file.name.toLowerCase().endsWith(".heic") ? "image/heic" : "");
   const list = allowed && allowed.length ? allowed : ACCEPTED_UPLOADS;
-  if (!list.includes(type)) return `${file.name}: tipo de ficheiro não aceite`;
-  if (file.size <= 0) return `${file.name}: ficheiro vazio`;
-  if (file.size > MAX_UPLOAD_BYTES) return `${file.name}: maior que 50 MB`;
+  if (!list.includes(type)) return `${file.name}: file type not accepted`;
+  if (file.size <= 0) return `${file.name}: empty file`;
+  if (file.size > MAX_UPLOAD_BYTES) return `${file.name}: larger than 50 MB`;
   return null;
 }

@@ -12,10 +12,10 @@ import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/pedidos/$id")({
   head: () => ({
     meta: [
-      { title: "Rever pedido — Lockcopy" },
-      { name: "description", content: "Reveja, aprove e exporte os conteúdos enviados pelo cliente." },
-      { property: "og:title", content: "Rever pedido — Lockcopy" },
-      { property: "og:description", content: "Reveja, aprove e exporte os conteúdos do cliente." },
+      { title: "Review request — Lockcopy" },
+      { name: "description", content: "Review, approve and export the content sent by the client." },
+      { property: "og:title", content: "Review request — Lockcopy" },
+      { property: "og:description", content: "Review, approve and export the client's content." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -29,7 +29,7 @@ const BUCKET = "client-uploads";
 
 async function signedUrl(path: string) {
   const { data, error } = await getSupabase().storage.from(BUCKET).createSignedUrl(path, 600);
-  if (error || !data) throw new Error(error?.message ?? "Ficheiro indisponível.");
+  if (error || !data) throw new Error(error?.message ?? "File unavailable.");
   return data.signedUrl;
 }
 
@@ -46,8 +46,8 @@ function RequestPage() {
   const d = q.data;
   const exp = useMemo<ExportInput | null>(() => (d ? toExport(d) : null), [d]);
 
-  if (q.isLoading) return <p className="text-sm text-muted-foreground">A carregar pedido…</p>;
-  if (q.error || !d || !exp) return <p>{q.error ? friendlyError(q.error) : "Pedido não encontrado."} <Link to="/app" className="underline">Voltar</Link></p>;
+  if (q.isLoading) return <p className="text-sm text-muted-foreground">Loading request…</p>;
+  if (q.error || !d || !exp) return <p>{q.error ? friendlyError(q.error) : "Request not found."} <Link to="/app" className="underline">Back</Link></p>;
 
   const r = d.request;
   const subs = new Map(d.submissions.map((s) => [s.field_id, s]));
@@ -74,19 +74,19 @@ function RequestPage() {
   const zip = () =>
     run("zip", async () => {
       const entries = zipEntries(exp);
-      if (!entries.length) throw new Error("Ainda não há ficheiros neste pedido.");
+      if (!entries.length) throw new Error("There are no files in this request yet.");
       const { zipSync } = await import("fflate");
       const files: Record<string, Uint8Array> = {};
       for (const e of entries) {
         const res = await fetch(await signedUrl(e.storagePath));
-        if (!res.ok) throw new Error(`Não foi possível descarregar ${e.zipPath}.`);
+        if (!res.ok) throw new Error(`Could not download ${e.zipPath}.`);
         files[e.zipPath] = new Uint8Array(await res.arrayBuffer());
       }
       const blob = new Blob([zipSync(files, { level: 0 }) as Uint8Array<ArrayBuffer>], { type: "application/zip" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${r.client_name}-conteudos.zip`;
+      a.download = `${r.client_name}-content.zip`;
       a.click();
       URL.revokeObjectURL(url);
     });
@@ -95,9 +95,9 @@ function RequestPage() {
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <div className="space-y-5">
         <div>
-          <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Pedidos</Link>
+          <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Requests</Link>
           <h1 className="font-display text-4xl font-bold">{r.client_name}</h1>
-          <p className="text-muted-foreground">{r.title} · {done}/{total} campos · prazo {fmtDate(r.due_date)}</p>
+          <p className="text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
         </div>
         {d.sections.map((s) => (
           <Card key={s.id}>
@@ -111,37 +111,37 @@ function RequestPage() {
 
       <aside className="space-y-4">
         <Card className="space-y-2">
-          <div className="flex items-center justify-between"><p className="text-sm font-medium">Link do cliente</p><Badge s={ls} /></div>
+          <div className="flex items-center justify-between"><p className="text-sm font-medium">Client link</p><Badge s={ls} /></div>
           <p className="break-all rounded bg-muted p-2 text-xs">{link}</p>
-          <p className="text-xs text-muted-foreground">Expira a {fmtDate(r.expires_at)}</p>
+          <p className="text-xs text-muted-foreground">Expires on {fmtDate(r.expires_at)}</p>
           <div className="flex gap-2">
-            <Btn variant="outline" className="flex-1" disabled={ls !== "ativo"} onClick={() => { navigator.clipboard.writeText(link); setCopied(true); }}>{copied ? "Copiado" : "Copiar"}</Btn>
-            <a href={`/c/${r.token}`} target="_blank" rel="noreferrer" className="inline-flex flex-1 items-center justify-center rounded-full border border-border text-sm hover:bg-muted">Abrir</a>
+            <Btn variant="outline" className="flex-1" disabled={ls !== "active"} onClick={() => { navigator.clipboard.writeText(link); setCopied(true); }}>{copied ? "Copied" : "Copy"}</Btn>
+            <a href={`/c/${r.token}`} target="_blank" rel="noreferrer" className="inline-flex flex-1 items-center justify-center rounded-full border border-border text-sm hover:bg-muted">Open</a>
           </div>
-          {ls === "ativo" ? (
+          {ls === "active" ? (
             <>
-              <Btn variant="outline" className="w-full" disabled={!!busy} onClick={() => run("rem", () => sendReminder({ data: { requestId: r.id } }), "Lembrete posto na fila de envio.")}>Enviar lembrete</Btn>
-              <Btn variant="ghost" className="w-full text-destructive" disabled={!!busy} onClick={() => run("link", () => setRequestLink({ data: { requestId: r.id, revoke: true } }), "Link desligado.")}>Desligar link</Btn>
+              <Btn variant="outline" className="w-full" disabled={!!busy} onClick={() => run("rem", () => sendReminder({ data: { requestId: r.id } }), "Reminder queued for sending.")}>Send reminder</Btn>
+              <Btn variant="ghost" className="w-full text-destructive" disabled={!!busy} onClick={() => run("link", () => setRequestLink({ data: { requestId: r.id, revoke: true } }), "Link switched off.")}>Switch off link</Btn>
             </>
           ) : (
-            <Btn variant="outline" className="w-full" disabled={!!busy} onClick={() => run("link", () => setRequestLink({ data: { requestId: r.id, revoke: false } }), "Link reativado.")}>Reativar link</Btn>
+            <Btn variant="outline" className="w-full" disabled={!!busy} onClick={() => run("link", () => setRequestLink({ data: { requestId: r.id, revoke: false } }), "Link reactivated.")}>Reactivate link</Btn>
           )}
           {msg && <p className="text-xs text-muted-foreground">{msg}</p>}
         </Card>
         <Card className="space-y-2">
-          <p className="text-sm font-medium">Exportar</p>
-          <Btn variant="outline" className="w-full" disabled={!!busy} onClick={zip}>{busy === "zip" ? "A preparar ZIP…" : "ZIP por página"}</Btn>
-          <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-webflow.csv`, webflowCsv(exp), "text/csv")}>CSV para Webflow</Btn>
-          <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-framer.json`, framerJson(exp), "application/json")}>JSON para Framer</Btn>
-          <p className="text-xs text-muted-foreground">Ficheiros prontos para importar, organizados por página. Não é sincronização.</p>
+          <p className="text-sm font-medium">Export</p>
+          <Btn variant="outline" className="w-full" disabled={!!busy} onClick={zip}>{busy === "zip" ? "Preparing ZIP…" : "ZIP per page"}</Btn>
+          <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-webflow.csv`, webflowCsv(exp), "text/csv")}>CSV for Webflow</Btn>
+          <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-framer.json`, framerJson(exp), "application/json")}>JSON for Framer</Btn>
+          <p className="text-xs text-muted-foreground">Files ready to import, organized by page. This is not a sync.</p>
         </Card>
         <Card>
-          <p className="mb-2 text-sm font-medium">Histórico</p>
+          <p className="mb-2 text-sm font-medium">History</p>
           <ol className="space-y-2 text-xs">
             {d.events.slice(0, 50).map((e) => (
               <li key={e.id} className="border-l-2 border-primary pl-2">
-                <span className="font-medium">{e.actor === "client" ? "Cliente" : e.actor === "agency" ? "Agência" : "Sistema"}</span> — {eventText(e.kind, e.detail)}
-                <span className="block text-muted-foreground">{new Date(e.created_at).toLocaleString("pt-PT")}</span>
+                <span className="font-medium">{e.actor === "client" ? "Client" : e.actor === "agency" ? "Agency" : "System"}</span> — {eventText(e.kind, e.detail)}
+                <span className="block text-muted-foreground">{new Date(e.created_at).toLocaleString("en-GB")}</span>
               </li>
             ))}
           </ol>
@@ -199,22 +199,22 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
         <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
           {files.map((x) => (
             <li key={x.id}>
-              <button className="underline-offset-2 hover:underline" onClick={() => open(x.storage_path)}>📎 {x.file_name}</button> · {fmtMb(x.size_bytes)} · {x.image_status === "done" ? "WebP pronto" : x.image_status === "pending" || x.image_status === "processing" ? "WebP a preparar" : "só original"}
+              <button className="underline-offset-2 hover:underline" onClick={() => open(x.storage_path)}>📎 {x.file_name}</button> · {fmtMb(x.size_bytes)} · {x.image_status === "done" ? "WebP ready" : x.image_status === "pending" || x.image_status === "processing" ? "WebP processing" : "original only"}
             </li>
           ))}
         </ul>
       )}
-      {sub?.rejection_note && status === "ajuste" && <p className="mt-1 text-xs text-destructive">Nota: {sub.rejection_note}</p>}
-      {status === "enviado" && !asking && (
+      {sub?.rejection_note && status === "adjust" && <p className="mt-1 text-xs text-destructive">Note: {sub.rejection_note}</p>}
+      {status === "sent" && !asking && (
         <div className="mt-2 flex gap-2">
-          <Btn className="px-3 py-1" disabled={busy} onClick={() => decide("approve")}>Aprovar</Btn>
-          <Btn variant="outline" className="px-3 py-1" disabled={busy} onClick={() => setAsking(true)}>Pedir ajuste</Btn>
+          <Btn className="px-3 py-1" disabled={busy} onClick={() => decide("approve")}>Approve</Btn>
+          <Btn variant="outline" className="px-3 py-1" disabled={busy} onClick={() => setAsking(true)}>Request change</Btn>
         </div>
       )}
       {asking && (
         <div className="mt-2 flex gap-2">
-          <input className={inputClass} placeholder="O que falta?" value={note} maxLength={2000} onChange={(e) => setNote(e.target.value)} />
-          <Btn disabled={!note.trim() || busy} onClick={() => decide("adjust")}>Enviar</Btn>
+          <input className={inputClass} placeholder="What is missing?" value={note} maxLength={2000} onChange={(e) => setNote(e.target.value)} />
+          <Btn disabled={!note.trim() || busy} onClick={() => decide("adjust")}>Send</Btn>
         </div>
       )}
       {error && <p className="mt-1 text-xs text-destructive">{error}</p>}

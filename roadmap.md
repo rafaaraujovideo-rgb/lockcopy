@@ -10,6 +10,7 @@
 - Ecrã de início do teste abre o checkout do Stripe; faturação abre o portal do Stripe.
 
 ## Por fazer
+- [ ] Interface e emails 100% em inglês (língua global); chat com o utilizador fica em português.
 - [x] Fluxo completo testado com sessão real (agência, pedido, portal, upload+WebP, aprovar, ajuste, link, exportações).
 - [x] `db/0007_webp.sql` corrido e corrigido.
 - [ ] Voltar a ligar "Confirm email" no Supabase.

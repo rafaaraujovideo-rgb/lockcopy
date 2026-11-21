@@ -24,7 +24,7 @@ type Notification = {
 };
 
 function unauthorized() {
-  return new Response(JSON.stringify({ error: "não autorizado" }), {
+  return new Response(JSON.stringify({ error: "unauthorized" }), {
     status: 401,
     headers: { "content-type": "application/json" },
   });
@@ -83,9 +83,9 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
         for (const n of items) {
           let err: string | null = null;
           if (n.channel !== "email") {
-            err = `canal não suportado: ${n.channel}`;
+            err = `unsupported channel: ${n.channel}`;
           } else if (!apiKey) {
-            err = "BREVO_API_KEY não configurada no servidor.";
+            err = "BREVO_API_KEY is not configured on the server.";
           } else {
             err = await sendEmail(from, apiKey, n);
           }
@@ -94,7 +94,7 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
           else sent += 1;
         }
 
-        return new Response(JSON.stringify({ processadas: items.length, enviadas: sent, falhadas: failed }), {
+        return new Response(JSON.stringify({ processed: items.length, sent, failed }), {
           status: 200,
           headers: { "content-type": "application/json" },
         });

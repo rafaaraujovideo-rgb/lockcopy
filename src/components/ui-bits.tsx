@@ -24,16 +24,25 @@ export function Card({ children, className }: { children: ReactNode; className?:
 }
 
 const tones: Record<string, string> = {
-  vazio: "bg-muted text-muted-foreground",
-  enviado: "bg-warn text-warn-foreground",
-  aprovado: "bg-accent text-accent-foreground",
-  ajuste: "bg-destructive/15 text-destructive",
-  ativo: "bg-accent text-accent-foreground",
-  revogado: "bg-destructive/15 text-destructive",
-  expirado: "bg-muted text-muted-foreground",
+  empty: "bg-muted text-muted-foreground",
+  sent: "bg-warn text-warn-foreground",
+  approved: "bg-accent text-accent-foreground",
+  adjust: "bg-destructive/15 text-destructive",
+  active: "bg-accent text-accent-foreground",
+  revoked: "bg-destructive/15 text-destructive",
+  expired: "bg-muted text-muted-foreground",
+};
+const LABELS: Record<string, string> = {
+  empty: "Empty",
+  sent: "Sent",
+  approved: "Approved",
+  adjust: "Change requested",
+  active: "Active",
+  revoked: "Switched off",
+  expired: "Expired",
 };
 export function Badge({ s }: { s: string }) {
-  return <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", tones[s] ?? tones["vazio"])}>{s}</span>;
+  return <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", tones[s] ?? tones["empty"])}>{LABELS[s] ?? s}</span>;
 }
 
 export function download(name: string, content: string, type: string) {
@@ -45,6 +54,6 @@ export function download(name: string, content: string, type: string) {
 
 export const DemoNote = () => (
   <p className="rounded-md border border-dashed border-border bg-muted px-3 py-2 text-xs text-muted-foreground">
-    Modo demonstração: os dados ficam só nesta janela e desaparecem ao recarregar. Ainda não há ligação ao Supabase nem ao Stripe.
+    Demo mode: data stays in this window only and disappears on reload. Not connected to Supabase or Stripe yet.
   </p>
 );

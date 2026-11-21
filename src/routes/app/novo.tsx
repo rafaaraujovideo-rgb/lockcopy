@@ -11,10 +11,10 @@ import { Btn, Card, inputClass } from "@/components/ui-bits";
 export const Route = createFileRoute("/app/novo")({
   head: () => ({
     meta: [
-      { title: "Novo pedido — Lockcopy" },
-      { name: "description", content: "Crie um pedido de conteúdos a partir de um modelo." },
-      { property: "og:title", content: "Novo pedido — Lockcopy" },
-      { property: "og:description", content: "Crie um pedido de conteúdos a partir de um modelo." },
+      { title: "New request — Lockcopy" },
+      { name: "description", content: "Create a content request from a template." },
+      { property: "og:title", content: "New request — Lockcopy" },
+      { property: "og:description", content: "Create a content request from a template." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -69,13 +69,13 @@ function NewRequest() {
     }
   };
 
-  if (templates.isLoading) return <p className="text-sm text-muted-foreground">A carregar modelos…</p>;
+  if (templates.isLoading) return <p className="text-sm text-muted-foreground">Loading templates…</p>;
   if (templates.error) return <Card><p className="text-sm text-destructive">{friendlyError(templates.error)}</p></Card>;
 
   return (
     <div className="grid gap-6 md:grid-cols-[1fr_1fr]">
       <div className="space-y-4">
-        <h1 className="font-display text-4xl font-bold">Novo pedido</h1>
+        <h1 className="font-display text-4xl font-bold">New request</h1>
         <div className="grid grid-cols-2 gap-2">
           {list.map((x) => (
             <button key={x.id} onClick={() => setTplId(x.id)} className={"rounded-md border p-3 text-left text-sm " + (t?.id === x.id ? "border-primary bg-primary/5" : "border-border bg-card")}>
@@ -84,21 +84,21 @@ function NewRequest() {
           ))}
         </div>
         <Card className="space-y-3">
-          <input className={inputClass} placeholder="Nome do cliente" value={form.client} maxLength={160} onChange={(e) => setForm({ ...form, client: e.target.value })} />
-          <input className={inputClass} type="email" placeholder="Email do cliente" value={form.clientEmail} onChange={(e) => setForm({ ...form, clientEmail: e.target.value })} />
-          <input className={inputClass} placeholder="Título do projeto" value={form.title} maxLength={200} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          <label className="block text-sm text-muted-foreground">Prazo<input className={inputClass + " mt-1"} type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} /></label>
-          {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error} Os pedidos existentes continuam a receber conteúdos.</p>}
-          <Btn className="w-full" disabled={busy || !t || !form.client.trim() || !form.title.trim() || !/^\S+@\S+\.\S+$/.test(form.clientEmail)} onClick={submit}>{busy ? "A criar…" : "Criar pedido e gerar link"}</Btn>
+          <input className={inputClass} placeholder="Client name" value={form.client} maxLength={160} onChange={(e) => setForm({ ...form, client: e.target.value })} />
+          <input className={inputClass} type="email" placeholder="Client email" value={form.clientEmail} onChange={(e) => setForm({ ...form, clientEmail: e.target.value })} />
+          <input className={inputClass} placeholder="Project title" value={form.title} maxLength={200} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <label className="block text-sm text-muted-foreground">Deadline<input className={inputClass + " mt-1"} type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} /></label>
+          {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error} Existing requests keep receiving content.</p>}
+          <Btn className="w-full" disabled={busy || !t || !form.client.trim() || !form.title.trim() || !/^\S+@\S+\.\S+$/.test(form.clientEmail)} onClick={submit}>{busy ? "Creating…" : "Create request and generate link"}</Btn>
         </Card>
       </div>
       <Card>
-        <p className="mb-3 text-sm font-medium text-muted-foreground">O cliente vai preencher</p>
+        <p className="mb-3 text-sm font-medium text-muted-foreground">The client will fill in</p>
         {t?.template_sections.map((s) => (
           <div key={s.id} className="mb-4">
             <p className="font-display text-lg font-semibold">{s.title}</p>
             <ul className="mt-1 space-y-1 text-sm">
-              {s.template_fields.map((fl) => <li key={fl.id} className="flex justify-between border-b border-border py-1"><span>{fl.label}</span><span className="text-muted-foreground">{isFileField(fl.field_type) ? "ficheiros" : "texto"}</span></li>)}
+              {s.template_fields.map((fl) => <li key={fl.id} className="flex justify-between border-b border-border py-1"><span>{fl.label}</span><span className="text-muted-foreground">{isFileField(fl.field_type) ? "files" : "text"}</span></li>)}
             </ul>
           </div>
         ))}

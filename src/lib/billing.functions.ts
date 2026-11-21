@@ -35,8 +35,8 @@ export const startCheckout = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const secret = env("STRIPE_SECRET_KEY");
     const price = priceFor(data.plan, data.cycle);
-    if (!secret) throw new Error("Stripe não está configurado no servidor.");
-    if (!price) throw new Error(`Preço do plano ${data.plan} (${data.cycle === "year" ? "anual" : "mensal"}) não configurado.`);
+    if (!secret) throw new Error("Stripe is not configured on the server.");
+    if (!price) throw new Error(`Price for the ${data.plan} plan (${data.cycle === "year" ? "yearly" : "monthly"}) is not configured.`);
 
     const { data: membership } = await context.supabase
       .from("org_members")
@@ -46,7 +46,7 @@ export const startCheckout = createServerFn({ method: "POST" })
       .limit(1)
       .maybeSingle();
 
-    if (!membership) throw new Error("Sem organização associada a esta conta.");
+    if (!membership) throw new Error("No organization linked to this account.");
 
     const { data: org } = await context.supabase
       .from("organizations")
@@ -54,7 +54,7 @@ export const startCheckout = createServerFn({ method: "POST" })
       .eq("id", membership.org_id)
       .maybeSingle();
 
-    if (!org) throw new Error("Conta não encontrada.");
+    if (!org) throw new Error("Account not found.");
 
     const { data: limits } = await context.supabase
       .from("plan_limits")
@@ -102,7 +102,7 @@ export const startCheckout = createServerFn({ method: "POST" })
     };
 
     if (!response.ok || !session.url) {
-      throw new Error(session.error?.message ?? "Não foi possível abrir o pagamento.");
+      throw new Error(session.error?.message ?? "Could not open checkout.");
     }
 
     return { url: session.url };
@@ -113,7 +113,7 @@ export const openBillingPortal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const secret = env("STRIPE_SECRET_KEY");
-    if (!secret) throw new Error("Stripe não está configurado no servidor.");
+    if (!secret) throw new Error("Stripe is not configured on the server.");
 
     const { data: membership } = await context.supabase
       .from("org_members")
@@ -122,14 +122,14 @@ export const openBillingPortal = createServerFn({ method: "POST" })
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
-    if (!membership) throw new Error("Sem organização associada a esta conta.");
+    if (!membership) throw new Error("No organization linked to this account.");
 
     const { data: org } = await context.supabase
       .from("organizations")
       .select("stripe_customer_id")
       .eq("id", membership.org_id)
       .maybeSingle();
-    if (!org?.stripe_customer_id) throw new Error("Ainda não há cartão registado.");
+    if (!org?.stripe_customer_id) throw new Error("No card registered yet.");
 
     const origin = env("APP_URL") || "https://lockcopy.com";
     const body = new URLSearchParams();
@@ -143,7 +143,7 @@ export const openBillingPortal = createServerFn({ method: "POST" })
     });
     const session = (await response.json()) as { url?: string; error?: { message?: string } };
     if (!response.ok || !session.url) {
-      throw new Error(session.error?.message ?? "Não foi possível abrir a gestão do cartão.");
+      throw new Error(session.error?.message ?? "Could not open card management.");
     }
     return { url: session.url };
   });

@@ -5,47 +5,47 @@ import { zipEntries } from "./exports";
 
 const now = new Date("2026-11-21T12:00:00Z");
 
-describe("estado do link do cliente", () => {
-  it("link desligado mostra revogado", () => {
-    expect(requestLinkState({ revoked_at: "2026-11-20T00:00:00Z", expires_at: "2027-01-01T00:00:00Z" }, now)).toBe("revogado");
+describe("client link state", () => {
+  it("switched-off link shows revoked", () => {
+    expect(requestLinkState({ revoked_at: "2026-11-20T00:00:00Z", expires_at: "2027-01-01T00:00:00Z" }, now)).toBe("revoked");
   });
-  it("link passado o prazo mostra expirado", () => {
-    expect(requestLinkState({ revoked_at: null, expires_at: "2026-11-21T11:59:59Z" }, now)).toBe("expirado");
+  it("link past the deadline shows expired", () => {
+    expect(requestLinkState({ revoked_at: null, expires_at: "2026-11-21T11:59:59Z" }, now)).toBe("expired");
   });
-  it("link dentro do prazo e ligado mostra ativo", () => {
-    expect(requestLinkState({ revoked_at: null, expires_at: "2026-12-21T00:00:00Z" }, now)).toBe("ativo");
-  });
-});
-
-describe("estado das respostas", () => {
-  it("resposta devolvida pela agência aparece como ajuste", () => {
-    expect(answerLabel("rejected")).toBe("ajuste");
-  });
-  it("campo sem resposta aparece vazio", () => {
-    expect(answerLabel(undefined)).toBe("vazio");
+  it("link within the deadline shows active", () => {
+    expect(requestLinkState({ revoked_at: null, expires_at: "2026-12-21T00:00:00Z" }, now)).toBe("active");
   });
 });
 
-describe("limite de upload de 50 MB", () => {
-  it("aceita ficheiro com exatamente 50 MB", () => {
+describe("answer states", () => {
+  it("answer returned by the agency shows as adjust", () => {
+    expect(answerLabel("rejected")).toBe("adjust");
+  });
+  it("field without an answer shows as empty", () => {
+    expect(answerLabel(undefined)).toBe("empty");
+  });
+});
+
+describe("50 MB upload limit", () => {
+  it("accepts a file of exactly 50 MB", () => {
     expect(uploadProblem({ name: "a.jpg", size: 50 * 1024 * 1024, type: "image/jpeg" })).toBeNull();
   });
-  it("recusa ficheiro acima de 50 MB", () => {
+  it("rejects a file above 50 MB", () => {
     expect(uploadProblem({ name: "a.jpg", size: 50 * 1024 * 1024 + 1, type: "image/jpeg" })).toMatch(/50 MB/);
   });
-  it("recusa tipo não aceite", () => {
-    expect(uploadProblem({ name: "a.exe", size: 10, type: "application/x-msdownload" })).toMatch(/não aceite/);
+  it("rejects a non-accepted type", () => {
+    expect(uploadProblem({ name: "a.exe", size: 10, type: "application/x-msdownload" })).toMatch(/not accepted/);
   });
 });
 
-describe("endereço da agência", () => {
-  it("gera um slug aceite pela base de dados mesmo com acentos", () => {
+describe("agency slug", () => {
+  it("generates a database-safe slug even with accents", () => {
     expect(orgSlug("Estúdio Ção & Filhos", "ab12")).toMatch(/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/);
   });
 });
 
-describe("ZIP por página", () => {
-  it("organiza original e WebP por página e campo, sem nomes repetidos", () => {
+describe("ZIP per page", () => {
+  it("organizes original and WebP by page and field, with no duplicate names", () => {
     const entries = zipEntries({
       title: "Site",
       client: "Cliente",

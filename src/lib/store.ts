@@ -30,7 +30,7 @@ export type Request = {
 
 export type Plan = "teste" | "solo" | "agency";
 export const PLANS: Record<Plan, { name: string; month: number; year: number; requests: number; users: number; storageGb: number }> = {
-  teste: { name: "Teste", month: 0, year: 0, requests: 1, users: 1, storageGb: 0.5 },
+  teste: { name: "Trial", month: 0, year: 0, requests: 1, users: 1, storageGb: 0.5 },
   solo: { name: "Solo", month: 19, year: 190, requests: 15, users: 1, storageGb: 5 },
   agency: { name: "Agency", month: 39, year: 390, requests: 50, users: 3, storageGb: 20 },
 };
@@ -40,39 +40,39 @@ const f = (id: string, label: string, type: FieldType, hint?: string): Field => 
 export const TEMPLATES: Template[] = [
   {
     id: "institucional",
-    name: "Site institucional",
-    description: "Início, sobre, serviços e contactos.",
+    name: "Business website",
+    description: "Home, about, services and contact.",
     sections: [
-      { id: "home", page: "Início", fields: [f("home-title", "Frase principal", "text", "Uma linha sobre o que fazem."), f("home-hero", "Fotografia de capa", "files")] },
-      { id: "about", page: "Sobre", fields: [f("about-story", "A vossa história", "longtext"), f("about-team", "Fotos da equipa", "files")] },
-      { id: "services", page: "Serviços", fields: [f("services-list", "Lista de serviços", "longtext", "Um serviço por linha.")] },
-      { id: "contact", page: "Contactos", fields: [f("contact-info", "Morada, telefone e email", "longtext"), f("contact-logo", "Logótipo", "files", "SVG ou PNG.")] },
+      { id: "home", page: "Home", fields: [f("home-title", "Main headline", "text", "One line about what you do."), f("home-hero", "Cover photo", "files")] },
+      { id: "about", page: "About", fields: [f("about-story", "Your story", "longtext"), f("about-team", "Team photos", "files")] },
+      { id: "services", page: "Services", fields: [f("services-list", "List of services", "longtext", "One service per line.")] },
+      { id: "contact", page: "Contact", fields: [f("contact-info", "Address, phone and email", "longtext"), f("contact-logo", "Logo", "files", "SVG or PNG.")] },
     ],
   },
   {
     id: "landing",
     name: "Landing page",
-    description: "Uma página de campanha com oferta e prova.",
+    description: "A campaign page with offer and proof.",
     sections: [
-      { id: "offer", page: "Oferta", fields: [f("offer-head", "Título", "text"), f("offer-body", "Descrição da oferta", "longtext")] },
-      { id: "proof", page: "Prova", fields: [f("proof-quotes", "Testemunhos", "longtext"), f("proof-logos", "Logótipos de clientes", "files")] },
+      { id: "offer", page: "Offer", fields: [f("offer-head", "Headline", "text"), f("offer-body", "Offer description", "longtext")] },
+      { id: "proof", page: "Proof", fields: [f("proof-quotes", "Testimonials", "longtext"), f("proof-logos", "Client logos", "files")] },
     ],
   },
   {
     id: "ecommerce",
     name: "E-commerce",
-    description: "Catálogo, fotos de produto e políticas.",
+    description: "Catalogue, product photos and policies.",
     sections: [
-      { id: "catalog", page: "Catálogo", fields: [f("catalog-products", "Produtos (nome, preço, descrição)", "longtext"), f("catalog-photos", "Fotos de produto", "files")] },
-      { id: "policies", page: "Políticas", fields: [f("pol-shipping", "Envios e devoluções", "longtext")] },
+      { id: "catalog", page: "Catalogue", fields: [f("catalog-products", "Products (name, price, description)", "longtext"), f("catalog-photos", "Product photos", "files")] },
+      { id: "policies", page: "Policies", fields: [f("pol-shipping", "Shipping and returns", "longtext")] },
     ],
   },
   {
     id: "rebranding",
     name: "Rebranding / assets",
-    description: "Logótipos, cores, letras e imagens da marca.",
+    description: "Logos, colours, fonts and brand imagery.",
     sections: [
-      { id: "brand", page: "Marca", fields: [f("brand-logos", "Logótipos atuais", "files"), f("brand-colors", "Cores e letras", "text"), f("brand-refs", "Referências que gostam", "files")] },
+      { id: "brand", page: "Brand", fields: [f("brand-logos", "Current logos", "files"), f("brand-colors", "Colours and fonts", "text"), f("brand-refs", "References you like", "files")] },
     ],
   },
 ];
@@ -87,17 +87,17 @@ const rid = () => Math.random().toString(36).slice(2, 10);
 function seed(): Request {
   const t = TEMPLATES[0]!;
   const answers = emptyAnswers(t.sections);
-  answers["home-title"] = { text: "Clínica dentária no centro do Porto desde 1998.", files: [], status: "enviado" };
-  answers["home-hero"] = { text: "", files: [{ name: "fachada.heic", size: 3_400_000, type: "image/heic", webp: "pending" }, { name: "recepcao.jpg", size: 2_100_000, type: "image/jpeg", webp: "ok" }], status: "enviado" };
-  answers["about-story"] = { text: "Fundada pelo Dr. Sousa...", files: [], status: "ajuste", note: "Podem acrescentar 2-3 frases sobre a equipa atual?" };
+  answers["home-title"] = { text: "A family dental clinic in the city centre since 1998.", files: [], status: "enviado" };
+  answers["home-hero"] = { text: "", files: [{ name: "facade.heic", size: 3_400_000, type: "image/heic", webp: "pending" }, { name: "reception.jpg", size: 2_100_000, type: "image/jpeg", webp: "ok" }], status: "enviado" };
+  answers["about-story"] = { text: "Founded by Dr. Sousa...", files: [], status: "ajuste", note: "Could you add 2-3 sentences about the current team?" };
   return {
-    id: "p1", token: "demo-x7k2q9", client: "Clínica Sousa", clientEmail: "geral@clinicasousa.pt",
-    title: "Novo site institucional", templateId: t.id, sections: t.sections,
+    id: "p1", token: "demo-x7k2q9", client: "Sousa Clinic", clientEmail: "hello@sousaclinic.com",
+    title: "New business website", templateId: t.id, sections: t.sections,
     deadline: days(10), expiresAt: days(30), revoked: false, answers,
     history: [
-      { at: now(), who: "Agência", what: "Pedido criado a partir do modelo Site institucional" },
-      { at: now(), who: "Cliente", what: "Enviou 'Frase principal' e 2 ficheiros em 'Fotografia de capa'" },
-      { at: now(), who: "Agência", what: "Pediu ajuste em 'A vossa história'" },
+      { at: now(), who: "Agency", what: "Request created from the Business website template" },
+      { at: now(), who: "Client", what: "Sent 'Main headline' and 2 files in 'Cover photo'" },
+      { at: now(), who: "Agency", what: "Requested a change in 'Your story'" },
     ],
   };
 }
@@ -119,11 +119,11 @@ export const actions = {
   },
   createRequest(input: { client: string; clientEmail: string; title: string; templateId: string; deadline: string }): Request | { error: string } {
     if (state.requests.filter((r) => !r.revoked).length >= activeLimit())
-      return { error: `Atingiu o limite de ${activeLimit()} pedidos ativos do plano ${PLANS[state.plan].name}.` };
+      return { error: `You reached the limit of ${activeLimit()} active requests on the ${PLANS[state.plan].name} plan.` };
     const t = TEMPLATES.find((x) => x.id === input.templateId)!;
     const r: Request = {
       ...input, id: rid(), token: rid() + rid(), sections: t.sections, expiresAt: days(45), revoked: false,
-      answers: emptyAnswers(t.sections), history: [{ at: now(), who: "Agência", what: `Pedido criado a partir do modelo ${t.name}` }],
+      answers: emptyAnswers(t.sections), history: [{ at: now(), who: "Agency", what: `Request created from the ${t.name} template` }],
     };
     set((s) => ({ ...s, requests: [r, ...s.requests] }));
     return r;
@@ -134,7 +134,7 @@ export const actions = {
       requests: s.requests.map((r) => r.token !== token ? r : {
         ...r,
         answers: { ...r.answers, [fieldId]: { ...r.answers[fieldId]!, ...patch } },
-        history: log ? [...r.history, { at: now(), who: "Cliente", what: log }] : r.history,
+        history: log ? [...r.history, { at: now(), who: "Client", what: log }] : r.history,
       }),
     }));
   },
@@ -144,12 +144,12 @@ export const actions = {
       requests: s.requests.map((r) => r.id !== id ? r : {
         ...r,
         answers: { ...r.answers, [fieldId]: { ...r.answers[fieldId]!, status, note } },
-        history: [...r.history, { at: now(), who: "Agência", what: status === "aprovado" ? `Aprovou '${label}'` : `Pediu ajuste em '${label}'${note ? `: ${note}` : ""}` }],
+        history: [...r.history, { at: now(), who: "Agency", what: status === "aprovado" ? `Approved '${label}'` : `Requested a change in '${label}'${note ? `: ${note}` : ""}` }],
       }),
     }));
   },
   revoke(id: string) {
-    set((s) => ({ ...s, requests: s.requests.map((r) => r.id !== id ? r : { ...r, revoked: true, history: [...r.history, { at: now(), who: "Agência", what: "Link revogado" }] }) }));
+    set((s) => ({ ...s, requests: s.requests.map((r) => r.id !== id ? r : { ...r, revoked: true, history: [...r.history, { at: now(), who: "Agency", what: "Link revoked" }] }) }));
   },
 };
 
@@ -165,7 +165,7 @@ export function linkState(r: Request): "ativo" | "revogado" | "expirado" {
   return "ativo";
 }
 
-/* Exportações preparadas (não sincronização) */
+/* Prepared exports (not a sync) */
 const slug = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 export function webflowCsv(r: Request) {
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;

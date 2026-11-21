@@ -81,10 +81,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lockcopy — recolha de conteúdos de clientes" },
-      { name: "description", content: "Checklists por página para agências web recolherem textos e ficheiros dos clientes." },
-      { property: "og:title", content: "Lockcopy — recolha de conteúdos de clientes" },
-      { property: "og:description", content: "Checklists por página para agências web recolherem textos e ficheiros dos clientes." },
+      { title: "Lockcopy — client content collection" },
+      { name: "description", content: "Per-page checklists for web agencies to collect texts and files from clients." },
+      { property: "og:title", content: "Lockcopy — client content collection" },
+      { property: "og:description", content: "Per-page checklists for web agencies to collect texts and files from clients." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
           ],
@@ -106,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>

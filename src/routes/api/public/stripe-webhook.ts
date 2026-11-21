@@ -116,14 +116,14 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
             secret,
           ))
         ) {
-          return new Response("assinatura inválida", { status: 400 });
+          return new Response("invalid signature", { status: 400 });
         }
 
         let event: StripeEvent;
         try {
           event = JSON.parse(rawBody) as StripeEvent;
         } catch {
-          return new Response("corpo inválido", { status: 400 });
+          return new Response("invalid body", { status: 400 });
         }
 
         const { createAdminSupabase } = await import(
@@ -163,7 +163,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
           orgId = org?.id ?? null;
         }
 
-        if (!orgId) return Response.json({ ok: true, ignored: "sem org" });
+        if (!orgId) return Response.json({ ok: true, ignored: "no org" });
 
         if (event.type === "checkout.session.completed") {
           const plan = planOf(object);
