@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { PLANS } from "@/lib/store";
+import { LandingDemo } from "@/components/landing-demo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,20 +16,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Landing,
 });
-
-const rows: [string, string, string][] = [
-  ["Início", "Frase principal", "Aprovado"],
-  ["Início", "Fotografia de capa", "Aprovado"],
-  ["Sobre", "A vossa história", "Ajuste pedido"],
-  ["Serviços", "Lista e preços", "Enviado"],
-  ["Contactos", "Logótipo (SVG)", "Em falta"],
-];
-const tone: Record<string, string> = {
-  Aprovado: "bg-accent text-accent-foreground",
-  "Ajuste pedido": "bg-destructive/10 text-destructive",
-  Enviado: "bg-warn text-warn-foreground",
-  "Em falta": "bg-muted text-muted-foreground",
-};
 
 function Landing() {
   const [billing, setBilling] = useState<"month" | "year">("month");
@@ -46,8 +33,8 @@ function Landing() {
 
       <section className="mx-auto max-w-4xl px-6 pb-16 pt-16 text-center md:pt-24">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Para freelancers e agências web</p>
-        <h1 className="mt-6 font-display text-5xl leading-[1.05] md:text-7xl">
-          Os conteúdos do cliente,<br /><em className="text-primary">organizados e aprovados.</em>
+        <h1 className="mt-6 font-display text-4xl leading-[1.1] md:text-6xl">
+          Os conteúdos do cliente,<br /><span className="text-seal">organizados e aprovados.</span>
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
           Envie um link. O cliente preenche textos e carrega ficheiros, página a página, sem criar conta. Você revê, aprova e exporta para Webflow ou Framer.
@@ -59,28 +46,9 @@ function Landing() {
         <p className="mt-4 text-xs text-muted-foreground">Cartão pedido no início. Nada é cobrado durante os 14 dias.</p>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 pb-24">
-        <div className="rounded-2xl border border-border bg-card shadow-float">
-          <div className="flex items-center justify-between border-b border-border px-6 py-4">
-            <div className="text-left">
-              <p className="text-sm font-medium">Clínica Sousa</p>
-              <p className="text-xs text-muted-foreground">Novo site institucional · prazo 1 dez</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-1.5 w-32 rounded-full bg-muted"><div className="h-1.5 w-2/5 rounded-full bg-seal" /></div>
-              <span className="text-xs text-muted-foreground">2 de 5</span>
-            </div>
-          </div>
-          {rows.map(([pg, f, s]) => (
-            <div key={f} className="flex items-center justify-between border-b border-border px-6 py-4 last:border-0">
-              <div className="flex items-baseline gap-4">
-                <span className="w-20 text-xs text-muted-foreground">{pg}</span>
-                <span className="text-sm">{f}</span>
-              </div>
-              <span className={"rounded-full px-2.5 py-0.5 text-xs font-medium " + tone[s]}>{s}</span>
-            </div>
-          ))}
-        </div>
+      <section className="mx-auto max-w-6xl px-6 pb-24">
+        <p className="mb-6 text-center text-sm text-muted-foreground">Veja como funciona — pode clicar em cada passo e experimentar.</p>
+        <LandingDemo />
       </section>
 
       <section id="como" className="border-y border-border bg-card">
@@ -93,7 +61,7 @@ function Landing() {
           ].map(([t, d], i) => (
             <div key={t}>
               <span className="text-xs text-muted-foreground">0{i + 1}</span>
-              <h3 className="mt-3 font-display text-2xl">{t}</h3>
+              <h3 className="mt-3 text-lg font-bold">{t}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d}</p>
             </div>
           ))}
@@ -118,7 +86,7 @@ function Landing() {
                   <h3 className="text-sm font-medium">{p.name}</h3>
                   {k === "agency" && <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs text-accent-foreground">Recomendado</span>}
                 </div>
-                <p className="mt-4"><span className="font-display text-6xl">${billing === "month" ? p.month : p.year}</span><span className="text-muted-foreground"> /{billing === "month" ? "mês" : "ano"}</span></p>
+                <p className="mt-4"><span className="font-display text-5xl">${billing === "month" ? p.month : p.year}</span><span className="text-muted-foreground"> /{billing === "month" ? "mês" : "ano"}</span></p>
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                   <li>{p.requests} pedidos ativos</li><li>{p.users} {p.users > 1 ? "utilizadores" : "utilizador"}</li><li>{p.storageGb} GB de ficheiros</li>
                 </ul>
