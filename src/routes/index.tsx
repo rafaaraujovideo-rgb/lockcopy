@@ -151,7 +151,6 @@ function Landing() {
         <div className="border-t border-border">
           <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
             <span>© 2026 Lockcopy™. Todos os direitos reservados.</span>
-            <span>Pagamentos seguros · Dados na UE</span>
           </div>
         </div>
       </footer>
