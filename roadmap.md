@@ -10,11 +10,12 @@
 - Ecrã de início do teste abre o checkout do Stripe; faturação abre o portal do Stripe.
 
 ## Por fazer
-- [ ] Testar o fluxo completo com uma conta real confirmada (o utilizador está a criar a conta).
-- [ ] Correr `db/0007_webp.sql` no Supabase (anexar WebP aos ficheiros).
+- [x] Fluxo completo testado com sessão real (agência, pedido, portal, upload+WebP, aprovar, ajuste, link, exportações).
+- [x] `db/0007_webp.sql` corrido e corrigido.
+- [ ] Voltar a ligar "Confirm email" no Supabase.
 - [ ] Configurar cron externo para POST /api/public/cron/notifications com `CRON_SECRET`.
 - [ ] Chaves Stripe e Resend nas variáveis de ambiente.
 
 ## Bloqueios
-- Conta de teste confirmada no Supabase para validar o fluxo com sessão.
+- Emails reais: precisa de `RESEND_API_KEY`.
 - Cobrança real: precisa de `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_SOLO`, `STRIPE_PRICE_AGENCY`, `STRIPE_PRICE_SOLO_YEAR`, `STRIPE_PRICE_AGENCY_YEAR` e `APP_URL`.
