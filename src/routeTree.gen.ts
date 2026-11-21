@@ -10,33 +10,122 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as ComecarRouteImport } from './routes/comecar'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppFaturacaoRouteImport } from './routes/app/faturacao'
+import { Route as AppNovoRouteImport } from './routes/app/novo'
+import { Route as CTokenRouteImport } from './routes/c/$token'
+import { Route as AppPedidosIdRouteImport } from './routes/app/pedidos/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComecarRoute = ComecarRouteImport.update({
+  id: '/comecar',
+  path: '/comecar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFaturacaoRoute = AppFaturacaoRouteImport.update({
+  id: '/faturacao',
+  path: '/faturacao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNovoRoute = AppNovoRouteImport.update({
+  id: '/novo',
+  path: '/novo',
+  getParentRoute: () => AppRoute,
+} as any)
+const CTokenRoute = CTokenRouteImport.update({
+  id: '/c/$token',
+  path: '/c/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppPedidosIdRoute = AppPedidosIdRouteImport.update({
+  id: '/pedidos/$id',
+  path: '/pedidos/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/comecar': typeof ComecarRoute
+  '/app/faturacao': typeof AppFaturacaoRoute
+  '/app/novo': typeof AppNovoRoute
+  '/c/$token': typeof CTokenRoute
+  '/app/': typeof AppIndexRoute
+  '/app/pedidos/$id': typeof AppPedidosIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/comecar': typeof ComecarRoute
+  '/app/faturacao': typeof AppFaturacaoRoute
+  '/app/novo': typeof AppNovoRoute
+  '/c/$token': typeof CTokenRoute
+  '/app': typeof AppIndexRoute
+  '/app/pedidos/$id': typeof AppPedidosIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/comecar': typeof ComecarRoute
+  '/app/faturacao': typeof AppFaturacaoRoute
+  '/app/novo': typeof AppNovoRoute
+  '/c/$token': typeof CTokenRoute
+  '/app/': typeof AppIndexRoute
+  '/app/pedidos/$id': typeof AppPedidosIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/comecar'
+    | '/app/faturacao'
+    | '/app/novo'
+    | '/c/$token'
+    | '/app/'
+    | '/app/pedidos/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/comecar'
+    | '/app/faturacao'
+    | '/app/novo'
+    | '/c/$token'
+    | '/app'
+    | '/app/pedidos/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/comecar'
+    | '/app/faturacao'
+    | '/app/novo'
+    | '/c/$token'
+    | '/app/'
+    | '/app/pedidos/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  ComecarRoute: typeof ComecarRoute
+  CTokenRoute: typeof CTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +137,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comecar': {
+      id: '/comecar'
+      path: '/comecar'
+      fullPath: '/comecar'
+      preLoaderRoute: typeof ComecarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/faturacao': {
+      id: '/app/faturacao'
+      path: '/faturacao'
+      fullPath: '/app/faturacao'
+      preLoaderRoute: typeof AppFaturacaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/novo': {
+      id: '/app/novo'
+      path: '/novo'
+      fullPath: '/app/novo'
+      preLoaderRoute: typeof AppNovoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/c/$token': {
+      id: '/c/$token'
+      path: '/c/$token'
+      fullPath: '/c/$token'
+      preLoaderRoute: typeof CTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/pedidos/$id': {
+      id: '/app/pedidos/$id'
+      path: '/pedidos/$id'
+      fullPath: '/app/pedidos/$id'
+      preLoaderRoute: typeof AppPedidosIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppFaturacaoRoute: typeof AppFaturacaoRoute
+  AppNovoRoute: typeof AppNovoRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppPedidosIdRoute: typeof AppPedidosIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppFaturacaoRoute: AppFaturacaoRoute,
+  AppNovoRoute: AppNovoRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppPedidosIdRoute: AppPedidosIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  ComecarRoute: ComecarRoute,
+  CTokenRoute: CTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
