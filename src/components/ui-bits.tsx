@@ -6,7 +6,7 @@ export function Btn({ variant = "primary", className, ...p }: ButtonHTMLAttribut
     <button
       {...p}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50",
         variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/90",
         variant === "outline" && "border border-border bg-card hover:bg-muted",
         variant === "ghost" && "hover:bg-muted",
@@ -16,7 +16,7 @@ export function Btn({ variant = "primary", className, ...p }: ButtonHTMLAttribut
   );
 }
 
-export const btnClass = "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90";
+export const btnClass = "inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90";
 export const inputClass = "w-full rounded-lg border border-input bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring";
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
