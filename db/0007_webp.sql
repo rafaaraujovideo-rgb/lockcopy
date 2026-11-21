@@ -45,7 +45,7 @@ begin
 
   update public.submission_files
   set webp_storage_path = _webp_path,
-      image_status = 'ready'::public.image_status,
+      image_status = 'done'::public.image_status,
       image_error = null
   where id = f.id;
 end;
