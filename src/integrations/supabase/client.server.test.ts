@@ -39,4 +39,11 @@ describe("cliente privilegiado do servidor", () => {
     delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
     expect(() => createAdminSupabase()).toThrow(/LOCKCOPY_DB_SECRET_KEY/);
   });
+
+  it("recusa a chave publicável no lugar da secreta", () => {
+    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+    delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
+    process.env["LOCKCOPY_DB_SECRET_KEY"] = "sb_publishable_teste";
+    expect(() => createAdminSupabase()).toThrow(/sb_secret_/);
+  });
 });

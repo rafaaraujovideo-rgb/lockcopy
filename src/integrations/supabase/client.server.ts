@@ -70,6 +70,9 @@ export function createAdminSupabase(): SupabaseClient<Database> {
   if (!url || !key) {
     throw new Error("Servidor sem SUPABASE_URL / LOCKCOPY_DB_SECRET_KEY.");
   }
+  if (key.startsWith("sb_publishable_")) {
+    throw new Error("LOCKCOPY_DB_SECRET_KEY tem a chave publicável; precisa da sb_secret_.");
+  }
 
   return createClient<Database>(url, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
@@ -77,7 +80,9 @@ export function createAdminSupabase(): SupabaseClient<Database> {
       fetch: (input, init) => {
         const headers = new Headers(init?.headers);
         headers.set("apikey", key);
-        headers.set("Authorization", `Bearer ${key}`);
+        // Só as chaves antigas (JWT) vão como bearer; as sb_secret_ só como apikey.
+        if (key.startsWith("eyJ")) headers.set("Authorization", `Bearer ${key}`);
+        else headers.delete("Authorization");
         return fetch(input, { ...init, headers });
       },
     },
