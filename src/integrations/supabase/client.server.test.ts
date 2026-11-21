@@ -20,23 +20,23 @@ afterEach(() => {
 
 describe("cliente privilegiado do servidor", () => {
   it("usa a chave guardada como LOCKCOPY_DB_SECRET_KEY", () => {
-    process.env.SUPABASE_URL = "https://exemplo.supabase.co";
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
-    process.env.LOCKCOPY_DB_SECRET_KEY = "sb_secret_teste";
+    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+    delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
+    process.env["LOCKCOPY_DB_SECRET_KEY"] = "sb_secret_teste";
     expect(() => createAdminSupabase()).not.toThrow();
   });
 
   it("continua a aceitar o nome antigo SUPABASE_SERVICE_ROLE_KEY", () => {
-    process.env.SUPABASE_URL = "https://exemplo.supabase.co";
-    delete process.env.LOCKCOPY_DB_SECRET_KEY;
-    process.env.SUPABASE_SERVICE_ROLE_KEY = "sb_secret_teste";
+    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+    delete process.env["LOCKCOPY_DB_SECRET_KEY"];
+    process.env["SUPABASE_SERVICE_ROLE_KEY"] = "sb_secret_teste";
     expect(() => createAdminSupabase()).not.toThrow();
   });
 
   it("falha sem nenhuma chave de serviço", () => {
-    process.env.SUPABASE_URL = "https://exemplo.supabase.co";
-    delete process.env.LOCKCOPY_DB_SECRET_KEY;
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+    delete process.env["LOCKCOPY_DB_SECRET_KEY"];
+    delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
     expect(() => createAdminSupabase()).toThrow(/LOCKCOPY_DB_SECRET_KEY/);
   });
 });

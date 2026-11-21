@@ -8,7 +8,19 @@ import { getSupabase } from "@/integrations/supabase/client";
 import { friendlyError, orgSlug, fmtDate } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
-export const Route = createFileRoute("/app")({ component: AppLayout });
+export const Route = createFileRoute("/app")({
+  head: () => ({
+    meta: [
+      { title: "Área da agência — Lockcopy" },
+      { name: "description", content: "Gira pedidos de conteúdos, reve respostas e exporte para o seu construtor." },
+      { property: "og:title", content: "Área da agência — Lockcopy" },
+      { property: "og:description", content: "Gira pedidos de conteúdos, reve respostas e exporte para o seu construtor." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: AppLayout,
+});
 
 function AppLayout() {
   const { ready, session } = useSession();
