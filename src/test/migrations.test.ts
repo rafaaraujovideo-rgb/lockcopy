@@ -33,6 +33,7 @@ describe("db/*.sql", () => {
       "0004_portal.sql",
       "0005_storage_policies.sql",
       "0006_seed_templates.sql",
+      "0007_webp.sql",
     ]);
   });
 

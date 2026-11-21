@@ -246,6 +246,15 @@ export type Database = {
         Returns: undefined;
       };
       start_trial: { Args: { _org: string; _plan: AppPlan }; Returns: undefined };
+      portal_attach_webp: {
+        Args: { _token: string; _file: string; _webp_path: string };
+        Returns: undefined;
+      };
+      claim_notifications: { Args: { _batch: number }; Returns: Json };
+      finish_notification: {
+        Args: { _id: string; _ok: boolean; _err?: string | null };
+        Returns: undefined;
+      };
     };
     Enums: {
       app_plan: AppPlan;

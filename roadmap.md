@@ -10,11 +10,10 @@
 - Ecrã de início do teste abre o checkout do Stripe; faturação abre o portal do Stripe.
 
 ## Por fazer
-- [ ] Testar o fluxo completo com uma conta real confirmada (falta conta de teste).
-- [ ] Trabalhador de emails e lembretes (`claim_notifications` / `finish_notification`).
-- [ ] Trabalhador de imagens WebP (`due_images` / `mark_image`), original preservado.
-- [ ] Política de privacidade, termos e DPA antes de cobrar.
-- [ ] Páginas SEO de comparação e modelos gratuitos para download.
+- [ ] Testar o fluxo completo com uma conta real confirmada (o utilizador está a criar a conta).
+- [ ] Correr `db/0007_webp.sql` no Supabase (anexar WebP aos ficheiros).
+- [ ] Configurar cron externo para POST /api/public/cron/notifications com `CRON_SECRET`.
+- [ ] Chaves Stripe e Resend nas variáveis de ambiente.
 
 ## Bloqueios
 - Conta de teste confirmada no Supabase para validar o fluxo com sessão.

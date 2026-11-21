@@ -412,3 +412,28 @@ export const portalRegisterFile = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return result as { file_id: string; image_status: string };
   });
+
+/**
+ * Anexa a versão WebP (gerada no browser) ao ficheiro original já registado.
+ * O original é sempre preservado; o WebP serve para pré-visualizações leves.
+ */
+export const portalAttachWebp = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        token: uuid,
+        fileId: uuid,
+        webpPath: text(600).min(1),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const supabase = await portalClient();
+    const { error } = await supabase.rpc("portal_attach_webp", {
+      _token: data.token,
+      _file: data.fileId,
+      _webp_path: data.webpPath,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

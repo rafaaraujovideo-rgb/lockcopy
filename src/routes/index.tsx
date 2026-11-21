@@ -137,8 +137,8 @@ function Landing() {
           </div>
           {[
             ["Produto", [["Demonstração", "#demo"], ["Funcionalidades", "#como"], ["Preços", "#precos"]]],
-            ["Começar", [["Teste de 14 dias", "/comecar"], ["Entrar", "/entrar"], ["Criar conta", "/entrar?modo=criar"]]],
-            ["Exportações", [["Webflow (CSV)", "#como"], ["Framer (JSON)", "#como"], ["ZIP por página", "#como"]]],
+            ["Recursos", [["Modelos gratuitos", "/modelos"], ["Lockcopy vs Content Snare", "/comparar/content-snare"], ["Teste de 14 dias", "/comecar"]]],
+            ["Legal", [["Privacidade", "/privacidade"], ["Termos", "/termos"], ["Tratamento de dados", "/dpa"]]],
           ].map(([t, links]) => (
             <div key={t as string}>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">{t as string}</h4>

@@ -12,13 +12,19 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ComecarRouteImport } from './routes/comecar'
+import { Route as DpaRouteImport } from './routes/dpa'
 import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as ModelosRouteImport } from './routes/modelos'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppFaturacaoRouteImport } from './routes/app/faturacao'
 import { Route as AppNovoRouteImport } from './routes/app/novo'
 import { Route as CTokenRouteImport } from './routes/c/$token'
+import { Route as CompararContentSnareRouteImport } from './routes/comparar/content-snare'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as AppPedidosIdRouteImport } from './routes/app/pedidos/$id'
+import { Route as ApiPublicCronNotificationsRouteImport } from './routes/api/public/cron/notifications'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,9 +41,29 @@ const ComecarRoute = ComecarRouteImport.update({
   path: '/comecar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DpaRoute = DpaRouteImport.update({
+  id: '/dpa',
+  path: '/dpa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EntrarRoute = EntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModelosRoute = ModelosRouteImport.update({
+  id: '/modelos',
+  path: '/modelos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -60,6 +86,11 @@ const CTokenRoute = CTokenRouteImport.update({
   path: '/c/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompararContentSnareRoute = CompararContentSnareRouteImport.update({
+  id: '/comparar/content-snare',
+  path: '/comparar/content-snare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
   id: '/api/public/stripe-webhook',
   path: '/api/public/stripe-webhook',
@@ -70,42 +101,66 @@ const AppPedidosIdRoute = AppPedidosIdRouteImport.update({
   path: '/pedidos/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiPublicCronNotificationsRoute =
+  ApiPublicCronNotificationsRouteImport.update({
+    id: '/api/public/cron/notifications',
+    path: '/api/public/cron/notifications',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/comecar': typeof ComecarRoute
+  '/dpa': typeof DpaRoute
   '/entrar': typeof EntrarRoute
+  '/modelos': typeof ModelosRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
+  '/comparar/content-snare': typeof CompararContentSnareRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/pedidos/$id': typeof AppPedidosIdRoute
+  '/api/public/cron/notifications': typeof ApiPublicCronNotificationsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/comecar': typeof ComecarRoute
+  '/dpa': typeof DpaRoute
   '/entrar': typeof EntrarRoute
+  '/modelos': typeof ModelosRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
+  '/comparar/content-snare': typeof CompararContentSnareRoute
   '/app': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/pedidos/$id': typeof AppPedidosIdRoute
+  '/api/public/cron/notifications': typeof ApiPublicCronNotificationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/comecar': typeof ComecarRoute
+  '/dpa': typeof DpaRoute
   '/entrar': typeof EntrarRoute
+  '/modelos': typeof ModelosRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
+  '/comparar/content-snare': typeof CompararContentSnareRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/pedidos/$id': typeof AppPedidosIdRoute
+  '/api/public/cron/notifications': typeof ApiPublicCronNotificationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -113,45 +168,69 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/comecar'
+    | '/dpa'
     | '/entrar'
+    | '/modelos'
+    | '/privacidade'
+    | '/termos'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
+    | '/comparar/content-snare'
     | '/app/'
     | '/api/public/stripe-webhook'
     | '/app/pedidos/$id'
+    | '/api/public/cron/notifications'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/comecar'
+    | '/dpa'
     | '/entrar'
+    | '/modelos'
+    | '/privacidade'
+    | '/termos'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
+    | '/comparar/content-snare'
     | '/app'
     | '/api/public/stripe-webhook'
     | '/app/pedidos/$id'
+    | '/api/public/cron/notifications'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/comecar'
+    | '/dpa'
     | '/entrar'
+    | '/modelos'
+    | '/privacidade'
+    | '/termos'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
+    | '/comparar/content-snare'
     | '/app/'
     | '/api/public/stripe-webhook'
     | '/app/pedidos/$id'
+    | '/api/public/cron/notifications'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   ComecarRoute: typeof ComecarRoute
+  DpaRoute: typeof DpaRoute
   EntrarRoute: typeof EntrarRoute
+  ModelosRoute: typeof ModelosRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  TermosRoute: typeof TermosRoute
   CTokenRoute: typeof CTokenRoute
+  CompararContentSnareRoute: typeof CompararContentSnareRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
+  ApiPublicCronNotificationsRoute: typeof ApiPublicCronNotificationsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -177,11 +256,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComecarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dpa': {
+      id: '/dpa'
+      path: '/dpa'
+      fullPath: '/dpa'
+      preLoaderRoute: typeof DpaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/entrar': {
       id: '/entrar'
       path: '/entrar'
       fullPath: '/entrar'
       preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modelos': {
+      id: '/modelos'
+      path: '/modelos'
+      fullPath: '/modelos'
+      preLoaderRoute: typeof ModelosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -212,6 +319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comparar/content-snare': {
+      id: '/comparar/content-snare'
+      path: '/comparar/content-snare'
+      fullPath: '/comparar/content-snare'
+      preLoaderRoute: typeof CompararContentSnareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/stripe-webhook': {
       id: '/api/public/stripe-webhook'
       path: '/api/public/stripe-webhook'
@@ -225,6 +339,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/pedidos/$id'
       preLoaderRoute: typeof AppPedidosIdRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/api/public/cron/notifications': {
+      id: '/api/public/cron/notifications'
+      path: '/api/public/cron/notifications'
+      fullPath: '/api/public/cron/notifications'
+      preLoaderRoute: typeof ApiPublicCronNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -249,9 +370,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   ComecarRoute: ComecarRoute,
+  DpaRoute: DpaRoute,
   EntrarRoute: EntrarRoute,
+  ModelosRoute: ModelosRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  TermosRoute: TermosRoute,
   CTokenRoute: CTokenRoute,
+  CompararContentSnareRoute: CompararContentSnareRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
+  ApiPublicCronNotificationsRoute: ApiPublicCronNotificationsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

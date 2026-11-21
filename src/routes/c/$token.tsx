@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 import { getPortalSupabase } from "@/integrations/supabase/portal-client";
-import { portalLoad, portalRegisterFile, portalSave, type PortalField, type PortalSubmission } from "@/lib/api.functions";
+import { portalAttachWebp, portalLoad, portalRegisterFile, portalSave, type PortalField, type PortalSubmission } from "@/lib/api.functions";
 import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 
@@ -23,6 +23,24 @@ export const Route = createFileRoute("/c/$token")({
 });
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Converte uma imagem para WebP no browser (máx. 2048 px no lado maior). */
+async function toWebp(file: File): Promise<Blob | null> {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 2048 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    return await new Promise((resolve) => canvas.toBlob((b) => resolve(b), "image/webp", 0.82));
+  } catch {
+    return null;
+  }
+}
 
 function Unavailable() {
   return (
@@ -133,7 +151,15 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
         const path = `${prefix}${Date.now()}-${safe}`;
         const { error: upErr } = await supabase.storage.from("client-uploads").upload(path, file, { contentType: mime, upsert: false });
         if (upErr) throw new Error(upErr.message);
-        await portalRegisterFile({ data: { token, fieldId: field.id, path, name: file.name, mime, size: file.size } });
+        const reg = await portalRegisterFile({ data: { token, fieldId: field.id, path, name: file.name, mime, size: file.size } });
+        if (reg.image_status === "pending") {
+          const webp = await toWebp(file);
+          if (webp) {
+            const webpPath = path.replace(/\.[a-z0-9]+$/i, "") + ".webp";
+            const { error: wErr } = await supabase.storage.from("client-uploads").upload(webpPath, webp, { contentType: "image/webp", upsert: false });
+            if (!wErr) await portalAttachWebp({ data: { token, fileId: reg.file_id, webpPath } }).catch(() => undefined);
+          }
+        }
         setStatus((s) => (s === "approved" ? s : "submitted"));
       } catch (e) {
         setErrors((x) => [...x, `${file.name}: ${friendlyError(e)}`]);
