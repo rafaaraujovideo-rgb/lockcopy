@@ -1,7 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { PLANS, actions } from "@/lib/store";
-import { Btn, Card, DemoNote, inputClass } from "@/components/ui-bits";
+
+import { startCheckout } from "@/lib/billing.functions";
+import { PLANS } from "@/lib/store";
+import { useSession } from "@/lib/session";
+import { useWorkspace } from "@/lib/workspace";
+import { friendlyError } from "@/lib/lockcopy";
+import { Btn, btnClass, Card } from "@/components/ui-bits";
 
 type Search = { plano?: "solo" | "agency"; ciclo?: "month" | "year" };
 
@@ -25,19 +30,35 @@ export const Route = createFileRoute("/comecar")({
 
 function Checkout() {
   const { plano, ciclo } = Route.useSearch();
-  const nav = useNavigate();
+  const { ready, session } = useSession();
+  const ws = useWorkspace();
   const [plan, setPlan] = useState<"solo" | "agency">(plano ?? "solo");
   const [cycle, setCycle] = useState<"month" | "year">(ciclo ?? "month");
   const [agree, setAgree] = useState(false);
-  const [card, setCard] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   const p = PLANS[plan];
   const price = cycle === "month" ? p.month : p.year;
   const first = new Date(Date.now() + 14 * 864e5).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" });
+  const here = `/comecar?plano=${plan}&ciclo=${cycle}`;
+
+  const go = async () => {
+    setBusy(true);
+    setError("");
+    try {
+      const { url } = await startCheckout({ data: { plan, cycle } });
+      window.location.assign(url);
+    } catch (e) {
+      setError(friendlyError(e));
+      setBusy(false);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12">
+      <Link to="/" className="mb-8 flex items-center gap-2 text-base font-semibold tracking-tight"><span className="h-2 w-2 rounded-full bg-seal" />Lockcopy</Link>
       <h1 className="font-display text-4xl font-bold">Comece o teste</h1>
-      <p className="mt-2 text-muted-foreground">14 dias completos. Nada é cobrado durante o teste.</p>
+      <p className="mt-2 text-muted-foreground">14 dias completos. O teste só começa depois de registar o cartão, e nada é cobrado durante o teste.</p>
       <div className="mt-6 space-y-4">
         <Card>
           <p className="mb-3 text-sm font-medium">Plano depois do teste</p>
@@ -55,11 +76,6 @@ function Checkout() {
             ))}
           </div>
         </Card>
-        <Card>
-          <p className="mb-2 text-sm font-medium">Cartão</p>
-          <input className={inputClass} placeholder="4242 4242 4242 4242" value={card} onChange={(e) => setCard(e.target.value)} />
-          <p className="mt-2 text-xs text-muted-foreground">Na versão final, este campo é o formulário seguro do Stripe.</p>
-        </Card>
         <Card className="bg-muted">
           <dl className="grid grid-cols-2 gap-y-2 text-sm">
             <dt className="text-muted-foreground">Hoje</dt><dd className="text-right font-semibold">$0</dd>
@@ -72,10 +88,15 @@ function Checkout() {
             <span>Autorizo a cobrança automática de ${price} {cycle === "month" ? "por mês" : "por ano"} a partir de {first}, salvo se cancelar antes. Recebo um aviso antes do fim do teste.</span>
           </label>
         </Card>
-        <Btn className="w-full py-3" disabled={!agree || card.replace(/\s/g, "").length < 12} onClick={() => { actions.startTrial(plan, cycle); nav({ to: "/app" }); }}>
-          Registar cartão e começar
-        </Btn>
-        <DemoNote />
+        {error && <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
+        {!ready ? null : !session ? (
+          <Link to="/entrar" search={{ modo: "criar", seguir: here }} className={btnClass + " w-full py-3"}>Criar conta para continuar</Link>
+        ) : !ws.data && !ws.isLoading ? (
+          <Link to="/app" className={btnClass + " w-full py-3"}>Criar primeiro a conta da agência</Link>
+        ) : (
+          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading} onClick={go}>{busy ? "A abrir o pagamento seguro…" : "Registar cartão e começar"}</Btn>
+        )}
+        <p className="text-center text-xs text-muted-foreground">O cartão é pedido na página segura do Stripe. Os dados do cartão nunca passam pela Lockcopy.</p>
       </div>
     </div>
   );

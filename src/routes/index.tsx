@@ -30,10 +30,10 @@ function Landing() {
             <a href="#demo" className="hover:text-foreground">Demonstração</a>
             <a href="#como" className="hover:text-foreground">Funcionalidades</a>
             <a href="#precos" className="hover:text-foreground">Preços</a>
-            <Link to="/c/$token" params={{ token: "demo-x7k2q9" }} className="hover:text-foreground">Portal do cliente</Link>
+            <Link to="/entrar" search={{ modo: "criar", seguir: "/app" }} className="hover:text-foreground">Criar conta</Link>
           </nav>
           <div className="hidden items-center gap-2 text-sm md:flex">
-            <Link to="/app" className="rounded-full px-4 py-2 text-muted-foreground hover:text-foreground">Entrar</Link>
+            <Link to="/entrar" className="rounded-full px-4 py-2 text-muted-foreground hover:text-foreground">Entrar</Link>
             <Link to="/comecar" className="rounded-full bg-primary px-4 py-2 font-medium text-primary-foreground hover:opacity-90">Experimentar grátis</Link>
           </div>
           <button aria-label="Menu" onClick={() => setOpen(!open)} className="rounded-lg p-2 md:hidden">{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
@@ -42,9 +42,9 @@ function Landing() {
           <div className="border-t border-border bg-background px-6 py-4 md:hidden">
             <nav className="flex flex-col gap-3 text-sm" onClick={() => setOpen(false)}>
               <a href="#demo">Demonstração</a><a href="#como">Funcionalidades</a><a href="#precos">Preços</a>
-              <Link to="/c/$token" params={{ token: "demo-x7k2q9" }}>Portal do cliente</Link>
+              <Link to="/entrar" search={{ modo: "criar", seguir: "/app" }}>Criar conta</Link>
               <div className="mt-2 flex gap-2">
-                <Link to="/app" className="flex-1 rounded-full border border-border py-2 text-center">Entrar</Link>
+                <Link to="/entrar" className="flex-1 rounded-full border border-border py-2 text-center">Entrar</Link>
                 <Link to="/comecar" className="flex-1 rounded-full bg-primary py-2 text-center font-medium text-primary-foreground">Experimentar</Link>
               </div>
             </nav>
@@ -62,7 +62,7 @@ function Landing() {
         </p>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <Link to="/comecar" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90">Começar teste de 14 dias</Link>
-          <Link to="/c/$token" params={{ token: "demo-x7k2q9" }} className="rounded-full border border-border bg-card px-6 py-3 text-sm hover:bg-muted">Ver o que o cliente vê</Link>
+          <a href="#demo" className="rounded-full border border-border bg-card px-6 py-3 text-sm hover:bg-muted">Ver o que o cliente vê</a>
         </div>
         <p className="mt-4 text-xs text-muted-foreground">Cartão pedido no início. Nada é cobrado durante os 14 dias.</p>
       </section>
@@ -137,7 +137,7 @@ function Landing() {
           </div>
           {[
             ["Produto", [["Demonstração", "#demo"], ["Funcionalidades", "#como"], ["Preços", "#precos"]]],
-            ["Começar", [["Teste de 14 dias", "/comecar"], ["Entrar", "/app"], ["Portal do cliente", "/c/demo-x7k2q9"]]],
+            ["Começar", [["Teste de 14 dias", "/comecar"], ["Entrar", "/entrar"], ["Criar conta", "/entrar?modo=criar"]]],
             ["Exportações", [["Webflow (CSV)", "#como"], ["Framer (JSON)", "#como"], ["ZIP por página", "#como"]]],
           ].map(([t, links]) => (
             <div key={t as string}>

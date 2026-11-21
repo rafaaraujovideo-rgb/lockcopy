@@ -145,16 +145,25 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
         }
 
         const object = event.data?.object ?? {};
-        const orgId = object.client_reference_id ?? object.metadata?.["org_id"];
-
-        if (!orgId) return Response.json({ ok: true, ignored: "sem org" });
-
         const subscription =
           typeof object.subscription === "string"
             ? object.subscription
             : object.subscription?.id ?? null;
         const customer =
           typeof object.customer === "string" ? object.customer : object.customer?.id ?? null;
+
+        let orgId: string | null = object.client_reference_id ?? object.metadata?.["org_id"] ?? null;
+        // Faturas não trazem o metadata da subscrição: procura a conta pelo cliente Stripe.
+        if (!orgId && customer) {
+          const { data: org } = await admin
+            .from("organizations")
+            .select("id")
+            .eq("stripe_customer_id", customer)
+            .maybeSingle();
+          orgId = org?.id ?? null;
+        }
+
+        if (!orgId) return Response.json({ ok: true, ignored: "sem org" });
 
         if (event.type === "checkout.session.completed") {
           const plan = planOf(object);

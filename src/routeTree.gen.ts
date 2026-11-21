@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ComecarRouteImport } from './routes/comecar'
+import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppFaturacaoRouteImport } from './routes/app/faturacao'
 import { Route as AppNovoRouteImport } from './routes/app/novo'
@@ -32,6 +33,11 @@ const AppRoute = AppRouteImport.update({
 const ComecarRoute = ComecarRouteImport.update({
   id: '/comecar',
   path: '/comecar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/comecar': typeof ComecarRoute
+  '/entrar': typeof EntrarRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/comecar': typeof ComecarRoute
+  '/entrar': typeof EntrarRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/comecar': typeof ComecarRoute
+  '/entrar': typeof EntrarRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/comecar'
+    | '/entrar'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/comecar'
+    | '/entrar'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/comecar'
+    | '/entrar'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
@@ -137,6 +149,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   ComecarRoute: typeof ComecarRoute
+  EntrarRoute: typeof EntrarRoute
   CTokenRoute: typeof CTokenRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
 }
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/comecar'
       fullPath: '/comecar'
       preLoaderRoute: typeof ComecarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -229,6 +249,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   ComecarRoute: ComecarRoute,
+  EntrarRoute: EntrarRoute,
   CTokenRoute: CTokenRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
 }

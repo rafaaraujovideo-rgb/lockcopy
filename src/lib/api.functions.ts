@@ -66,8 +66,29 @@ export const listRequests = createServerFn({ method: "POST" })
       .limit(100);
 
     if (error) throw new Error(error.message);
-    return data as Array<
-      Pick<
+
+    // Progresso por pedido: campos respondidos / total de campos.
+    const ids = (data ?? []).map((r) => r.id);
+    const total = new Map<string, number>();
+    const done = new Map<string, number>();
+    if (ids.length) {
+      const { data: secs } = await context.supabase.from("sections").select("id, request_id").in("request_id", ids);
+      const secToReq = new Map((secs ?? []).map((s) => [s.id, s.request_id]));
+      if (secToReq.size) {
+        const { data: flds } = await context.supabase.from("fields").select("id, section_id").in("section_id", [...secToReq.keys()]);
+        for (const f of flds ?? []) {
+          const rid = secToReq.get(f.section_id);
+          if (rid) total.set(rid, (total.get(rid) ?? 0) + 1);
+        }
+      }
+      const { data: subs } = await context.supabase.from("submissions").select("request_id, status").in("request_id", ids);
+      for (const s of subs ?? []) {
+        if (s.status === "submitted" || s.status === "approved") done.set(s.request_id, (done.get(s.request_id) ?? 0) + 1);
+      }
+    }
+
+    return (data ?? []).map((r) => ({ ...r, fieldsTotal: total.get(r.id) ?? 0, fieldsDone: done.get(r.id) ?? 0 })) as Array<
+      { fieldsTotal: number; fieldsDone: number } & Pick<
         Tables<"requests">,
         | "id"
         | "org_id"

@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { useStore, actions, progress, linkState, UPLOAD, WEBP_OK, type Field, type Request, type FileItem } from "@/lib/store";
+
+import { getPortalSupabase } from "@/integrations/supabase/portal-client";
+import { portalLoad, portalRegisterFile, portalSave, type PortalField, type PortalSubmission } from "@/lib/api.functions";
+import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/c/$token")({
@@ -18,34 +22,55 @@ export const Route = createFileRoute("/c/$token")({
   component: Portal,
 });
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function Unavailable() {
+  return (
+    <div className="flex min-h-screen items-center justify-center px-5 text-center">
+      <div><h1 className="font-display text-3xl font-bold">Este link já não está disponível</h1><p className="mt-2 text-muted-foreground">Peça um novo link à sua agência.</p></div>
+    </div>
+  );
+}
+
 function Portal() {
   const { token } = Route.useParams();
-  const r = useStore((s) => s.requests.find((x) => x.token === token));
-  if (!r || linkState(r) !== "ativo")
-    return (
-      <div className="flex min-h-screen items-center justify-center px-5 text-center">
-        <div><h1 className="font-display text-3xl font-bold">Este link já não está disponível</h1><p className="mt-2 text-muted-foreground">Peça um novo link à sua agência.</p></div>
-      </div>
-    );
-  const p = progress(r);
+  const valid = UUID.test(token);
+  const q = useQuery({
+    queryKey: ["portal", token],
+    queryFn: () => portalLoad({ data: { token } }),
+    enabled: valid,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  if (!valid || q.error) return <Unavailable />;
+  if (!q.data) return <p className="p-8 text-center text-sm text-muted-foreground">A abrir o pedido…</p>;
+
+  const p = q.data;
+  const subs = new Map((p.submissions ?? []).map((s) => [s.field_id, s]));
+  const allFields = p.sections.flatMap((s) => s.fields ?? []);
+  const done = allFields.filter((f) => ["submitted", "approved"].includes(subs.get(f.id)?.status ?? "")).length;
+  const pct = allFields.length ? Math.round((done / allFields.length) * 100) : 0;
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto max-w-3xl px-5 py-3">
-          <p className="text-xs text-muted-foreground">Pedido para {r.client} · entregar até {r.deadline}</p>
+          <p className="text-xs text-muted-foreground">{p.request.agency_name} · para {p.request.client_name} · entregar até {fmtDate(p.request.due_date)}</p>
           <div className="mt-1 flex items-center gap-3">
-            <p className="font-display text-lg font-semibold">{r.title}</p>
-            <div className="h-2 flex-1 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${p.pct}%` }} /></div>
-            <span className="text-xs">{p.pct}%</span>
+            <p className="font-display text-lg font-semibold">{p.request.title}</p>
+            <div className="h-2 flex-1 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} /></div>
+            <span className="text-xs">{pct}%</span>
           </div>
         </div>
       </header>
       <main className="mx-auto max-w-3xl space-y-5 px-5 py-8">
         <p className="text-sm text-muted-foreground">Tudo é guardado automaticamente. Pode sair e voltar mais tarde com este mesmo link.</p>
-        {r.sections.map((s) => (
+        {p.sections.map((s) => (
           <Card key={s.id}>
-            <h2 className="font-display text-2xl font-semibold">{s.page}</h2>
-            {s.fields.map((fl) => <FieldInput key={fl.id} r={r} fl={fl} />)}
+            <h2 className="font-display text-2xl font-semibold">{s.title}</h2>
+            {s.description && <p className="text-sm text-muted-foreground">{s.description}</p>}
+            {(s.fields ?? []).map((f) => <FieldInput key={f.id} token={token} field={f} sub={subs.get(f.id)} />)}
           </Card>
         ))}
       </main>
@@ -53,80 +78,101 @@ function Portal() {
   );
 }
 
-function FieldInput({ r, fl }: { r: Request; fl: Field }) {
-  const a = r.answers[fl.id]!;
-  const [text, setText] = useState(a.text);
-  const [saved, setSaved] = useState<"" | "a guardar" | "guardado">("");
-  const [uploads, setUploads] = useState<{ name: string; pct: number }[]>([]);
+function FieldInput({ token, field, sub }: { token: string; field: PortalField; sub: PortalSubmission | undefined }) {
+  const qc = useQueryClient();
+  const [text, setText] = useState(sub?.value_text ?? "");
+  const [status, setStatus] = useState<SubmissionStatus>((sub?.status as SubmissionStatus) ?? "pending");
+  const [saved, setSaved] = useState<"" | "a guardar…" | "guardado" | "erro ao guardar">("");
+  const [uploads, setUploads] = useState<string[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const first = useRef(true);
-  const locked = a.status === "aprovado";
+  const locked = status === "approved";
+
+  useEffect(() => {
+    if (sub?.status) setStatus(sub.status as SubmissionStatus);
+  }, [sub?.status]);
 
   useEffect(() => {
     if (first.current) { first.current = false; return; }
-    setSaved("a guardar");
-    const t = setTimeout(() => {
-      actions.saveAnswer(r.token, fl.id, { text, status: text.trim() || a.files.length ? "enviado" : "vazio" }, `Atualizou '${fl.label}'`);
-      setSaved("guardado");
+    setSaved("a guardar…");
+    const t = setTimeout(async () => {
+      try {
+        const r = await portalSave({ data: { token, fieldId: field.id, text } });
+        setStatus(r.status as SubmissionStatus);
+        setSaved("guardado");
+      } catch (e) {
+        setSaved("erro ao guardar");
+        setErrors([friendlyError(e)]);
+      }
     }, 800);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
+  }, [text, token, field.id]);
 
-  const onFiles = (list: FileList | null) => {
+  const onFiles = async (list: FileList | null) => {
     if (!list) return;
-    const ok: File[] = []; const errs: string[] = [];
-    Array.from(list).forEach((file) => {
-      const type = file.type || (file.name.toLowerCase().endsWith(".heic") ? "image/heic" : "");
-      if (!UPLOAD.types.includes(type)) errs.push(`${file.name}: tipo não aceite`);
-      else if (file.size > UPLOAD.maxBytes) errs.push(`${file.name}: maior que 50 MB`);
+    const errs: string[] = [];
+    const ok: File[] = [];
+    for (const file of Array.from(list)) {
+      const problem = uploadProblem(file, field.allowed_mime);
+      if (problem) errs.push(problem);
       else ok.push(file);
-    });
+    }
     setErrors(errs);
-    ok.forEach((file) => {
-      setUploads((u) => [...u, { name: file.name, pct: 0 }]);
-      let pct = 0;
-      const iv = setInterval(() => {
-        pct = Math.min(100, pct + 20 + Math.random() * 25);
-        setUploads((u) => u.map((x) => (x.name === file.name ? { ...x, pct } : x)));
-        if (pct >= 100) {
-          clearInterval(iv);
-          setUploads((u) => u.filter((x) => x.name !== file.name));
-          const type = file.type || "image/heic";
-          const item: FileItem = { name: file.name, size: file.size, type, webp: WEBP_OK.includes(type) ? "ok" : type === "image/heic" ? "pending" : "original" };
-          const current = r.answers[fl.id]!;
-          actions.saveAnswer(r.token, fl.id, { files: [...current.files, item], status: "enviado" }, `Carregou ${file.name} em '${fl.label}'`);
-        }
-      }, 250);
-    });
+    if (!ok.length) return;
+    const supabase = getPortalSupabase();
+    const { data: prefix, error: prefixError } = await supabase.rpc("portal_upload_prefix", { _token: token, _field: field.id });
+    if (prefixError || !prefix) {
+      setErrors((e) => [...e, "Este link já não aceita ficheiros."]);
+      return;
+    }
+    for (const file of ok) {
+      setUploads((u) => [...u, file.name]);
+      try {
+        const mime = file.type || "image/heic";
+        const safe = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w.-]+/g, "_").slice(-120);
+        const path = `${prefix}${Date.now()}-${safe}`;
+        const { error: upErr } = await supabase.storage.from("client-uploads").upload(path, file, { contentType: mime, upsert: false });
+        if (upErr) throw new Error(upErr.message);
+        await portalRegisterFile({ data: { token, fieldId: field.id, path, name: file.name, mime, size: file.size } });
+        setStatus((s) => (s === "approved" ? s : "submitted"));
+      } catch (e) {
+        setErrors((x) => [...x, `${file.name}: ${friendlyError(e)}`]);
+      } finally {
+        setUploads((u) => u.filter((n) => n !== file.name));
+      }
+    }
+    await qc.invalidateQueries({ queryKey: ["portal", token] });
   };
+
+  const files = sub?.files ?? [];
+  const accept = (field.allowed_mime ?? []).join(",") || undefined;
 
   return (
     <div className="border-t border-border py-4 first-of-type:border-0">
       <div className="flex items-center justify-between gap-2">
-        <label className="font-medium">{fl.label}</label>
-        <span className="flex items-center gap-2 text-xs text-muted-foreground">{saved}<Badge s={a.status} /></span>
+        <label className="font-medium" htmlFor={field.id}>{field.label}{field.is_required && <span className="text-destructive"> *</span>}</label>
+        <span className="flex items-center gap-2 text-xs text-muted-foreground">{saved}<Badge s={answerLabel(status)} /></span>
       </div>
-      {fl.hint && <p className="text-xs text-muted-foreground">{fl.hint}</p>}
-      {a.status === "ajuste" && a.note && <p className="mt-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive">A agência pede: {a.note}</p>}
-      {fl.type === "text" && <input disabled={locked} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
-      {fl.type === "longtext" && <textarea disabled={locked} rows={4} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
-      {fl.type === "files" && (
+      {field.help_text && <p className="text-xs text-muted-foreground">{field.help_text}</p>}
+      {status === "rejected" && sub?.rejection_note && <p className="mt-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive">A agência pede: {sub.rejection_note}</p>}
+      {locked && <p className="mt-1 text-xs text-muted-foreground">Aprovado pela agência — já não precisa de mexer aqui.</p>}
+      {field.field_type === "textarea" && <textarea id={field.id} disabled={locked} rows={4} maxLength={field.char_limit ?? 20000} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
+      {(field.field_type === "text" || field.field_type === "select") && <input id={field.id} disabled={locked} maxLength={field.char_limit ?? 20000} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
+      {isFileField(field.field_type) && (
         <div className="mt-2 space-y-2">
           {!locked && (
             <label className="flex cursor-pointer flex-col items-center rounded-md border-2 border-dashed border-border p-5 text-sm text-muted-foreground hover:border-primary">
               Escolher ficheiros (vários de uma vez)
               <span className="text-xs">JPG, PNG, WebP, HEIC, SVG, GIF, PDF · até 50 MB</span>
-              <input type="file" multiple className="hidden" onChange={(e) => onFiles(e.target.files)} />
+              <input id={field.id} type="file" multiple accept={accept} className="hidden" onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
             </label>
           )}
-          {uploads.map((u) => (
-            <div key={u.name} className="text-xs"><span>{u.name}</span><div className="mt-1 h-1.5 rounded-full bg-muted"><div className="h-1.5 rounded-full bg-primary" style={{ width: `${u.pct}%` }} /></div></div>
-          ))}
-          {errors.map((e) => <p key={e} className="text-xs text-destructive">{e}</p>)}
-          <ul className="space-y-1 text-sm">{a.files.map((x) => <li key={x.name}>📎 {x.name} <span className="text-xs text-muted-foreground">{(x.size / 1e6).toFixed(1)} MB</span></li>)}</ul>
+          {uploads.map((n) => <p key={n} className="text-xs text-muted-foreground">A enviar {n}…</p>)}
+          <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id}>📎 {x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></li>)}</ul>
         </div>
       )}
+      {errors.map((e) => <p key={e} className="mt-1 text-xs text-destructive">{e}</p>)}
     </div>
   );
 }
+

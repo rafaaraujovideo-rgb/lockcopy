@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 const DB_DIR = resolve(process.cwd(), "db");
 
 const files = readdirSync(DB_DIR)
-  .filter((f) => f.endsWith(".sql"))
+  .filter((f) => /^\d{4}_.*\.sql$/.test(f))
   .sort();
 
 const sql = files.map((f) => readFileSync(resolve(DB_DIR, f), "utf8")).join("\n");
