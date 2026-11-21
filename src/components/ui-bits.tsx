@@ -33,7 +33,7 @@ const tones: Record<string, string> = {
   expirado: "bg-muted text-muted-foreground",
 };
 export function Badge({ s }: { s: string }) {
-  return <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", tones[s] ?? tones.vazio)}>{s}</span>;
+  return <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", tones[s] ?? tones["vazio"])}>{s}</span>;
 }
 
 export function download(name: string, content: string, type: string) {

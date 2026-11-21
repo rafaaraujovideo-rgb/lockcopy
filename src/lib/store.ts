@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 export type FieldType = "text" | "longtext" | "files";
-export type Field = { id: string; label: string; type: FieldType; hint?: string };
+export type Field = { id: string; label: string; type: FieldType; hint?: string | undefined };
 export type Section = { id: string; page: string; fields: Field[] };
 export type Template = { id: string; name: string; description: string; sections: Section[] };
 
@@ -10,7 +10,7 @@ export type Answer = {
   text: string;
   files: FileItem[];
   status: "vazio" | "enviado" | "aprovado" | "ajuste";
-  note?: string;
+  note?: string | undefined;
 };
 export type HistoryEntry = { at: string; who: string; what: string };
 export type Request = {
