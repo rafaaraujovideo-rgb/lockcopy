@@ -4,6 +4,7 @@ import type React from "react";
 import { PLANS } from "@/lib/store";
 import { Lock, Menu, X } from "lucide-react";
 import { LandingDemo } from "@/components/landing-demo";
+import { BeforeAfter, SampleExport, SavingsCalc } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -75,6 +76,14 @@ function Landing() {
         </div>
       </section>
 
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <p className="eyebrow">The problem</p>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">From scattered emails to one checklist.</h2>
+          <div className="mt-10"><BeforeAfter /></div>
+        </div>
+      </section>
+
       <section id="demo" className="scroll-mt-20 border-b border-border bg-muted/50">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -102,6 +111,17 @@ function Landing() {
             <Feature n="04" t="Exports that drop in" d="ZIP organized per page, CSV ready for Webflow CMS, JSON for Framer. Images converted to WebP.">
               <div className="flex gap-2 font-mono text-[11px]">{["content.zip", "webflow.csv", "framer.json"].map((x) => <span key={x} className="rounded-md border border-border bg-background px-2 py-1">{x}</span>)}</div>
             </Feature>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl space-y-16 px-6 py-20">
+          <SampleExport />
+          <div>
+            <p className="eyebrow">Time back</p>
+            <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">How much does the chase cost you?</h2>
+            <div className="mt-8"><SavingsCalc /></div>
           </div>
         </div>
       </section>

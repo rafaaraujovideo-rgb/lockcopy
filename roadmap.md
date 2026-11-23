@@ -23,3 +23,8 @@
 - [x] Chave secreta do Supabase guardada; fila de emails envia pelo Brevo (teste enviado com sucesso). Remetente atual: o Gmail verificado no Brevo; trocar por um email do domínio quando houver.
 - [ ] Primeiro checkout real no Stripe (modo real) — não testado por mim.
 - [ ] Voltar a ligar 'Confirm email' no Supabase antes de publicar.
+
+## Nível de mercado
+- [x] Bloco 1 — Landing: antes/depois, ZIP de exemplo real, calculadora de poupança.
+- [ ] Bloco 2 — Entrar em ecrã dividido, onboarding em 3 passos (logótipo, pedido de exemplo, abrir portal).
+- [ ] Bloco 3 — Pedido editável, portal por páginas com progresso, upload múltiplo, copiar campo na revisão.
