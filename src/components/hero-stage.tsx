@@ -44,7 +44,7 @@ export function HeroStage() {
           </div>
         </div>
       </div>
-      <p className="mt-4 text-center font-mono text-[11px] text-muted-foreground">Interactive — the same screens as the real app. Type, upload, then approve.</p>
+      <p className="mt-4 text-center font-mono text-[11px] text-muted-foreground">Try it: type an answer, add a photo, then approve it as the studio.</p>
     </div>
   );
 }

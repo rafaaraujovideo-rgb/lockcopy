@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 const STEPS = [
   { t: "Send the link", d: "Pick a template and share a private link." },
-  { t: "Client fills it in", d: "No account. Texts and files, page by page." },
-  { t: "Review and approve", d: "Approve field by field. Approved stays locked." },
+  { t: "Client fills it in", d: "No sign-up. Text and files for each page." },
+  { t: "Review and approve", d: "Approve each answer. Approved answers are locked." },
   { t: "Export", d: "CSV for Webflow, JSON for Framer or ZIP." },
 ];
 

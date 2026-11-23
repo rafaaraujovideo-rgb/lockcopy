@@ -21,7 +21,7 @@ export function BeforeAfter() {
     <div className="grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
       <div className="bg-card p-6">
         <p className="eyebrow">Without Lockcopy</p>
-        <p className="mt-2 text-sm text-muted-foreground">Content arrives in pieces, across threads, in the wrong formats.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Texts and photos come in separate emails and in different formats.</p>
         <ul className="mt-5 space-y-2">
           {mess.map((m, i) => (
             <li key={i} className="flex items-start gap-3 rounded-md border border-border bg-background p-3 text-xs">
@@ -37,7 +37,7 @@ export function BeforeAfter() {
       </div>
       <div className="bg-card p-6">
         <p className="eyebrow">With Lockcopy</p>
-        <p className="mt-2 text-sm text-muted-foreground">One link, one checklist per page, every field reviewed.</p>
+        <p className="mt-2 text-sm text-muted-foreground">One link, a checklist per page, and you review every answer.</p>
         <div className="mt-5 rounded-md border border-border bg-background">
           <div className="flex items-center justify-between border-b border-border px-3 py-2 text-xs">
             <span className="font-medium">Reed Clinic · Business site</span><span className="font-mono text-muted-foreground">3/4</span>
@@ -118,8 +118,8 @@ export function SampleExport() {
     <div className="flex flex-col gap-6 rounded-lg border border-border bg-card p-6 shadow-card md:flex-row md:items-center md:justify-between">
       <div>
         <p className="eyebrow">See the output</p>
-        <h3 className="mt-2 text-xl font-bold tracking-tight">Download a real sample export.</h3>
-        <p className="mt-1.5 max-w-md text-sm text-muted-foreground">The exact files your team receives: Webflow CSV, Framer JSON and WebP images sorted by page and field.</p>
+        <h3 className="mt-2 text-xl font-bold tracking-tight">Download a sample export.</h3>
+        <p className="mt-1.5 max-w-md text-sm text-muted-foreground">These are the files you get: a Webflow CSV, a Framer JSON file and WebP images sorted by page.</p>
         <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">{["webflow.csv", "framer.json", "home/…/facade.webp", "README.txt"].map((x) => <span key={x} className="rounded-md border border-border bg-background px-2 py-1">{x}</span>)}</div>
       </div>
       <button onClick={get} disabled={busy} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft disabled:opacity-60">
@@ -157,7 +157,7 @@ export function SavingsCalc() {
         <p className="eyebrow">Your estimate</p>
         <p className="mt-2 font-display text-4xl">{hours} h<span className="text-base text-muted-foreground"> / month</span></p>
         <p className="mt-1 text-sm text-muted-foreground">≈ ${value.toLocaleString("en-US")} of time you spend on follow-ups today.</p>
-        <p className="mt-4 flex items-start gap-1.5 text-xs text-muted-foreground"><Check className="mt-0.5 h-3 w-3" />Based only on your numbers. Real savings vary by client.</p>
+        <p className="mt-4 flex items-start gap-1.5 text-xs text-muted-foreground"><Check className="mt-0.5 h-3 w-3" />An estimate based on the numbers you entered.</p>
       </div>
     </div>
   );
@@ -167,7 +167,7 @@ export function StackBar() {
   const tools = [siWebflow, siFramer, siFigma, siWordpress, siNotion, siGoogledrive];
   return (
     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-      <p className="eyebrow">Exports fit the stack you already use</p>
+      <p className="eyebrow">Exports for</p>
       <ul className="flex flex-wrap items-center gap-x-8 gap-y-4 text-ink-soft">
         {tools.map((t) => (
           <li key={t.slug} className="flex items-center gap-2 opacity-70 transition-opacity hover:opacity-100">
@@ -208,9 +208,9 @@ export function ExportPeek() {
 
 const FAQS: Array<[string, string]> = [
   ["Does my client need an account?", "No. They get a private link, fill in each page at their own pace, and everything autosaves."],
-  ["Can I use my own logo and colors?", "Yes. Add your logo and brand color and the client portal shows your studio, not ours."],
-  ["How does the 14-day trial work?", "No credit card needed. You get 14 days free; add a card on the billing page only if you want to keep going, otherwise the trial simply ends."],
-  ["What if I don't use Webflow or Framer?", "Download a ZIP organized by page, with copy in text files and images already converted to WebP — it works with any builder."],
+  ["Can I use my own logo and colors?", "Yes. Add your logo and brand color and the client portal shows your studio's name and look."],
+  ["How does the 14-day trial work?", "No credit card needed. You get 14 days free; add a card on the billing page only if you want to keep going. If you don't, the trial ends."],
+  ["What if I don't use Webflow or Framer?", "Download a ZIP organized by page, with copy in text files and images converted to WebP. You can use it with any site builder."],
   ["Are my clients' files safe?", "Files are stored privately and isolated per agency. Only your team and the client with the link can see them."],
 ];
 
