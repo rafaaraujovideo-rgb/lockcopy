@@ -32,30 +32,30 @@ function AppLayout() {
     if (ready && !session) nav({ to: "/entrar", search: { modo: "entrar", seguir: "/app" } });
   }, [ready, session, nav]);
 
-  const link = "rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground";
+  const link = "rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground";
   const org = ws.data?.org;
   const planName = org ? { teste: "Trial", solo: "Solo", agency: "Agency" }[org.plan] : "";
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border bg-card/80 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-5 py-3">
-          <Link to="/" className="mr-4 flex items-center gap-2 text-base font-semibold tracking-tight"><span className="h-2 w-2 rounded-full bg-seal" />Lockcopy</Link>
+          <Link to="/" className="mr-5 flex items-center gap-2 text-[15px] font-bold tracking-tight"><span className="grid h-6 w-6 place-items-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground shadow-btn">L</span>Lockcopy</Link>
           {org && (
             <>
-              <Link to="/app" activeOptions={{ exact: true }} className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>Requests</Link>
-              <Link to="/app/novo" className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>New request</Link>
-              <Link to="/app/faturacao" className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>Billing</Link>
-              {isAdminUser(session?.user) && <Link to="/app/admin" className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>Admin</Link>}
+              <Link to="/app" activeOptions={{ exact: true }} className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Requests</Link>
+              <Link to="/app/novo" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>New request</Link>
+              <Link to="/app/faturacao" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Billing</Link>
+              {isAdminUser(session?.user) && <Link to="/app/admin" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Admin</Link>}
             </>
           )}
           <span className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
-            {org && <span>{org.name} · {planName} plan{org.trial_ends_at ? ` · trial until ${fmtDate(org.trial_ends_at)}` : ""}</span>}
+            {org && <span className="hidden rounded-md border border-border bg-card px-2 py-1 font-mono text-[11px] sm:inline">{org.name} · {planName} plan{org.trial_ends_at ? ` · trial until ${fmtDate(org.trial_ends_at)}` : ""}</span>}
             {session && <button className="underline-offset-2 hover:underline" onClick={() => signOut()}>Sign out</button>}
           </span>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-8">
+      <main className="mx-auto max-w-6xl px-5 py-10">
         {!ready || !session || ws.isLoading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : ws.error ? (

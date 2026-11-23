@@ -41,7 +41,7 @@ function Modelos() {
           </Card>
         ))}
       </div>
-      <div className="mt-12 rounded-2xl border border-border bg-card p-8 text-center">
+      <div className="mt-12 rounded-lg border border-border bg-card p-8 text-center">
         <h2 className="font-display text-2xl font-semibold">Want the client to fill this in by themselves?</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
           In Lockcopy these templates become a portal with a link, a deadline and automatic reminders — and every answer is ready to export.

@@ -71,7 +71,7 @@ function Comparar() {
         <p className="text-xs">Comparison based on public information available in November 2026; confirm current prices and features on the respective sites.</p>
       </section>
 
-      <div className="mt-12 rounded-2xl bg-primary px-8 py-10 text-center text-primary-foreground">
+      <div className="mt-12 rounded-lg bg-primary px-8 py-10 text-center text-primary-foreground">
         <h2 className="text-2xl font-bold">Try it with no commitment</h2>
         <p className="mt-2 text-sm opacity-80">14-day trial. Nothing is charged during the trial.</p>
         <Link to="/comecar" className="mt-5 inline-block rounded-full bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">

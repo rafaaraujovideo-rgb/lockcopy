@@ -6,9 +6,9 @@ export function Btn({ variant = "primary", className, ...p }: ButtonHTMLAttribut
     <button
       {...p}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50",
-        variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/90",
-        variant === "outline" && "border border-border bg-card hover:bg-muted",
+        "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-50",
+        variant === "primary" && "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft",
+        variant === "outline" && "border border-border bg-card shadow-card hover:bg-muted",
         variant === "ghost" && "hover:bg-muted",
         className,
       )}
@@ -16,11 +16,11 @@ export function Btn({ variant = "primary", className, ...p }: ButtonHTMLAttribut
   );
 }
 
-export const btnClass = "inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90";
-export const inputClass = "w-full rounded-lg border border-input bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring";
+export const btnClass = "inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft";
+export const inputClass = "w-full rounded-md border border-input bg-card px-3 py-2 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/15";
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-xl border border-border bg-card p-5 shadow-card", className)}>{children}</div>;
+  return <div className={cn("rounded-lg border border-border bg-card p-5 shadow-card", className)}>{children}</div>;
 }
 
 const tones: Record<string, string> = {
@@ -42,7 +42,7 @@ const LABELS: Record<string, string> = {
   expired: "Expired",
 };
 export function Badge({ s }: { s: string }) {
-  return <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", tones[s] ?? tones["empty"])}>{LABELS[s] ?? s}</span>;
+  return <span className={cn("inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[11px] font-medium before:h-1.5 before:w-1.5 before:rounded-full before:bg-current before:opacity-70", tones[s] ?? tones["empty"])}>{LABELS[s] ?? s}</span>;
 }
 
 export function download(name: string, content: string, type: string) {

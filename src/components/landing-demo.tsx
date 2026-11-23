@@ -54,7 +54,7 @@ export function LandingDemo() {
             <button
               onClick={() => go(i)}
               className={cn(
-                "relative w-full overflow-hidden rounded-xl border p-4 text-left transition-all",
+                "relative w-full overflow-hidden rounded-lg border p-4 text-left transition-all",
                 step === i ? "border-primary/20 bg-card shadow-card" : "border-transparent hover:bg-card/60",
               )}
             >
@@ -69,7 +69,7 @@ export function LandingDemo() {
         ))}
       </ol>
 
-      <div className="relative min-h-[420px] overflow-hidden rounded-2xl border border-border bg-card shadow-float">
+      <div className="relative min-h-[420px] overflow-hidden rounded-lg border border-border bg-card shadow-float">
         <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" />
           <span className="ml-3 rounded-md bg-muted px-3 py-1 text-xs text-muted-foreground">
@@ -86,14 +86,14 @@ export function LandingDemo() {
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {["Business site", "Landing page", "E-commerce"].map((m, i) => (
-                  <div key={m} className={cn("rounded-xl border p-4 text-sm", i === 0 ? "border-primary bg-primary/5" : "border-border")}>
+                  <div key={m} className={cn("rounded-lg border p-4 text-sm", i === 0 ? "border-primary bg-primary/5" : "border-border")}>
                     <FileText className="h-4 w-4 text-muted-foreground" />
                     <p className="mt-2 font-medium">{m}</p>
                     <p className="text-xs text-muted-foreground">{[7, 4, 9][i]} fields</p>
                   </div>
                 ))}
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/50 p-2 pl-4">
+              <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 p-2 pl-4">
                 <Link2 className="h-4 w-4 text-muted-foreground" />
                 <span className="flex-1 truncate text-sm">https://lockcopy.app/c/x7k2q9</span>
                 <button
@@ -145,7 +145,7 @@ export function LandingDemo() {
                 <span className="text-sm text-muted-foreground">{approved} of {FIELDS.length} approved</span>
               </div>
               <div className="h-1.5 rounded-full bg-muted"><div className="h-1.5 rounded-full bg-seal transition-all duration-500" style={{ width: `${(approved / FIELDS.length) * 100}%` }} /></div>
-              <div className="divide-y divide-border rounded-xl border border-border">
+              <div className="divide-y divide-border rounded-lg border border-border">
                 {FIELDS.map((f) => {
                   const s = st[f.id];
                   return (
@@ -184,7 +184,7 @@ export function LandingDemo() {
                   ))}
                 </div>
               </div>
-              <pre className="overflow-x-auto rounded-xl bg-primary p-4 font-mono text-xs leading-relaxed text-primary-foreground/90">
+              <pre className="overflow-x-auto rounded-lg bg-primary p-4 font-mono text-xs leading-relaxed text-primary-foreground/90">
 {fmt === "webflow" && `page,field,value
 home,main-headline,"A family dental clinic in the city centre since 1998."
 home,cover-photo,assets/home/facade.webp

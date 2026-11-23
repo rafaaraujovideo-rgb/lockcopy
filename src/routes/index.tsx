@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import type React from "react";
 import { PLANS } from "@/lib/store";
 import { Lock, Menu, X } from "lucide-react";
 import { LandingDemo } from "@/components/landing-demo";
@@ -25,7 +26,7 @@ function Landing() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <a href="#" className="flex items-center gap-2 text-lg font-bold tracking-tight"><span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</a>
+          <a href="#" className="flex items-center gap-2 text-lg font-bold tracking-tight"><span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground shadow-btn"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</a>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
             <a href="#demo" className="hover:text-foreground">Demo</a>
             <a href="#como" className="hover:text-foreground">Features</a>
@@ -33,8 +34,8 @@ function Landing() {
             <Link to="/entrar" search={{ modo: "criar", seguir: "/app" }} className="hover:text-foreground">Create account</Link>
           </nav>
           <div className="hidden items-center gap-2 text-sm md:flex">
-            <Link to="/entrar" className="rounded-full px-4 py-2 text-muted-foreground hover:text-foreground">Sign in</Link>
-            <Link to="/comecar" className="rounded-full bg-primary px-4 py-2 font-medium text-primary-foreground hover:opacity-90">Try for free</Link>
+            <Link to="/entrar" className="rounded-md px-4 py-2 text-muted-foreground hover:text-foreground">Sign in</Link>
+            <Link to="/comecar" className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Try for free</Link>
           </div>
           <button aria-label="Menu" onClick={() => setOpen(!open)} className="rounded-lg p-2 md:hidden">{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
         </div>
@@ -44,57 +45,73 @@ function Landing() {
               <a href="#demo">Demo</a><a href="#como">Features</a><a href="#precos">Pricing</a>
               <Link to="/entrar" search={{ modo: "criar", seguir: "/app" }}>Create account</Link>
               <div className="mt-2 flex gap-2">
-                <Link to="/entrar" className="flex-1 rounded-full border border-border py-2 text-center">Sign in</Link>
-                <Link to="/comecar" className="flex-1 rounded-full bg-primary py-2 text-center font-medium text-primary-foreground">Try it</Link>
+                <Link to="/entrar" className="flex-1 rounded-md border border-border py-2 text-center">Sign in</Link>
+                <Link to="/comecar" className="flex-1 rounded-md bg-primary py-2 text-center font-medium text-primary-foreground">Try it</Link>
               </div>
             </nav>
           </div>
         )}
       </header>
 
-      <section className="mx-auto max-w-4xl px-6 pb-16 pt-16 text-center md:pt-24">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">For web freelancers and agencies</p>
-        <h1 className="mt-6 font-display text-4xl leading-[1.1] md:text-6xl">
-          Client content,<br /><span className="text-seal">organized and approved.</span>
-        </h1>
-        <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-          Send a link. The client fills in texts and uploads files, page by page, with no account. You review, approve and export to Webflow or Framer.
-        </p>
-        <div className="mt-9 flex flex-wrap justify-center gap-3">
-          <Link to="/comecar" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90">Start 14-day trial</Link>
-          <a href="#demo" className="rounded-full border border-border bg-card px-6 py-3 text-sm hover:bg-muted">See what the client sees</a>
-        </div>
-        <p className="mt-4 text-xs text-muted-foreground">Card required upfront. Nothing is charged during the 14 days.</p>
-      </section>
-
-      <section id="demo" className="mx-auto max-w-6xl scroll-mt-20 px-6 pb-24">
-        <p className="mb-6 text-center text-sm text-muted-foreground">See how it works — click each step and try it.</p>
-        <LandingDemo />
-      </section>
-
-      <section id="como" className="scroll-mt-16 border-y border-border bg-card">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-4">
-          {[
-            ["Per-page templates", "Business site, landing, e-commerce and rebranding, ready to send."],
-            ["No account for the client", "A private link with autosave and file uploads."],
-            ["Field-by-field review", "Approve or request a change with a note. Approved stays locked."],
-            ["Clean export", "ZIP per page, CSV for Webflow and JSON for Framer."],
-          ].map(([t, d], i) => (
-            <div key={t}>
-              <span className="text-xs text-muted-foreground">0{i + 1}</span>
-              <h3 className="mt-3 text-lg font-bold">{t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d}</p>
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 md:grid-cols-[1.1fr_1fr] md:items-end md:pt-24">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-card"><span className="h-1.5 w-1.5 rounded-full bg-seal" />Content collection for web studios</span>
+            <h1 className="mt-7 font-display text-[2.6rem] leading-[1.02] md:text-[4.2rem]">
+              Get the copy.<br />Get the photos.<br /><span className="text-muted-foreground">Skip the email chase.</span>
+            </h1>
+          </div>
+          <div className="md:pb-2">
+            <p className="max-w-md text-lg leading-relaxed text-ink-soft">
+              Send one link. Your client fills in each page and uploads files — no account. You approve field by field, lock it, and export to Webflow or Framer.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/comecar" className="rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
+              <a href="#demo" className="rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">Try the demo ↓</a>
             </div>
-          ))}
+            <p className="mt-4 font-mono text-[11px] text-muted-foreground">Card upfront · $0 for 14 days · cancel anytime</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" className="scroll-mt-20 border-b border-border bg-muted/50">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div><p className="eyebrow">Live demo</p><h2 className="mt-2 font-display text-3xl md:text-4xl">Click through it yourself.</h2></div>
+            <p className="max-w-xs text-sm text-muted-foreground">Four steps, the same screens your client and your team use.</p>
+          </div>
+          <div className="rounded-xl border border-border bg-card p-2 shadow-float"><LandingDemo /></div>
+        </div>
+      </section>
+
+      <section id="como" className="scroll-mt-16 border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <p className="eyebrow">What you get</p>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Built around the part of the project nobody enjoys.</h2>
+          <div className="mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
+            <Feature n="01" t="Per-page templates" d="Business site, landing page, e-commerce and rebrand — each page lists exactly what you need.">
+              <div className="space-y-1.5 font-mono text-[11px]">{["Home · Hero headline", "Home · 3 service blurbs", "About · Team photos"].map((x) => <div key={x} className="flex justify-between rounded-md border border-border bg-background px-2.5 py-1.5"><span>{x}</span><span className="text-muted-foreground">required</span></div>)}</div>
+            </Feature>
+            <Feature n="02" t="No account for your client" d="A private link with autosave. They can stop, come back tomorrow, and pick up where they left off.">
+              <div className="rounded-md border border-border bg-background p-3 text-xs"><p className="text-muted-foreground">Hero headline</p><p className="mt-1 font-medium">Fresh bread, every morning since 1987<span className="animate-caret">|</span></p><p className="mt-2 font-mono text-[10px] text-seal">● Saved</p></div>
+            </Feature>
+            <Feature n="03" t="Field-by-field review" d="Approve or send back with a note. Approved fields lock, so nothing changes behind your back.">
+              <div className="flex gap-2 text-[11px]"><span className="rounded-md bg-accent px-2 py-1 font-medium text-accent-foreground">✓ Approved · locked</span><span className="rounded-md bg-warn px-2 py-1 font-medium text-warn-foreground">↺ Change requested</span></div>
+            </Feature>
+            <Feature n="04" t="Exports that drop in" d="ZIP organized per page, CSV ready for Webflow CMS, JSON for Framer. Images converted to WebP.">
+              <div className="flex gap-2 font-mono text-[11px]">{["content.zip", "webflow.csv", "framer.json"].map((x) => <span key={x} className="rounded-md border border-border bg-background px-2 py-1">{x}</span>)}</div>
+            </Feature>
+          </div>
         </div>
       </section>
 
       <section id="precos" className="scroll-mt-16 mx-auto max-w-4xl px-6 py-24">
         <div className="text-center">
-          <h2 className="font-display text-5xl">Simple pricing</h2>
-          <div className="mt-6 inline-flex rounded-full border border-border bg-card p-1 text-sm">
+          <p className="eyebrow">Pricing</p><h2 className="mt-2 font-display text-4xl md:text-5xl">Two plans. No surprises.</h2>
+          <div className="mt-6 inline-flex rounded-md border border-border bg-muted p-1 text-sm">
             {(["month", "year"] as const).map((b) => (
-              <button key={b} onClick={() => setBilling(b)} className={"rounded-full px-4 py-1.5 transition-colors " + (billing === b ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>{b === "month" ? "Monthly" : "Yearly"}</button>
+              <button key={b} onClick={() => setBilling(b)} className={"rounded px-4 py-1.5 transition-colors " + (billing === b ? "bg-card text-foreground shadow-card font-medium" : "text-muted-foreground")}>{b === "month" ? "Monthly" : "Yearly"}</button>
             ))}
           </div>
         </div>
@@ -102,16 +119,16 @@ function Landing() {
           {(["solo", "agency"] as const).map((k) => {
             const p = PLANS[k];
             return (
-              <div key={k} className={"rounded-2xl border bg-card p-8 shadow-card " + (k === "agency" ? "border-primary/30" : "border-border")}>
+              <div key={k} className={"rounded-lg border bg-card p-8 shadow-card " + (k === "agency" ? "border-primary shadow-float" : "border-border")}>
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium">{p.name}</h3>
-                  {k === "agency" && <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs text-accent-foreground">Recommended</span>}
+                  {k === "agency" && <span className="rounded-md bg-accent px-2 py-0.5 text-xs text-accent-foreground">Recommended</span>}
                 </div>
                 <p className="mt-4"><span className="font-display text-5xl">${billing === "month" ? p.month : p.year}</span><span className="text-muted-foreground"> /{billing === "month" ? "month" : "year"}</span></p>
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                   <li>{p.requests} active requests</li><li>{p.users} {p.users > 1 ? "users" : "user"}</li><li>{p.storageGb} GB of files</li>
                 </ul>
-                <Link to="/comecar" search={{ plano: k, ciclo: billing }} className={"mt-8 block rounded-full py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground" : "border border-border hover:bg-muted")}>Try 14 days</Link>
+                <Link to="/comecar" search={{ plano: k, ciclo: billing }} className={"mt-8 block rounded-md py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft" : "border border-border hover:bg-muted")}>Try 14 days</Link>
               </div>
             );
           })}
@@ -120,19 +137,19 @@ function Landing() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="flex flex-col items-center justify-between gap-6 rounded-2xl bg-primary px-8 py-10 text-primary-foreground md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-6 rounded-lg bg-primary px-8 py-12 shadow-float text-primary-foreground md:flex-row">
           <div>
-            <h2 className="text-2xl font-bold md:text-3xl">Stop chasing clients for content.</h2>
+            <h2 className="font-display text-3xl md:text-4xl">Stop chasing clients for content.</h2>
             <p className="mt-2 text-sm opacity-80">14-day trial. Nothing is charged during the trial.</p>
           </div>
-          <Link to="/comecar" className="shrink-0 rounded-full bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start now</Link>
+          <Link to="/comecar" className="shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start now</Link>
         </div>
       </section>
 
-      <footer className="border-t border-border bg-card">
+      <footer className="border-t border-border">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 md:grid-cols-5">
           <div className="md:col-span-2">
-            <span className="flex items-center gap-2 text-lg font-bold"><span className="grid h-7 w-7 place-items-center rounded-lg bg-primary text-primary-foreground"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</span>
+            <span className="flex items-center gap-2 text-lg font-bold"><span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground shadow-btn"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</span>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">Collect, approve and lock client content. Built for web freelancers and agencies.</p>
           </div>
           {[
@@ -154,6 +171,15 @@ function Landing() {
           </div>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function Feature({ n, t, d, children }: { n: string; t: string; d: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-6 bg-card p-8">
+      <div><span className="font-mono text-[11px] text-muted-foreground">{n}</span><h3 className="mt-2 text-lg font-bold tracking-tight">{t}</h3><p className="mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">{d}</p></div>
+      <div className="mt-auto">{children}</div>
     </div>
   );
 }
