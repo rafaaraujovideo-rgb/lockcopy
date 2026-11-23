@@ -145,7 +145,7 @@ function RequestPage() {
           <Btn variant="outline" className="w-full" disabled={!!busy} onClick={zip}>{busy === "zip" ? "Preparing ZIP…" : "ZIP per page"}</Btn>
           <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-webflow.csv`, webflowCsv(exp), "text/csv")}>CSV for Webflow</Btn>
           <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-framer.json`, framerJson(exp), "application/json")}>JSON for Framer</Btn>
-          <p className="text-xs text-muted-foreground">Files ready to import, organized by page. This is not a sync.</p>
+          <p className="text-xs text-muted-foreground">Ready to import into Webflow CMS or Framer, organized by page.</p>
         </Card>
         <Card>
           <p className="mb-2 text-sm font-medium">History</p>

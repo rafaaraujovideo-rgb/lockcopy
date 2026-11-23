@@ -102,7 +102,7 @@ function Portal() {
         </div>
       </header>
       <main className="mx-auto max-w-3xl space-y-5 px-5 py-8">
-        <p className="text-sm text-muted-foreground">Everything is saved automatically. You can leave and come back later with this same link.</p>
+        <p className="text-sm text-muted-foreground">Autosaved as you type. Come back anytime with this link.</p>
         <nav aria-label="Pages" className="flex gap-1 overflow-x-auto border-b border-border pb-px">
           {p.sections.map((s, i) => {
             const fs = s.fields ?? [];
@@ -145,7 +145,7 @@ function Portal() {
           <Card className="text-center">
             <Check className="mx-auto h-6 w-6 text-seal" />
             <p className="mt-2 font-display text-lg font-semibold">Sent to {p.request.agency_name}</p>
-            <p className="mt-1 text-sm text-muted-foreground">They've been emailed and will review it. This link stays open if they ask for a change.</p>
+            <p className="mt-1 text-sm text-muted-foreground">They'll go through each page and tell you here if anything needs a tweak.</p>
           </Card>
         )}
       </main>

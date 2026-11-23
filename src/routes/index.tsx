@@ -56,7 +56,7 @@ function Landing() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className="eyebrow">The problem</p>
-          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">From scattered emails to one checklist.</h2>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">No more “did you get my email with the photos?”</h2>
           <div className="mt-10"><BeforeAfter /></div>
         </div>
       </section>
