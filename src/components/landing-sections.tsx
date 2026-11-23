@@ -203,7 +203,7 @@ export function HeroPreview() {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[1.25rem] bg-seal/10 blur-2xl" />
-      <div className="rounded-xl border border-border bg-card shadow-window">
+      <div className="rounded-xl border border-border bg-card shadow-window specular">
         <div className="flex items-center gap-3 border-b border-border px-3 py-2.5">
           <div className="flex gap-1.5">{[0, 1, 2].map((i) => <span key={i} className="h-2.5 w-2.5 rounded-full bg-border" />)}</div>
           <div className="mx-auto flex items-center gap-1.5 rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5" />lockcopy.com/c/bloom-bakery</div>
@@ -282,5 +282,90 @@ export function Faq() {
         </details>
       ))}
     </div>
+  );
+}
+
+const QUEUE: Array<{ c: string; f: string; s: "review" | "locked" | "missing" }> = [
+  { c: "Bloom Bakery", f: "Home · Hero headline", s: "review" },
+  { c: "Bloom Bakery", f: "Team photos · 4 files", s: "locked" },
+  { c: "Reed Clinic", f: "About · Your story", s: "review" },
+  { c: "Reed Clinic", f: "Contact · Logo", s: "missing" },
+  { c: "Atlas Coffee", f: "Menu · Prices", s: "locked" },
+];
+
+/** Studio side of the hero stage: a review queue the visitor can actually approve. */
+export function StudioPreview() {
+  const [done, setDone] = useState<Record<number, boolean>>({});
+  const open = QUEUE.filter((q, i) => q.s === "review" && !done[i]).length;
+  return (
+    <div className="rounded-xl border border-border bg-card shadow-window specular">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+        <div><p className="text-sm font-bold tracking-tight">Review queue</p><p className="font-mono text-[10px] text-muted-foreground">{open} waiting for you · 3 clients</p></div>
+        <span className="font-mono text-[10px] text-muted-foreground">Click to approve</span>
+      </div>
+      <ul className="divide-y divide-border">
+        {QUEUE.map((q, i) => {
+          const st = done[i] ? "locked" : q.s;
+          return (
+            <li key={i} className="flex items-center justify-between gap-3 px-4 py-3">
+              <div className="min-w-0"><p className="text-[11px] text-muted-foreground">{q.c}</p><p className="truncate text-sm font-medium">{q.f}</p></div>
+              {st === "review" ? (
+                <button type="button" onClick={() => setDone({ ...done, [i]: true })} className="press shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground shadow-btn">Approve & lock</button>
+              ) : (
+                <span className={"shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium animate-lc-in " + (st === "locked" ? "bg-accent text-accent-foreground" : "bg-warn text-warn-foreground")}>{st === "locked" ? "✓ Locked" : "Missing"}</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/** Hero stage: switch between what the client sees and what the studio sees. */
+export function HeroStage() {
+  const [v, setV] = useState<"client" | "studio">("client");
+  return (
+    <div>
+      <div className="mx-auto mb-5 flex w-fit rounded-md border border-border bg-muted p-1 text-xs">
+        {(["client", "studio"] as const).map((k) => (
+          <button key={k} type="button" onClick={() => setV(k)} className={"rounded px-3.5 py-1.5 font-medium transition-all duration-300 " + (v === k ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground")}>{k === "client" ? "Your client sees" : "Your studio sees"}</button>
+        ))}
+      </div>
+      <div key={v} className="mx-auto max-w-2xl animate-lc-in">{v === "client" ? <HeroPreview /> : <StudioPreview />}</div>
+    </div>
+  );
+}
+
+function kb(n: number) { return n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.round(n / 1024) + " KB"; }
+
+/** Real tool in the page: converts the visitor's own photo to WebP in the browser. Nothing is uploaded. */
+export function WebpTry() {
+  const [r, setR] = useState<{ a: number; b: number; url: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const run = async (file: File) => {
+    setBusy(true);
+    try {
+      const bmp = await createImageBitmap(file);
+      const scale = Math.min(1, 2000 / bmp.width);
+      const c = document.createElement("canvas");
+      c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+      c.getContext("2d")!.drawImage(bmp, 0, 0, c.width, c.height);
+      const blob = await new Promise<Blob | null>((res) => c.toBlob(res, "image/webp", 0.8));
+      if (blob) setR({ a: file.size, b: blob.size, url: URL.createObjectURL(blob) });
+    } finally { setBusy(false); }
+  };
+  return (
+    <label className="block cursor-pointer rounded-md border border-dashed border-input bg-background p-3 text-xs transition-colors hover:border-primary">
+      <input type="file" accept="image/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) void run(f); }} />
+      {r ? (
+        <div className="flex items-center gap-3 animate-lc-in">
+          <img src={r.url} alt="Your photo converted to WebP" className="h-12 w-12 rounded object-cover" />
+          <div className="font-mono text-[11px]"><p className="text-muted-foreground line-through">{kb(r.a)}</p><p className="font-medium text-seal">{kb(r.b)} WebP · −{Math.max(0, Math.round((1 - r.b / r.a) * 100))}%</p></div>
+        </div>
+      ) : (
+        <p className="text-muted-foreground"><span className="font-medium text-foreground">{busy ? "Converting…" : "Pick a photo"}</span> — it's converted right here, never uploaded.</p>
+      )}
+    </label>
   );
 }

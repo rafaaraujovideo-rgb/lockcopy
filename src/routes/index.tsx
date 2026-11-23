@@ -4,7 +4,7 @@ import type React from "react";
 import { PLANS } from "@/lib/store";
 import { Lock, Menu, X } from "lucide-react";
 import { LandingDemo } from "@/components/landing-demo";
-import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroPreview, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
+import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroStage, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -56,22 +56,22 @@ function Landing() {
 
       <section className="relative overflow-hidden border-b border-border">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 md:grid-cols-[1fr_1fr] md:items-center md:pt-24">
-          <div>
+        <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-16 md:pt-24">
+          <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-card"><span className="h-1.5 w-1.5 rounded-full bg-seal" />Content collection for web studios</span>
-            <h1 className="mt-7 font-display text-[2.6rem] leading-[1.02] md:text-[4.2rem]">
-              Get the copy.<br />Get the photos.<br /><span className="text-muted-foreground">Skip the email chase.</span>
+            <h1 className="mt-7 font-display text-[2.6rem] leading-[1.02] md:text-[4.6rem]">
+              Get the copy. Get the photos.<br /><span className="text-muted-foreground">Skip the email chase.</span>
             </h1>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-soft">
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
               Send one link. Your client fills in each page and uploads files — no account. You approve field by field, lock it, and export to Webflow or Framer.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/start" className="rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
-              <a href="#demo" className="rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">Try the demo ↓</a>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link to="/start" className="press rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
+              <a href="#demo" className="press rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">Try the demo ↓</a>
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">Card upfront · $0 for 14 days · cancel anytime</p>
           </div>
-          <HeroPreview />
+          <div className="mt-14"><HeroStage /></div>
         </div>
       </section>
 
@@ -114,6 +114,9 @@ function Landing() {
             <Feature n="04" t="Exports that drop in" d="ZIP organized per page, CSV ready for Webflow CMS, JSON for Framer. Images converted to WebP.">
               <ExportPeek />
             </Feature>
+            <div className="md:col-span-2"><Feature n="05" t="Heavy photos, made light" d="Every image your client uploads becomes a web-ready WebP. Try it with one of yours.">
+              <WebpTry />
+            </Feature></div>
           </div>
         </div>
       </section>
