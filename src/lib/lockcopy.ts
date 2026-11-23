@@ -71,6 +71,7 @@ export function friendlyError(e: unknown) {
 }
 
 const EVENT_TEXT: Record<string, string> = {
+  file_removed: "Removed a file",
   request_created: "Request created",
   text_saved: "Client updated a text",
   file_added: "Client uploaded a file",

@@ -37,6 +37,7 @@ describe("db/*.sql", () => {
       "0008_english.sql",
       "0009_trial_in_app.sql",
       "0010_team_invites.sql",
+      "0011_logo_and_file_removal.sql",
     ]);
   });
 

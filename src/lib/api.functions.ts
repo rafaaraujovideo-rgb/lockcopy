@@ -193,7 +193,7 @@ export const createRequest = createServerFn({ method: "POST" })
         dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().or(z.literal("")),
         expiresAt: z.string().datetime().optional(),
         skip: z.array(z.object({ section: text(200), label: text(200) })).max(200).optional(),
-        extra: z.array(z.object({ label: text(200).min(1), type: z.enum(["text", "textarea", "image", "file"]) })).max(30).optional(),
+        extra: z.array(z.object({ label: text(200).min(1), type: z.enum(["text", "textarea", "image", "file"]), help: text(300).optional() })).max(30).optional(),
       })
       .parse(data),
   )
@@ -389,6 +389,16 @@ export const portalSendToAgency = createServerFn({ method: "POST" })
     return result as { ready: number; total: number };
   });
 
+/** Client removes a file it sent by mistake (blocked once the field is approved). */
+export const portalRemoveFile = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid, fileId: uuid }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = (await portalClient()) as unknown as { rpc: (f: string, a: unknown) => Promise<{ data: unknown; error: { message: string } | null }> };
+    const { data: result, error } = await supabase.rpc("portal_remove_file", { _token: data.token, _file: data.fileId });
+    if (error) throw new Error(error.message);
+    return result as { paths: Array<string | null> };
+  });
+
 /** Guarda uma resposta com autosave. */
 export const portalSave = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
@@ -472,7 +482,7 @@ async function customizeFields(
   supabase: { from: (t: string) => any },
   requestId: string,
   skip: Array<{ section: string; label: string }>,
-  extra: Array<{ label: string; type: "text" | "textarea" | "image" | "file" }>,
+  extra: Array<{ label: string; type: "text" | "textarea" | "image" | "file"; help?: string | undefined }>,
 ) {
   const { data: secs, error } = await supabase.from("sections").select("id, title, order_index, fields(id, label)").eq("request_id", requestId);
   if (error) throw new Error(error.message);
@@ -490,7 +500,7 @@ async function customizeFields(
     const next = rows.reduce((m, r) => Math.max(m, r.order_index), 0) + 1;
     const ins = await supabase.from("sections").insert({ request_id: requestId, title: "Extra questions", order_index: next }).select("id").single();
     if (ins.error) throw new Error(ins.error.message);
-    const f = await supabase.from("fields").insert(extra.map((x, i) => ({ section_id: ins.data.id, label: x.label, field_type: x.type, is_required: false, order_index: i })));
+    const f = await supabase.from("fields").insert(extra.map((x, i) => ({ section_id: ins.data.id, label: x.label, help_text: x.help || null, field_type: x.type, is_required: false, order_index: i })));
     if (f.error) throw new Error(f.error.message);
   }
 }

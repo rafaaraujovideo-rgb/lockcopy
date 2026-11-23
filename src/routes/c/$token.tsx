@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 import { getPortalSupabase } from "@/integrations/supabase/portal-client";
-import { portalAttachWebp, portalLoad, portalRegisterFile, portalSave, portalSendToAgency, type PortalField, type PortalSubmission } from "@/lib/api.functions";
+import { portalAttachWebp, portalLoad, portalRegisterFile, portalRemoveFile, portalSave, portalSendToAgency, type PortalField, type PortalSubmission } from "@/lib/api.functions";
 import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 
@@ -228,6 +228,18 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
     await qc.invalidateQueries({ queryKey: ["portal", token] });
   };
 
+  const removeFile = async (fileId: string) => {
+    setErrors([]);
+    try {
+      const r = await portalRemoveFile({ data: { token, fileId } });
+      const paths = r.paths.filter((x): x is string => !!x);
+      if (paths.length) await getPortalSupabase().storage.from("client-uploads").remove(paths);
+      await qc.invalidateQueries({ queryKey: ["portal", token] });
+    } catch (e) {
+      setErrors([friendlyError(e)]);
+    }
+  };
+
   const files = sub?.files ?? [];
   const accept = (field.allowed_mime ?? []).join(",") || undefined;
 
@@ -252,7 +264,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
             </label>
           )}
           {uploads.map((n) => <p key={n} className="text-xs text-muted-foreground">Uploading {n}…</p>)}
-          <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id}>{x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></li>)}</ul>
+          <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></span>{!locked && <button type="button" onClick={() => removeFile(x.id)} className="text-xs text-muted-foreground hover:text-destructive">Remove</button>}</li>)}</ul>
         </div>
       )}
       {errors.map((e) => <p key={e} className="mt-1 text-xs text-destructive">{e}</p>)}

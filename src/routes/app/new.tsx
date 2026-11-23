@@ -52,15 +52,15 @@ function NewRequest() {
   const [form, setForm] = useState({ client: "", clientEmail: "", title: "", deadline: new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10) });
   const [error, setError] = useState("");
   const [skip, setSkip] = useState<Set<string>>(new Set());
-  const [extra, setExtra] = useState<Array<{ label: string; type: "text" | "textarea" | "image" | "file" }>>([]);
-  const [draft, setDraft] = useState({ label: "", type: "text" as "text" | "textarea" | "image" | "file" });
+  const [extra, setExtra] = useState<Array<{ label: string; help: string; type: "text" | "textarea" | "image" | "file" }>>([]);
+  const [draft, setDraft] = useState({ label: "", help: "", type: "text" as "text" | "textarea" | "image" | "file" });
   const [busy, setBusy] = useState(false);
   const list = templates.data ?? [];
   const t = list.find((x) => x.id === tplId) ?? list[0];
   const k = (sec: string, label: string) => `${sec}\u0000${label}`;
   const kept = (t?.template_sections ?? []).reduce((n, s) => n + s.template_fields.filter((f) => !skip.has(k(s.title, f.label))).length, 0) + extra.length;
   const toggle = (sec: string, label: string) => setSkip((prev) => { const n = new Set(prev); const id = k(sec, label); if (n.has(id)) n.delete(id); else n.add(id); return n; });
-  const addExtra = () => { if (!draft.label.trim()) return; setExtra([...extra, { label: draft.label.trim(), type: draft.type }]); setDraft({ ...draft, label: "" }); };
+  const addExtra = () => { if (!draft.label.trim()) return; setExtra([...extra, { label: draft.label.trim(), help: draft.help.trim(), type: draft.type }]); setDraft({ ...draft, label: "", help: "" }); };
 
   const submit = async () => {
     if (!t) return;
@@ -126,7 +126,7 @@ function NewRequest() {
           <ul className="mt-1 text-sm">
             {extra.map((x, i) => (
               <li key={i} className="flex items-center gap-2 border-b border-border py-1.5">
-                <span className="flex-1">{x.label}</span>
+                <span className="flex-1">{x.label}{x.help && <span className="block text-xs text-muted-foreground">{x.help}</span>}</span>
                 <span className="font-mono text-[10px] text-muted-foreground">{x.type === "image" || x.type === "file" ? "files" : x.type === "textarea" ? "long text" : "text"}</span>
                 <button onClick={() => setExtra(extra.filter((_, j) => j !== i))} className="text-xs text-muted-foreground hover:text-destructive" aria-label={`Remove ${x.label}`}>Remove</button>
               </li>
@@ -139,6 +139,7 @@ function NewRequest() {
             </select>
             <Btn onClick={addExtra} disabled={!draft.label.trim() || extra.length >= 30}>Add</Btn>
           </div>
+          <input className={inputClass + " mt-2"} placeholder="Note for the client (optional), e.g. Weekdays and weekends" value={draft.help} maxLength={300} onChange={(e) => setDraft({ ...draft, help: e.target.value })} />
         </div>
       </Card>
     </div>

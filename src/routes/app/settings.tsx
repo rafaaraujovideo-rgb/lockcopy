@@ -42,6 +42,28 @@ function Settings() {
   if (!org) return null;
   const validLogo = /^https:\/\//.test(logo.trim());
 
+  const [uploading, setUploading] = useState(false);
+  const uploadLogo = async (file: File | undefined) => {
+    if (!file) return;
+    setError(""); setMsg("");
+    if (!["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(file.type)) { setError("Use a PNG, JPG, WebP or SVG file."); return; }
+    if (file.size > 2 * 1024 * 1024) { setError("The logo must be under 2 MB."); return; }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+      const path = `${org.id}/logo-${Date.now()}.${ext}`;
+      const sb = getSupabase();
+      const { error: upErr } = await sb.storage.from("brand-logos").upload(path, file, { contentType: file.type, upsert: true });
+      if (upErr) throw new Error(upErr.message);
+      setLogo(sb.storage.from("brand-logos").getPublicUrl(path).data.publicUrl);
+      setMsg("Logo uploaded. Press Save brand to use it.");
+    } catch (e) {
+      setError(friendlyError(e));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const save = async () => {
     setBusy(true); setMsg(""); setError("");
     try {
@@ -69,7 +91,17 @@ function Settings() {
         </div>
         <Card className="space-y-3">
           <label className="block text-sm text-muted-foreground">Agency name<input className={inputClass + " mt-1"} value={name} maxLength={120} onChange={(e) => setName(e.target.value)} /></label>
-          <label className="block text-sm text-muted-foreground">Logo link (https://…)<input className={inputClass + " mt-1"} placeholder="https://yourstudio.com/logo.png" value={logo} onChange={(e) => setLogo(e.target.value)} /></label>
+          <div className="text-sm text-muted-foreground">
+            <p>Logo</p>
+            <div className="mt-1 flex items-center gap-3">
+              <label className="press cursor-pointer rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground shadow-card hover:bg-muted">
+                {uploading ? "Uploading…" : validLogo ? "Replace logo" : "Upload logo"}
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="hidden" disabled={uploading} onChange={(e) => { void uploadLogo(e.target.files?.[0]); e.target.value = ""; }} />
+              </label>
+              {validLogo && <button type="button" onClick={() => setLogo("")} className="text-xs hover:text-destructive">Remove</button>}
+              <span className="text-xs">PNG, JPG, WebP or SVG · up to 2 MB</span>
+            </div>
+          </div>
           <label className="flex items-center gap-3 text-sm text-muted-foreground">Brand color<input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-8 w-12 cursor-pointer rounded border border-border bg-card" aria-label="Brand color" /><span className="font-mono text-xs">{color}</span></label>
           {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
           {msg && <p className="rounded-md bg-accent p-2 text-sm text-accent-foreground">{msg}</p>}
