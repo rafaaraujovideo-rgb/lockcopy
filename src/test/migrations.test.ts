@@ -36,6 +36,7 @@ describe("db/*.sql", () => {
       "0007_webp.sql",
       "0008_english.sql",
       "0009_trial_in_app.sql",
+      "0010_team_invites.sql",
     ]);
   });
 

@@ -41,6 +41,7 @@ function SignIn() {
   const [agency, setAgency] = useState("");
   const [forgot, setForgot] = useState(false);
   const next = nextParam ?? "/app";
+  const joining = next.startsWith("/join/");
 
   useEffect(() => {
     if (ready && session) nav({ to: next });
@@ -68,7 +69,7 @@ function SignIn() {
         });
         if (err) throw err;
         const name = agency.trim();
-        if (name.length >= 2) {
+        if (!joining && name.length >= 2) {
           if (data.session) {
             await supabase.from("organizations").insert({ name, slug: orgSlug(name, Math.random().toString(36).slice(2, 6)) });
           } else {
@@ -132,7 +133,7 @@ function SignIn() {
                 </>
               )}
               <form onSubmit={submit} className="space-y-3">
-                {mode === "signup" && !forgot && (
+                {mode === "signup" && !forgot && !joining && (
                   <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} required minLength={2} />
                 )}
                 <input className={inputClass} type="email" autoComplete="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} required />

@@ -133,7 +133,7 @@ function Landing() {
             );
           })}
         </div>
-        <p className="mt-5 text-center text-xs text-muted-foreground">During the trial: 1 active request and 500 MB. Cancel in 1 click before day 14 and pay nothing. Prices exclude taxes.</p>
+        <p className="mt-5 text-center text-xs text-muted-foreground">During the 14-day trial you get the full Solo plan, with no credit card. Add a card only if you want to continue. Prices exclude taxes.</p>
       </section>
 
       <section id="faq" className="scroll-mt-16 mx-auto max-w-3xl px-6 pb-24">

@@ -23,8 +23,10 @@ import { Route as AppAdminRouteImport } from './routes/app/admin'
 import { Route as AppBillingRouteImport } from './routes/app/billing'
 import { Route as AppNewRouteImport } from './routes/app/new'
 import { Route as AppSettingsRouteImport } from './routes/app/settings'
+import { Route as AppTeamRouteImport } from './routes/app/team'
 import { Route as CTokenRouteImport } from './routes/c/$token'
 import { Route as CompareContentSnareRouteImport } from './routes/compare/content-snare'
+import { Route as JoinTokenRouteImport } from './routes/join/$token'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as AppRequestsIdRouteImport } from './routes/app/requests/$id'
 import { Route as ApiPublicCronNotificationsRouteImport } from './routes/api/public/cron/notifications'
@@ -99,6 +101,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTeamRoute = AppTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AppRoute,
+} as any)
 const CTokenRoute = CTokenRouteImport.update({
   id: '/c/$token',
   path: '/c/$token',
@@ -107,6 +114,11 @@ const CTokenRoute = CTokenRouteImport.update({
 const CompareContentSnareRoute = CompareContentSnareRouteImport.update({
   id: '/compare/content-snare',
   path: '/compare/content-snare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinTokenRoute = JoinTokenRouteImport.update({
+  id: '/join/$token',
+  path: '/join/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
@@ -140,8 +152,10 @@ export interface FileRoutesByFullPath {
   '/app/billing': typeof AppBillingRoute
   '/app/new': typeof AppNewRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/team': typeof AppTeamRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
+  '/join/$token': typeof JoinTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/requests/$id': typeof AppRequestsIdRoute
@@ -160,8 +174,10 @@ export interface FileRoutesByTo {
   '/app/billing': typeof AppBillingRoute
   '/app/new': typeof AppNewRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/team': typeof AppTeamRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
+  '/join/$token': typeof JoinTokenRoute
   '/app': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/requests/$id': typeof AppRequestsIdRoute
@@ -182,8 +198,10 @@ export interface FileRoutesById {
   '/app/billing': typeof AppBillingRoute
   '/app/new': typeof AppNewRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/team': typeof AppTeamRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
+  '/join/$token': typeof JoinTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/requests/$id': typeof AppRequestsIdRoute
@@ -205,8 +223,10 @@ export interface FileRouteTypes {
     | '/app/billing'
     | '/app/new'
     | '/app/settings'
+    | '/app/team'
     | '/c/$token'
     | '/compare/content-snare'
+    | '/join/$token'
     | '/app/'
     | '/api/public/stripe-webhook'
     | '/app/requests/$id'
@@ -225,8 +245,10 @@ export interface FileRouteTypes {
     | '/app/billing'
     | '/app/new'
     | '/app/settings'
+    | '/app/team'
     | '/c/$token'
     | '/compare/content-snare'
+    | '/join/$token'
     | '/app'
     | '/api/public/stripe-webhook'
     | '/app/requests/$id'
@@ -246,8 +268,10 @@ export interface FileRouteTypes {
     | '/app/billing'
     | '/app/new'
     | '/app/settings'
+    | '/app/team'
     | '/c/$token'
     | '/compare/content-snare'
+    | '/join/$token'
     | '/app/'
     | '/api/public/stripe-webhook'
     | '/app/requests/$id'
@@ -266,6 +290,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   CTokenRoute: typeof CTokenRoute
   CompareContentSnareRoute: typeof CompareContentSnareRoute
+  JoinTokenRoute: typeof JoinTokenRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicCronNotificationsRoute: typeof ApiPublicCronNotificationsRoute
 }
@@ -370,6 +395,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/team': {
+      id: '/app/team'
+      path: '/team'
+      fullPath: '/app/team'
+      preLoaderRoute: typeof AppTeamRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/c/$token': {
       id: '/c/$token'
       path: '/c/$token'
@@ -382,6 +414,13 @@ declare module '@tanstack/react-router' {
       path: '/compare/content-snare'
       fullPath: '/compare/content-snare'
       preLoaderRoute: typeof CompareContentSnareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join/$token': {
+      id: '/join/$token'
+      path: '/join/$token'
+      fullPath: '/join/$token'
+      preLoaderRoute: typeof JoinTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/stripe-webhook': {
@@ -413,6 +452,7 @@ interface AppRouteChildren {
   AppBillingRoute: typeof AppBillingRoute
   AppNewRoute: typeof AppNewRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppTeamRoute: typeof AppTeamRoute
   AppIndexRoute: typeof AppIndexRoute
   AppRequestsIdRoute: typeof AppRequestsIdRoute
 }
@@ -422,6 +462,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBillingRoute: AppBillingRoute,
   AppNewRoute: AppNewRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppTeamRoute: AppTeamRoute,
   AppIndexRoute: AppIndexRoute,
   AppRequestsIdRoute: AppRequestsIdRoute,
 }
@@ -440,6 +481,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   CTokenRoute: CTokenRoute,
   CompareContentSnareRoute: CompareContentSnareRoute,
+  JoinTokenRoute: JoinTokenRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicCronNotificationsRoute: ApiPublicCronNotificationsRoute,
 }
