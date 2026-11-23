@@ -1,3 +1,4 @@
+import { Logo } from "@/components/logo";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
@@ -92,7 +93,7 @@ function SignIn() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <aside className="relative hidden flex-col justify-between border-r border-border bg-muted/50 p-10 lg:flex">
-        <Link to="/" className="flex items-center gap-2 text-[15px] font-bold tracking-tight"><span className="grid h-6 w-6 place-items-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground shadow-btn">L</span>Lockcopy</Link>
+        <Link to="/" ><Logo className="text-[15px]" markClassName="h-6 w-6" /></Link>
         <div className="max-w-md">
           <p className="eyebrow">For web agencies</p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">Every page's content, approved, before you start building.</h2>
@@ -107,7 +108,7 @@ function SignIn() {
       <div className="flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-sm space-y-5">
         <Link to="/" className="flex items-center justify-center gap-2 lg:hidden text-lg font-semibold tracking-tight">
-          <span className="h-2 w-2 rounded-full bg-seal" />Lockcopy
+          <Logo className="text-base" markClassName="h-6 w-6" />
         </Link>
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">

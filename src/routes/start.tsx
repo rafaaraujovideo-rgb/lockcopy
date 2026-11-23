@@ -1,3 +1,4 @@
+import { Logo } from "@/components/logo";
 import { goExternal } from "@/lib/redirect";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -73,7 +74,7 @@ function Checkout() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12">
-      <Link to="/" className="mb-8 flex items-center gap-2 text-base font-semibold tracking-tight"><span className="h-2 w-2 rounded-full bg-seal" />Lockcopy</Link>
+      <Link to="/" className="mb-8 block"><Logo className="text-base" markClassName="h-6 w-6" /></Link>
       <h1 className="font-display text-4xl font-bold">Start your trial</h1>
       <p className="mt-2 text-muted-foreground">14 full days. The trial only starts after you register your card, and nothing is charged during the trial.</p>
       <div className="mt-6 space-y-4">

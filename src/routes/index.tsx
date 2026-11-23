@@ -1,3 +1,4 @@
+import { Logo } from "@/components/logo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import type React from "react";
@@ -27,7 +28,7 @@ function Landing() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <a href="#" className="flex items-center gap-2 text-lg font-bold tracking-tight"><span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground shadow-btn"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</a>
+          <a href="#" aria-label="Lockcopy home"><Logo className="text-lg" /></a>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
             <a href="#demo" className="hover:text-foreground">Demo</a>
             <a href="#features" className="hover:text-foreground">Features</a>
@@ -181,7 +182,7 @@ function Landing() {
       <footer className="border-t border-border">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 md:grid-cols-5">
           <div className="md:col-span-2">
-            <span className="flex items-center gap-2 text-lg font-bold"><span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground shadow-btn"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</span>
+            <Logo className="text-lg" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">Collect, approve and lock client content. Built for web freelancers and agencies.</p>
           </div>
           {[

@@ -1,3 +1,4 @@
+import { Logo } from "@/components/logo";
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -40,7 +41,7 @@ function AppLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-5 py-3">
-          <Link to="/" className="mr-5 flex items-center gap-2 text-[15px] font-bold tracking-tight"><span className="grid h-6 w-6 place-items-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground shadow-btn">L</span>Lockcopy</Link>
+          <Link to="/" className="mr-5"><Logo className="text-[15px]" markClassName="h-6 w-6" /></Link>
           {org && (
             <>
               <Link to="/app" activeOptions={{ exact: true }} className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Requests</Link>
