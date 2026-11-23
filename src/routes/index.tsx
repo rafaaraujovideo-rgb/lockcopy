@@ -4,7 +4,7 @@ import type React from "react";
 import { PLANS } from "@/lib/store";
 import { Lock, Menu, X } from "lucide-react";
 import { LandingDemo } from "@/components/landing-demo";
-import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroPreview, Faq } from "@/components/landing-sections";
+import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroPreview, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -109,10 +109,10 @@ function Landing() {
               <div className="rounded-md border border-border bg-background p-3 text-xs"><p className="text-muted-foreground">Hero headline</p><p className="mt-1 font-medium">Fresh bread, every morning since 1987<span className="animate-caret">|</span></p><p className="mt-2 font-mono text-[10px] text-seal">● Saved</p></div>
             </Feature>
             <Feature n="03" t="Field-by-field review" d="Approve or send back with a note. Approved fields lock, so nothing changes behind your back.">
-              <div className="flex gap-2 text-[11px]"><span className="rounded-md bg-accent px-2 py-1 font-medium text-accent-foreground">✓ Approved · locked</span><span className="rounded-md bg-warn px-2 py-1 font-medium text-warn-foreground">↺ Change requested</span></div>
+              <LockToggle />
             </Feature>
             <Feature n="04" t="Exports that drop in" d="ZIP organized per page, CSV ready for Webflow CMS, JSON for Framer. Images converted to WebP.">
-              <div className="flex gap-2 font-mono text-[11px]">{["content.zip", "webflow.csv", "framer.json"].map((x) => <span key={x} className="rounded-md border border-border bg-background px-2 py-1">{x}</span>)}</div>
+              <ExportPeek />
             </Feature>
           </div>
         </div>
@@ -206,7 +206,7 @@ function Landing() {
 
 function Feature({ n, t, d, children }: { n: string; t: string; d: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-6 bg-card p-8">
+    <div className="flex flex-col gap-6 bg-card p-8 transition-colors hover:bg-background">
       <div><span className="font-mono text-[11px] text-muted-foreground">{n}</span><h3 className="mt-2 text-lg font-bold tracking-tight">{t}</h3><p className="mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">{d}</p></div>
       <div className="mt-auto">{children}</div>
     </div>

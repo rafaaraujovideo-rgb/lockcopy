@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Download, Mail, Paperclip, Check, AlertTriangle } from "lucide-react";
+import { siWebflow, siFramer, siFigma, siWordpress, siNotion, siGoogledrive } from "simple-icons";
+import { useEffect, useState } from "react";
+import { Download, Mail, Paperclip, Check, AlertTriangle, Lock } from "lucide-react";
 import { framerJson, webflowCsv, type ExportInput } from "@/lib/exports";
 
 /** Before/after: the email chase vs. one structured request. */
@@ -163,43 +164,102 @@ export function SavingsCalc() {
 }
 
 export function StackBar() {
-  const tools = ["Webflow", "Framer", "WordPress", "Figma", "Notion", "Google Drive"];
+  const tools = [siWebflow, siFramer, siFigma, siWordpress, siNotion, siGoogledrive];
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Exports fit the stack you already use</p>
-      <ul className="flex flex-wrap gap-x-7 gap-y-2 text-sm font-semibold tracking-tight text-ink-soft">
-        {tools.map((t) => <li key={t}>{t}</li>)}
+    <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+      <p className="eyebrow">Exports fit the stack you already use</p>
+      <ul className="flex flex-wrap items-center gap-x-8 gap-y-4 text-ink-soft">
+        {tools.map((t) => (
+          <li key={t.slug} className="flex items-center gap-2 opacity-70 transition-opacity hover:opacity-100">
+            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden><path d={t.path} /></svg>
+            <span className="text-sm font-semibold tracking-tight">{t.title}</span>
+          </li>
+        ))}
       </ul>
     </div>
   );
 }
 
+type RowState = "todo" | "typing" | "review" | "locked";
+const HERO_ROWS: Array<{ l: string; v: string; meta?: string }> = [
+  { l: "Home · Hero headline", v: "Fresh bread, every morning since 1987" },
+  { l: "About · Our story", v: "Three generations of bakers on Rua da Lua" },
+  { l: "Team photos", v: "4 files", meta: "2.4 MB → 412 KB WebP" },
+  { l: "Contact · Opening hours", v: "Mon–Sat · 7:00–19:00" },
+];
+
+/** Hero product window: a looping, scripted session of a client filling in and the studio locking fields. */
 export function HeroPreview() {
-  const rows: Array<[string, string, "ok" | "saved" | "todo"]> = [
-    ["Hero headline", "Fresh bread, every morning since 1987", "ok"],
-    ["About · Our story", "Three generations of bakers on Rua da Lua…", "saved"],
-    ["Team photos", "4 files · converted to WebP", "ok"],
-    ["Opening hours", "", "todo"],
-  ];
+  const [tick, setTick] = useState(0);
+  useEffect(() => { const id = setInterval(() => setTick((t) => (t + 1) % 14), 900); return () => clearInterval(id); }, []);
+  const stateOf = (i: number): RowState => {
+    const start = i * 3;
+    if (tick < start) return "todo";
+    if (tick === start) return "typing";
+    if (tick === start + 1) return "review";
+    return "locked";
+  };
+  const locked = HERO_ROWS.filter((_, i) => stateOf(i) === "locked").length;
   return (
-    <div className="rounded-xl border border-border bg-card p-2 shadow-float">
-      <div className="rounded-lg border border-border bg-background">
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <div><p className="text-sm font-bold tracking-tight">Padaria Lua · Website</p><p className="font-mono text-[10px] text-muted-foreground">Home 3/4 · About 2/3</p></div>
-          <span className="font-mono text-[11px] text-seal">● Saved</span>
+    <div className="relative">
+      <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[1.25rem] bg-seal/10 blur-2xl" />
+      <div className="rounded-xl border border-border bg-card shadow-window">
+        <div className="flex items-center gap-3 border-b border-border px-3 py-2.5">
+          <div className="flex gap-1.5">{[0, 1, 2].map((i) => <span key={i} className="h-2.5 w-2.5 rounded-full bg-border" />)}</div>
+          <div className="mx-auto flex items-center gap-1.5 rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5" />lockcopy.com/c/padaria-lua</div>
+          <span className="w-10" />
         </div>
-        <div className="h-1 bg-muted"><div className="h-1 w-3/4 bg-seal" /></div>
-        <ul className="divide-y divide-border">
-          {rows.map(([l, v, s]) => (
-            <li key={l} className="flex items-center justify-between gap-3 px-4 py-3">
-              <div className="min-w-0"><p className="text-[11px] text-muted-foreground">{l}</p><p className="truncate text-sm font-medium">{v || <span className="text-muted-foreground">Waiting for client</span>}</p></div>
-              {s === "ok" && <span className="shrink-0 rounded-md bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-foreground">✓ Locked</span>}
-              {s === "saved" && <span className="shrink-0 rounded-md border border-border px-2 py-0.5 text-[11px]">Review</span>}
-              {s === "todo" && <span className="shrink-0 rounded-md bg-warn px-2 py-0.5 text-[11px] text-warn-foreground">Missing</span>}
-            </li>
-          ))}
+        <div className="flex items-center justify-between px-4 pt-4">
+          <div><p className="text-sm font-bold tracking-tight">Padaria Lua · Website</p><p className="font-mono text-[10px] text-muted-foreground">{locked}/4 locked · autosave on</p></div>
+          <span className="flex items-center gap-1.5 font-mono text-[10px] text-seal"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-seal" />Live</span>
+        </div>
+        <div className="mx-4 mt-3 h-1 overflow-hidden rounded-full bg-muted"><div className="h-1 bg-seal transition-all duration-700" style={{ width: `${(locked / 4) * 100}%` }} /></div>
+        <ul className="mt-3 divide-y divide-border border-t border-border">
+          {HERO_ROWS.map((r, i) => {
+            const st = stateOf(i);
+            return (
+              <li key={r.l} className={"flex items-center justify-between gap-3 px-4 py-3 transition-colors duration-500 " + (st === "review" ? "bg-muted/60" : "")}>
+                <div className="min-w-0">
+                  <p className="text-[11px] text-muted-foreground">{r.l}</p>
+                  <p className="truncate text-sm font-medium">
+                    {st === "todo" ? <span className="text-muted-foreground">Waiting for client</span> : <>{r.v}{st === "typing" && <span className="animate-caret">|</span>}</>}
+                  </p>
+                  {r.meta && st !== "todo" && <p className="font-mono text-[10px] text-seal">{r.meta}</p>}
+                </div>
+                <span className={"shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium transition-all duration-300 " + ({ todo: "bg-warn text-warn-foreground", typing: "border border-border text-muted-foreground", review: "border border-primary text-foreground", locked: "bg-accent text-accent-foreground" } as const)[st]}>
+                  {({ todo: "Missing", typing: "Saving…", review: "Review", locked: "✓ Locked" } as const)[st]}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       </div>
+    </div>
+  );
+}
+
+/** Bento micro-interaction: click to approve and lock a field. */
+export function LockToggle() {
+  const [locked, setLocked] = useState(false);
+  return (
+    <button type="button" onClick={() => setLocked(!locked)} className={"flex w-full items-center justify-between rounded-md border px-3 py-2.5 text-left text-xs transition-all duration-300 " + (locked ? "border-seal bg-accent" : "border-border bg-background hover:border-primary")}>
+      <span><span className="block text-muted-foreground">Hero headline</span><span className="font-medium">Fresh bread, every morning</span></span>
+      <span className={"flex items-center gap-1.5 rounded-md px-2 py-1 font-medium transition-all duration-300 " + (locked ? "bg-seal text-primary-foreground" : "bg-muted text-foreground")}>
+        <Lock className={"h-3 w-3 transition-transform duration-300 " + (locked ? "scale-110" : "")} />{locked ? "Locked" : "Approve & lock"}
+      </span>
+    </button>
+  );
+}
+
+/** Bento micro-interaction: switch export format and preview the file. */
+export function ExportPeek() {
+  const [f, setF] = useState<"csv" | "json">("csv");
+  return (
+    <div className="rounded-md border border-border bg-background text-[11px]">
+      <div className="flex border-b border-border">
+        {(["csv", "json"] as const).map((k) => <button key={k} type="button" onClick={() => setF(k)} className={"px-3 py-1.5 font-mono transition-colors " + (f === k ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground")}>{k === "csv" ? "webflow.csv" : "framer.json"}</button>)}
+      </div>
+      <pre className="overflow-hidden px-3 py-2 font-mono leading-relaxed text-ink-soft">{f === "csv" ? "Name,Slug,Hero headline\nHome,home,Fresh bread…" : '{ "home": { "hero": "Fresh bread…" } }'}</pre>
     </div>
   );
 }

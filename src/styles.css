@@ -182,6 +182,7 @@
   --grid-line: oklch(0.2 0.018 260 / 5%);
   --shadow-card: 0 0 0 1px oklch(0.2 0.018 260 / 3%), 0 1px 2px oklch(0.2 0.018 260 / 5%);
   --shadow-float: 0 0 0 1px oklch(0.2 0.018 260 / 6%), 0 2px 4px oklch(0.2 0.018 260 / 4%), 0 24px 48px -24px oklch(0.2 0.018 260 / 22%);
+  --shadow-window: inset 0 1px 0 oklch(1 0 0 / 70%), 0 0 0 1px oklch(0.2 0.018 260 / 7%), 0 2px 4px oklch(0.2 0.018 260 / 4%), 0 12px 24px -8px oklch(0.2 0.018 260 / 10%), 0 48px 80px -32px oklch(0.2 0.018 260 / 28%);
   --shadow-btn: inset 0 1px 0 oklch(1 0 0 / 14%), 0 1px 2px oklch(0.2 0.018 260 / 25%);
 }
 @theme inline {
@@ -195,6 +196,7 @@
   --shadow-card: var(--shadow-card);
   --shadow-float: var(--shadow-float);
   --shadow-btn: var(--shadow-btn);
+  --shadow-window: var(--shadow-window);
 }
 body { font-family: var(--font-sans); background: var(--background); color: var(--foreground); -webkit-font-smoothing: antialiased; font-feature-settings: "ss01", "cv11"; }
 .font-display { font-weight: 700; letter-spacing: -0.035em; }
