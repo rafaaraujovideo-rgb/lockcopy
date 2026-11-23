@@ -6,9 +6,10 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 /**
  * Billing with Stripe.
  *
- * Product rule: the 14-day trial only starts after Stripe confirms
- * the card. So checkout is created with trial_period_days and the account
- * state is applied by the webhook, never by browser code.
+ * Product rule: the 14-day trial starts without a card (like Content Snare
+ * and File Request Pro). Stripe asks for a card only when needed; if none is
+ * added by trial end the subscription is cancelled. Account state is applied
+ * by the webhook, never by browser code.
  */
 
 const PLANS = ["solo", "agency"] as const;
@@ -69,8 +70,8 @@ export const startCheckout = createServerFn({ method: "POST" })
     const body = new URLSearchParams();
     body.set("mode", "subscription");
     body.set("locale", "en");
-    // The card is always required, even for the free trial: no card, no trial.
-    body.set("payment_method_collection", "always");
+    // No card needed to start the trial; without one, the trial ends in cancellation.
+    body.set("payment_method_collection", limits?.trial_days ? "if_required" : "always");
     body.set("line_items[0][price]", price);
     body.set("line_items[0][quantity]", "1");
     body.set("client_reference_id", org.id);
@@ -82,6 +83,7 @@ export const startCheckout = createServerFn({ method: "POST" })
     body.set("cancel_url", `${origin}/app?checkout=cancel`);
     if (limits?.trial_days) {
       body.set("subscription_data[trial_period_days]", String(limits.trial_days));
+      body.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
     }
     if (org.stripe_customer_id) {
       body.set("customer", org.stripe_customer_id);

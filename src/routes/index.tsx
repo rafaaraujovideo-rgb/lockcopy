@@ -42,7 +42,7 @@ function Landing() {
               <Link to="/start" className="press rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
               <a href="#demo" className="press rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">Try the demo ↓</a>
             </div>
-            <p className="mt-4 font-mono text-[11px] text-muted-foreground">Card upfront · $0 for 14 days · cancel anytime</p>
+            <p className="mt-4 font-mono text-[11px] text-muted-foreground">No credit card required · 14 days free · cancel anytime</p>
           </div>
           <div className="mt-14"><HeroStage /></div>
         </div>
@@ -137,7 +137,7 @@ function Landing() {
 
       <section id="faq" className="scroll-mt-16 mx-auto max-w-3xl px-6 pb-24">
         <p className="eyebrow">FAQ</p>
-        <h2 className="mt-2 font-display text-3xl md:text-4xl">Before you add your card.</h2>
+        <h2 className="mt-2 font-display text-3xl md:text-4xl">Before you start your trial.</h2>
         <div className="mt-8"><Faq /></div>
       </section>
 

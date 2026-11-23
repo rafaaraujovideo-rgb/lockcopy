@@ -267,7 +267,7 @@ export function ExportPeek() {
 const FAQS: Array<[string, string]> = [
   ["Does my client need an account?", "No. They get a private link, fill in each page at their own pace, and everything autosaves."],
   ["Can I use my own logo and colors?", "Yes. Add your logo and brand color and the client portal shows your studio, not ours."],
-  ["How does the 14-day trial work?", "You add a card, nothing is charged for 14 days, and you can cancel from the billing page in one click before day 14."],
+  ["How does the 14-day trial work?", "No credit card needed. You get 14 days free; add a card on the billing page only if you want to keep going, otherwise the trial simply ends."],
   ["What if I don't use Webflow or Framer?", "Download a ZIP organized by page, with copy in text files and images already converted to WebP — it works with any builder."],
   ["Are my clients' files safe?", "Files are stored privately and isolated per agency. Only your team and the client with the link can see them."],
 ];

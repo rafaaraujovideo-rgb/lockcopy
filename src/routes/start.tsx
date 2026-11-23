@@ -23,9 +23,9 @@ export const Route = createFileRoute("/start")({
   head: () => ({
     meta: [
       { title: "Start your 14-day trial — Lockcopy" },
-      { name: "description", content: "Register your card and start 14 days of trial with no charge." },
+      { name: "description", content: "Start 14 days free. No credit card required." },
       { property: "og:title", content: "Start your 14-day trial — Lockcopy" },
-      { property: "og:description", content: "Register your card and start 14 days of trial with no charge." },
+      { property: "og:description", content: "Start 14 days free. No credit card required." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -76,7 +76,7 @@ function Checkout() {
     <div className="mx-auto max-w-2xl px-5 py-12">
       <Link to="/" className="mb-8 block"><Logo className="text-base" markClassName="h-6 w-6" /></Link>
       <h1 className="font-display text-4xl font-bold">Start your trial</h1>
-      <p className="mt-2 text-muted-foreground">14 full days. The trial only starts after you register your card, and nothing is charged during the trial.</p>
+      <p className="mt-2 text-muted-foreground">14 full days, no credit card required. Add a card only if you decide to stay.</p>
       <div className="mt-6 space-y-4">
         <Card>
           <p className="mb-3 text-sm font-medium">Plan after the trial</p>
@@ -114,10 +114,10 @@ function Checkout() {
           {!ws.data && !ws.isLoading && (
             <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} />
           )}
-          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading || (!ws.data && agency.trim().length < 2)} onClick={go}>{busy ? "Opening secure checkout…" : "Register card and start"}</Btn>
+          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading || (!ws.data && agency.trim().length < 2)} onClick={go}>{busy ? "Opening secure checkout…" : "Start free trial"}</Btn>
           </>
         )}
-        <p className="text-center text-xs text-muted-foreground">The card is requested on Stripe's secure page. Card details never touch Lockcopy.</p>
+        <p className="text-center text-xs text-muted-foreground">Secure setup by Stripe. If you add a card later, its details never touch Lockcopy.</p>
       </div>
     </div>
   );
