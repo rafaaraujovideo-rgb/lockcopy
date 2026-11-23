@@ -68,6 +68,7 @@ export const startCheckout = createServerFn({ method: "POST" })
     const origin = env("APP_URL") || "https://lockcopy.com";
     const body = new URLSearchParams();
     body.set("mode", "subscription");
+    body.set("locale", "en");
     // The card is always required, even for the free trial: no card, no trial.
     body.set("payment_method_collection", "always");
     body.set("line_items[0][price]", price);
@@ -138,6 +139,7 @@ export const openBillingPortal = createServerFn({ method: "POST" })
     const body = new URLSearchParams();
     body.set("customer", org.stripe_customer_id);
     body.set("return_url", `${origin}/app/billing`);
+    body.set("locale", "en");
 
     const response = await fetch("https://api.stripe.com/v1/billing_portal/sessions", {
       method: "POST",
