@@ -73,7 +73,7 @@ export function LandingDemo() {
         <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" />
           <span className="ml-3 rounded-md bg-muted px-3 py-1 text-xs text-muted-foreground">
-            {step === 1 ? "lockcopy.app/c/x7k2q9" : "lockcopy.app/app/requests/reed-clinic"}
+            {step === 1 ? "lockcopy.com/c/3f9a1d42-7c5e-4b8a-9e21-d6b0f4a7c813" : "lockcopy.com/app/requests/b2e7c9a4-15d3-4f6e-8a90-3c4d7e1f2b68"}
           </span>
         </div>
 
@@ -95,7 +95,7 @@ export function LandingDemo() {
               </div>
               <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 p-2 pl-4">
                 <Link2 className="h-4 w-4 text-muted-foreground" />
-                <span className="flex-1 truncate text-sm">https://lockcopy.app/c/x7k2q9</span>
+                <span className="flex-1 truncate text-sm">https://lockcopy.com/c/3f9a1d42-7c5e-4b8a-9e21-d6b0f4a7c813</span>
                 <button
                   onClick={() => { setCopied(true); setAuto(false); setTimeout(() => { setCopied(false); setStep(1); }, 900); }}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground"

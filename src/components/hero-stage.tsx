@@ -13,7 +13,7 @@ const START: F[] = [
   { id: "t", page: 1, label: "Team photos", kind: "file", value: "team-1.jpg, team-2.jpg · 2.4 MB → 412 KB WebP" },
   { id: "o", page: 2, label: "Opening hours", kind: "text", value: "Mon–Sat · 7:00–19:00" },
 ];
-const LINK = "lockcopy.com/c/8f3a2c1e-…-b71d";
+const LINK = "lockcopy.com/c/8f3a2c1e-4d7b-4a6f-b05e-92c1e7d4b71d";
 
 export function HeroStage() {
   const [v, setV] = useState<"client" | "studio">("client");
@@ -36,7 +36,7 @@ export function HeroStage() {
         <div className="overflow-hidden rounded-xl border border-border bg-card text-left shadow-window specular">
           <div className="flex items-center gap-3 border-b border-border px-3 py-2.5">
             <div className="flex gap-1.5">{[0, 1, 2].map((i) => <span key={i} className="h-2.5 w-2.5 rounded-full bg-border" />)}</div>
-            <div className="mx-auto flex min-w-0 items-center gap-1.5 truncate rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5 shrink-0" />{v === "client" ? LINK : "lockcopy.com/app/requests/bloom-bakery"}</div>
+            <div className="mx-auto flex min-w-0 items-center gap-1.5 truncate rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5 shrink-0" />{v === "client" ? LINK : "lockcopy.com/app/requests/5c1d8e3b-a274-4f09-9b6e-e8f2a0c47d15"}</div>
             <span className="w-10" />
           </div>
           <div key={v} className="animate-lc-in">
