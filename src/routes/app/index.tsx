@@ -56,9 +56,9 @@ function Dashboard() {
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border shadow-card sm:grid-cols-4">
             {[
               ["Active", active],
-              ["Waiting on client", (q.data ?? []).filter((r) => requestLinkState(r) === "sent").length],
-              ["To review", (q.data ?? []).filter((r) => r.fieldsTotal > 0 && r.fieldsDone === r.fieldsTotal && requestLinkState(r) !== "approved").length],
-              ["Approved", (q.data ?? []).filter((r) => requestLinkState(r) === "approved").length],
+              ["Waiting on client", (q.data ?? []).filter((r) => (r.status === "sent" || r.status === "in_progress") && r.fieldsDone < r.fieldsTotal).length],
+              ["To review", (q.data ?? []).filter((r) => r.fieldsTotal > 0 && r.fieldsDone === r.fieldsTotal && r.status !== "completed").length],
+              ["Approved", (q.data ?? []).filter((r) => r.status === "completed").length],
             ].map(([k, v]) => (
               <div key={String(k)} className="bg-card px-4 py-3">
                 <p className="eyebrow">{k}</p>
