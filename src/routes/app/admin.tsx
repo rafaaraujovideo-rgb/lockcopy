@@ -33,7 +33,7 @@ function AdminPage() {
   const q = useQuery({ queryKey: ["admin-overview"], queryFn: () => fetchOverview(), enabled: allowed });
 
   if (!allowed) return <Card><p className="text-sm text-muted-foreground">This page is not available.</p></Card>;
-  if (q.isLoading) return <p className="text-sm text-muted-foreground">Loading…</p>;
+  if (q.isLoading) return <div className="space-y-3"><div className="h-8 w-40 animate-pulse rounded-md bg-muted" /><div className="h-40 animate-pulse rounded-lg border border-border bg-muted/60" /></div>;
   if (q.error || !q.data) return <Card><p className="text-sm text-destructive">Could not load the overview.</p></Card>;
 
   const { orgs, stripe } = q.data;
