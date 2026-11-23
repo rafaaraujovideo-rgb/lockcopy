@@ -35,6 +35,7 @@ describe("db/*.sql", () => {
       "0006_seed_templates.sql",
       "0007_webp.sql",
       "0008_english.sql",
+      "0009_trial_in_app.sql",
     ]);
   });
 

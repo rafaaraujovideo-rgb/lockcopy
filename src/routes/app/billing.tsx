@@ -1,13 +1,15 @@
 import { goExternal } from "@/lib/redirect";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { openBillingPortal } from "@/lib/billing.functions";
+import { openBillingPortal, startCheckout } from "@/lib/billing.functions";
 import { useWorkspace } from "@/lib/workspace";
 import { fmtDate, friendlyError } from "@/lib/lockcopy";
-import { Btn, btnClass, Card } from "@/components/ui-bits";
+import { Btn, Card } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/billing")({
+  validateSearch: (s: Record<string, unknown>): { checkout?: "ok" | "cancel" } =>
+    s["checkout"] === "ok" || s["checkout"] === "cancel" ? { checkout: s["checkout"] } : {},
   head: () => ({
     meta: [
       { title: "Billing — Lockcopy" },
@@ -32,12 +34,28 @@ const PLAN_NAME: Record<string, string> = { teste: "Trial", solo: "Solo", agency
 
 function Billing() {
   const ws = useWorkspace();
+  const { checkout } = Route.useSearch();
+  const [plan, setPlan] = useState<"solo" | "agency">("solo");
+  const [cycle, setCycle] = useState<"month" | "year">("month");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const org = ws.data?.org;
   const limits = ws.data?.limits;
   if (!org) return null;
-  const hasCard = !!org.trial_ends_at || org.plan !== "teste";
+  const hasCard = !!org.current_period_ends_at || org.subscription_status === "active" || org.subscription_status === "past_due";
+
+  const addCard = async () => {
+    setBusy(true);
+    setError("");
+    try {
+      const { url } = await startCheckout({ data: { plan, cycle } });
+      goExternal(url);
+      setBusy(false);
+    } catch (e) {
+      setError(friendlyError(e));
+      setBusy(false);
+    }
+  };
 
   const manage = async () => {
     setBusy(true);
@@ -57,17 +75,28 @@ function Billing() {
       <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Billing</h1>
       <Card className="space-y-2 text-sm">
         <p><span className="text-muted-foreground">Plan:</span> <b>{PLAN_NAME[org.plan]}</b> · {STATUS[org.subscription_status] ?? org.subscription_status}</p>
-        {org.trial_ends_at && <p><span className="text-muted-foreground">Trial until:</span> <b>{fmtDate(org.trial_ends_at)}</b> — no charges until then</p>}
+        {org.trial_ends_at && !hasCard && <p><span className="text-muted-foreground">Trial until:</span> <b>{fmtDate(org.trial_ends_at)}</b> — no charges until then</p>}
         {org.current_period_ends_at && <p><span className="text-muted-foreground">Next renewal:</span> {fmtDate(org.current_period_ends_at)}</p>}
         {limits && (
           <p><span className="text-muted-foreground">Limits:</span> {limits.requests_limit} active requests · {limits.users_limit} user(s) · {Math.round(limits.storage_bytes / 1e9)} GB</p>
         )}
         <p><span className="text-muted-foreground">Storage used:</span> {(org.storage_used_bytes / 1e6).toFixed(0)} MB</p>
       </Card>
+      {checkout === "ok" && <Card className="bg-accent text-sm text-accent-foreground">Card added. It can take a few seconds for Stripe to confirm.</Card>}
+      {checkout === "cancel" && <Card className="text-sm text-muted-foreground">No card was added. Nothing was charged.</Card>}
       {!hasCard ? (
-        <Card>
-          <p className="text-sm">You haven't started your trial yet. It's 14 days free, no credit card required.</p>
-          <Link to="/start" className={btnClass + " mt-3"}>Start 14-day free trial</Link>
+        <Card className="space-y-3">
+          <p className="text-sm">Your trial runs without a card. Add one to keep going after it ends — you're only charged when the trial is over.</p>
+          <div className="flex flex-wrap gap-2 text-sm">
+            {(["solo", "agency"] as const).map((k) => (
+              <button key={k} type="button" onClick={() => setPlan(k)} className={"rounded-md border px-3 py-1.5 " + (plan === k ? "border-primary bg-primary/5 font-medium" : "border-border")}>{PLAN_NAME[k]}</button>
+            ))}
+            {(["month", "year"] as const).map((c) => (
+              <button key={c} type="button" onClick={() => setCycle(c)} className={"rounded-md border px-3 py-1.5 " + (cycle === c ? "border-primary bg-primary/5 font-medium" : "border-border")}>{c === "month" ? "Monthly" : "Yearly"}</button>
+            ))}
+          </div>
+          <Btn disabled={busy} onClick={addCard}>{busy ? "Opening…" : "Add a card"}</Btn>
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </Card>
       ) : (
         <Card className="space-y-2">

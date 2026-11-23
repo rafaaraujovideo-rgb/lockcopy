@@ -1,12 +1,10 @@
 import { Logo } from "@/components/logo";
-import { goExternal } from "@/lib/redirect";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getSupabase } from "@/integrations/supabase/client";
 import { workspaceKey } from "@/lib/workspace";
 
-import { startCheckout } from "@/lib/billing.functions";
 import { PLANS } from "@/lib/store";
 import { useSession } from "@/lib/session";
 import { useWorkspace } from "@/lib/workspace";
@@ -44,6 +42,7 @@ function Checkout() {
   const [error, setError] = useState("");
   const [agency, setAgency] = useState("");
   const qc = useQueryClient();
+  const nav = useNavigate();
   useEffect(() => {
     try { const n = localStorage.getItem("lc_pending_agency"); if (n) setAgency(n); } catch { /* ignore */ }
   }, []);
@@ -63,9 +62,7 @@ function Checkout() {
         try { localStorage.removeItem("lc_pending_agency"); } catch { /* ignore */ }
         await qc.invalidateQueries({ queryKey: workspaceKey });
       }
-      const { url } = await startCheckout({ data: { plan, cycle } });
-      goExternal(url);
-      setBusy(false);
+      nav({ to: "/app" });
     } catch (e) {
       setError(friendlyError(e));
       setBusy(false);
@@ -103,7 +100,7 @@ function Checkout() {
           </dl>
           <label className="mt-4 flex items-start gap-2 text-sm">
             <input type="checkbox" className="mt-1" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-            <span>I understand that if I add a card, ${price} {cycle === "month" ? "per month" : "per year"} is charged from {first} unless I cancel. Without a card, the trial simply ends.</span>
+            <span>I understand that if I add a card later, ${price} {cycle === "month" ? "per month" : "per year"} is charged from {first} unless I cancel. Without a card, the trial simply ends.</span>
           </label>
         </Card>
         {error && <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
@@ -114,10 +111,10 @@ function Checkout() {
           {!ws.data && !ws.isLoading && (
             <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} />
           )}
-          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading || (!ws.data && agency.trim().length < 2)} onClick={go}>{busy ? "Opening secure checkout…" : "Start free trial"}</Btn>
+          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading || (!ws.data && agency.trim().length < 2)} onClick={go}>{busy ? "Starting your trial…" : "Start free trial"}</Btn>
           </>
         )}
-        <p className="text-center text-xs text-muted-foreground">Secure setup by Stripe. If you add a card later, its details never touch Lockcopy.</p>
+        <p className="text-center text-xs text-muted-foreground">No card, no checkout. Add a card in Billing only if you decide to stay.</p>
       </div>
     </div>
   );

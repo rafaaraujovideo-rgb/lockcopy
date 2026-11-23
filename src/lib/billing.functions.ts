@@ -6,9 +6,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 /**
  * Billing with Stripe.
  *
- * Product rule: the 14-day trial starts without a card (like Content Snare
- * and File Request Pro). Stripe asks for a card only when needed; if none is
- * added by trial end the subscription is cancelled. Account state is applied
+ * Product rule: the 14-day trial starts in the app when the agency is
+ * created (db/0009), with no card and no Stripe. Checkout is only used to
+ * add a card; remaining trial days carry over so nothing is charged early. Account state is applied
  * by the webhook, never by browser code.
  */
 
@@ -54,24 +54,22 @@ export const startCheckout = createServerFn({ method: "POST" })
 
     const { data: org } = await context.supabase
       .from("organizations")
-      .select("id, name, slug, stripe_customer_id")
+      .select("id, name, slug, stripe_customer_id, trial_ends_at")
       .eq("id", membership.org_id)
       .maybeSingle();
 
     if (!org) throw new Error("Account not found.");
 
-    const { data: limits } = await context.supabase
-      .from("plan_limits")
-      .select("trial_days")
-      .eq("plan", data.plan)
-      .maybeSingle();
+    // The trial already runs in the app; Stripe only keeps the days left.
+    const left = org.trial_ends_at ? Math.ceil((new Date(org.trial_ends_at).getTime() - Date.now()) / 864e5) : 0;
+    const trialDays = Math.max(0, left);
 
     const origin = env("APP_URL") || "https://lockcopy.com";
     const body = new URLSearchParams();
     body.set("mode", "subscription");
     body.set("locale", "en");
-    // No card needed to start the trial; without one, the trial ends in cancellation.
-    body.set("payment_method_collection", limits?.trial_days ? "if_required" : "always");
+    // The user is here to add a card, so Stripe always asks for one.
+    body.set("payment_method_collection", "always");
     body.set("line_items[0][price]", price);
     body.set("line_items[0][quantity]", "1");
     body.set("client_reference_id", org.id);
@@ -79,12 +77,9 @@ export const startCheckout = createServerFn({ method: "POST" })
     body.set("metadata[plan]", data.plan);
     body.set("subscription_data[metadata][org_id]", org.id);
     body.set("subscription_data[metadata][plan]", data.plan);
-    body.set("success_url", `${origin}/app?checkout=ok`);
-    body.set("cancel_url", `${origin}/app?checkout=cancel`);
-    if (limits?.trial_days) {
-      body.set("subscription_data[trial_period_days]", String(limits.trial_days));
-      body.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");
-    }
+    body.set("success_url", `${origin}/app/billing?checkout=ok`);
+    body.set("cancel_url", `${origin}/app/billing?checkout=cancel`);
+    if (trialDays >= 1) body.set("subscription_data[trial_period_days]", String(trialDays));
     if (org.stripe_customer_id) {
       body.set("customer", org.stripe_customer_id);
     } else {
