@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { downloadTemplate, FREE_TEMPLATES } from "@/lib/free-templates";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/templates")({
 
 function Modelos() {
   return (
+    <SiteShell>
     <div className="mx-auto max-w-5xl px-6 py-16">
       <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Free resources</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Content checklist templates</h1>
@@ -43,7 +45,7 @@ function Modelos() {
       </div>
       <div className="mt-12 rounded-lg border border-border bg-card p-8 shadow-card">
         <h2 className="font-display text-2xl font-semibold">Want the client to fill this in by themselves?</h2>
-        <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
+        <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           In Lockcopy these templates become a portal with a link, a deadline and automatic reminders — and every answer is ready to export.
         </p>
         <Link to="/start" className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
@@ -51,5 +53,6 @@ function Modelos() {
         </Link>
       </div>
     </div>
+    </SiteShell>
   );
 }

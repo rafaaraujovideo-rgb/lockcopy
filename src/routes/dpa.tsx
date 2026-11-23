@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dpa")({
@@ -64,6 +65,7 @@ const sections: [string, string[]][] = [
 
 function Dpa() {
   return (
+    <SiteShell>
     <div className="mx-auto max-w-3xl px-6 py-16">
       <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Legal document</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Data processing agreement</h1>
@@ -80,5 +82,6 @@ function Dpa() {
         See also: <Link to="/privacy" className="underline hover:text-foreground">Privacy policy</Link> · <Link to="/terms" className="underline hover:text-foreground">Terms of service</Link>
       </p>
     </div>
+    </SiteShell>
   );
 }

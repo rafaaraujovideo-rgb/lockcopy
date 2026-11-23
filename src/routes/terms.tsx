@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/terms")({
@@ -65,6 +66,7 @@ const sections: [string, string[]][] = [
 
 function Termos() {
   return (
+    <SiteShell>
     <div className="mx-auto max-w-3xl px-6 py-16">
       <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Legal document</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Terms of service</h1>
@@ -81,5 +83,6 @@ function Termos() {
         See also: <Link to="/privacy" className="underline hover:text-foreground">Privacy policy</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
       </p>
     </div>
+    </SiteShell>
   );
 }

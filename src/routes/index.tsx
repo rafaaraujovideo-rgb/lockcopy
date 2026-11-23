@@ -1,9 +1,9 @@
-import { Logo } from "@/components/logo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import type React from "react";
 import { PLANS } from "@/lib/store";
-import { Lock, Menu, X } from "lucide-react";
+import { Lock } from "lucide-react";
+import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { LandingDemo } from "@/components/landing-demo";
 import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroStage, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
@@ -23,37 +23,9 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   const [billing, setBilling] = useState<"month" | "year">("month");
-  const [open, setOpen] = useState(false);
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <a href="#" aria-label="Lockcopy home"><Logo className="text-lg" /></a>
-          <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
-            <a href="#demo" className="hover:text-foreground">Demo</a>
-            <a href="#features" className="hover:text-foreground">Features</a>
-            <a href="#pricing" className="hover:text-foreground">Pricing</a>
-            <Link to="/login" search={{ mode: "signup", next: "/app" }} className="hover:text-foreground">Create account</Link>
-          </nav>
-          <div className="hidden items-center gap-2 text-sm md:flex">
-            <Link to="/login" className="rounded-md px-4 py-2 text-muted-foreground hover:text-foreground">Sign in</Link>
-            <Link to="/start" className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Try for free</Link>
-          </div>
-          <button aria-label="Menu" onClick={() => setOpen(!open)} className="rounded-lg p-2 md:hidden">{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
-        </div>
-        {open && (
-          <div className="border-t border-border bg-background px-6 py-4 md:hidden">
-            <nav className="flex flex-col gap-3 text-sm" onClick={() => setOpen(false)}>
-              <a href="#demo">Demo</a><a href="#features">Features</a><a href="#pricing">Pricing</a>
-              <Link to="/login" search={{ mode: "signup", next: "/app" }}>Create account</Link>
-              <div className="mt-2 flex gap-2">
-                <Link to="/login" className="flex-1 rounded-md border border-border py-2 text-center">Sign in</Link>
-                <Link to="/start" className="flex-1 rounded-md bg-primary py-2 text-center font-medium text-primary-foreground">Try it</Link>
-              </div>
-            </nav>
-          </div>
-        )}
-      </header>
+      <SiteHeader />
 
       <section className="relative overflow-hidden border-b border-border">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
@@ -179,31 +151,7 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 md:grid-cols-5">
-          <div className="md:col-span-2">
-            <Logo className="text-lg" />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">Collect, approve and lock client content. Built for web freelancers and agencies.</p>
-          </div>
-          {[
-            ["Product", [["Demo", "#demo"], ["Features", "#features"], ["Pricing", "#pricing"]]],
-            ["Resources", [["Free templates", "/templates"], ["Lockcopy vs Content Snare", "/compare/content-snare"], ["14-day trial", "/start"]]],
-            ["Legal", [["Privacy", "/privacy"], ["Terms", "/terms"], ["Data processing", "/dpa"]]],
-          ].map(([t, links]) => (
-            <div key={t as string}>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">{t as string}</h4>
-              <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-                {(links as string[][]).map(([l, h]) => <li key={l}><a href={h} className="hover:text-foreground">{l}</a></li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div className="border-t border-border">
-          <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
-            <span>© 2026 Lockcopy™. All rights reserved.</span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

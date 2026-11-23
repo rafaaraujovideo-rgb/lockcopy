@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/privacy")({
@@ -68,6 +69,7 @@ const sections: [string, string[]][] = [
 
 function Privacidade() {
   return (
+    <SiteShell>
     <div className="mx-auto max-w-3xl px-6 py-16">
       <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Legal document</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Privacy policy</h1>
@@ -84,5 +86,6 @@ function Privacidade() {
         See also: <Link to="/terms" className="underline hover:text-foreground">Terms of service</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
       </p>
     </div>
+    </SiteShell>
   );
 }

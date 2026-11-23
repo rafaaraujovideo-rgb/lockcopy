@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Card } from "@/components/ui-bits";
@@ -28,6 +29,7 @@ const rows: [string, string, string][] = [
 
 function Comparar() {
   return (
+    <SiteShell>
     <div className="mx-auto max-w-4xl px-6 py-16">
       <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-foreground">Lockcopy</Link> · Comparisons</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Lockcopy vs Content Snare</h1>
@@ -79,5 +81,6 @@ function Comparar() {
         </Link>
       </div>
     </div>
+    </SiteShell>
   );
 }
