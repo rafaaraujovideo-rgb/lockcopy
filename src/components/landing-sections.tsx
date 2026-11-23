@@ -180,64 +180,6 @@ export function StackBar() {
   );
 }
 
-type RowState = "todo" | "typing" | "review" | "locked";
-const HERO_ROWS: Array<{ l: string; v: string; meta?: string }> = [
-  { l: "Home · Hero headline", v: "Fresh bread, every morning since 1987" },
-  { l: "About · Our story", v: "Three generations of bakers on Elm Street" },
-  { l: "Team photos", v: "4 files", meta: "2.4 MB → 412 KB WebP" },
-  { l: "Contact · Opening hours", v: "Mon–Sat · 7:00–19:00" },
-];
-
-/** Hero product window: a looping, scripted session of a client filling in and the studio locking fields. */
-export function HeroPreview() {
-  const [tick, setTick] = useState(0);
-  useEffect(() => { const id = setInterval(() => setTick((t) => (t + 1) % 14), 900); return () => clearInterval(id); }, []);
-  const stateOf = (i: number): RowState => {
-    const start = i * 3;
-    if (tick < start) return "todo";
-    if (tick === start) return "typing";
-    if (tick === start + 1) return "review";
-    return "locked";
-  };
-  const locked = HERO_ROWS.filter((_, i) => stateOf(i) === "locked").length;
-  return (
-    <div className="relative">
-      <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[1.25rem] bg-seal/10 blur-2xl" />
-      <div className="rounded-xl border border-border bg-card shadow-window specular">
-        <div className="flex items-center gap-3 border-b border-border px-3 py-2.5">
-          <div className="flex gap-1.5">{[0, 1, 2].map((i) => <span key={i} className="h-2.5 w-2.5 rounded-full bg-border" />)}</div>
-          <div className="mx-auto flex items-center gap-1.5 rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5" />lockcopy.com/c/bloom-bakery</div>
-          <span className="w-10" />
-        </div>
-        <div className="flex items-center justify-between px-4 pt-4">
-          <div><p className="text-sm font-bold tracking-tight">Bloom Bakery · Website</p><p className="font-mono text-[10px] text-muted-foreground">{locked}/4 locked · autosave on</p></div>
-          <span className="flex items-center gap-1.5 font-mono text-[10px] text-seal"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-seal" />Live</span>
-        </div>
-        <div className="mx-4 mt-3 h-1 overflow-hidden rounded-full bg-muted"><div className="h-1 bg-seal transition-all duration-700" style={{ width: `${(locked / 4) * 100}%` }} /></div>
-        <ul className="mt-3 divide-y divide-border border-t border-border">
-          {HERO_ROWS.map((r, i) => {
-            const st = stateOf(i);
-            return (
-              <li key={r.l} className={"flex items-center justify-between gap-3 px-4 py-3 transition-colors duration-500 " + (st === "review" ? "bg-muted/60" : "")}>
-                <div className="min-w-0">
-                  <p className="text-[11px] text-muted-foreground">{r.l}</p>
-                  <p className="truncate text-sm font-medium">
-                    {st === "todo" ? <span className="text-muted-foreground">Waiting for client</span> : <>{r.v}{st === "typing" && <span className="animate-caret">|</span>}</>}
-                  </p>
-                  {r.meta && st !== "todo" && <p className="font-mono text-[10px] text-seal">{r.meta}</p>}
-                </div>
-                <span className={"shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium transition-all duration-300 " + ({ todo: "bg-warn text-warn-foreground", typing: "border border-border text-muted-foreground", review: "border border-primary text-foreground", locked: "bg-accent text-accent-foreground" } as const)[st]}>
-                  {({ todo: "Missing", typing: "Saving…", review: "Review", locked: "✓ Locked" } as const)[st]}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
 /** Bento micro-interaction: click to approve and lock a field. */
 export function LockToggle() {
   const [locked, setLocked] = useState(false);
@@ -281,58 +223,6 @@ export function Faq() {
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{a}</p>
         </details>
       ))}
-    </div>
-  );
-}
-
-const QUEUE: Array<{ c: string; f: string; s: "review" | "locked" | "missing" }> = [
-  { c: "Bloom Bakery", f: "Home · Hero headline", s: "review" },
-  { c: "Bloom Bakery", f: "Team photos · 4 files", s: "locked" },
-  { c: "Reed Clinic", f: "About · Your story", s: "review" },
-  { c: "Reed Clinic", f: "Contact · Logo", s: "missing" },
-  { c: "Atlas Coffee", f: "Menu · Prices", s: "locked" },
-];
-
-/** Studio side of the hero stage: a review queue the visitor can actually approve. */
-export function StudioPreview() {
-  const [done, setDone] = useState<Record<number, boolean>>({});
-  const open = QUEUE.filter((q, i) => q.s === "review" && !done[i]).length;
-  return (
-    <div className="rounded-xl border border-border bg-card shadow-window specular">
-      <div className="flex items-center justify-between border-b border-border px-4 py-3">
-        <div><p className="text-sm font-bold tracking-tight">Review queue</p><p className="font-mono text-[10px] text-muted-foreground">{open} waiting for you · 3 clients</p></div>
-        <span className="font-mono text-[10px] text-muted-foreground">Click to approve</span>
-      </div>
-      <ul className="divide-y divide-border">
-        {QUEUE.map((q, i) => {
-          const st = done[i] ? "locked" : q.s;
-          return (
-            <li key={i} className="flex items-center justify-between gap-3 px-4 py-3">
-              <div className="min-w-0"><p className="text-[11px] text-muted-foreground">{q.c}</p><p className="truncate text-sm font-medium">{q.f}</p></div>
-              {st === "review" ? (
-                <button type="button" onClick={() => setDone({ ...done, [i]: true })} className="press shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground shadow-btn">Approve & lock</button>
-              ) : (
-                <span className={"shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium animate-lc-in " + (st === "locked" ? "bg-accent text-accent-foreground" : "bg-warn text-warn-foreground")}>{st === "locked" ? "✓ Locked" : "Missing"}</span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
-/** Hero stage: switch between what the client sees and what the studio sees. */
-export function HeroStage() {
-  const [v, setV] = useState<"client" | "studio">("client");
-  return (
-    <div>
-      <div className="mx-auto mb-5 flex w-fit rounded-md border border-border bg-muted p-1 text-xs">
-        {(["client", "studio"] as const).map((k) => (
-          <button key={k} type="button" onClick={() => setV(k)} className={"rounded px-3.5 py-1.5 font-medium transition-all duration-300 " + (v === k ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground")}>{k === "client" ? "Your client sees" : "Your studio sees"}</button>
-        ))}
-      </div>
-      <div key={v} className="mx-auto max-w-2xl animate-lc-in">{v === "client" ? <HeroPreview /> : <StudioPreview />}</div>
     </div>
   );
 }

@@ -4,8 +4,9 @@ import type React from "react";
 import { PLANS } from "@/lib/store";
 import { Lock } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { HeroStage } from "@/components/hero-stage";
 import { LandingDemo } from "@/components/landing-demo";
-import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroStage, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
+import { BeforeAfter, SampleExport, SavingsCalc, StackBar, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
