@@ -1,13 +1,16 @@
 import { goExternal } from "@/lib/redirect";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { getSupabase } from "@/integrations/supabase/client";
+import { workspaceKey } from "@/lib/workspace";
 
 import { startCheckout } from "@/lib/billing.functions";
 import { PLANS } from "@/lib/store";
 import { useSession } from "@/lib/session";
 import { useWorkspace } from "@/lib/workspace";
-import { friendlyError } from "@/lib/lockcopy";
-import { Btn, btnClass, Card } from "@/components/ui-bits";
+import { friendlyError, orgSlug } from "@/lib/lockcopy";
+import { Btn, btnClass, Card, inputClass } from "@/components/ui-bits";
 
 type Search = { plano?: "solo" | "agency"; ciclo?: "month" | "year" };
 
@@ -38,6 +41,11 @@ function Checkout() {
   const [agree, setAgree] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [agency, setAgency] = useState("");
+  const qc = useQueryClient();
+  useEffect(() => {
+    try { const n = localStorage.getItem("lc_pending_agency"); if (n) setAgency(n); } catch { /* ignore */ }
+  }, []);
   const p = PLANS[plan];
   const price = cycle === "month" ? p.month : p.year;
   const first = new Date(Date.now() + 14 * 864e5).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -47,6 +55,13 @@ function Checkout() {
     setBusy(true);
     setError("");
     try {
+      if (!ws.data) {
+        const name = agency.trim();
+        const { error: err } = await getSupabase().from("organizations").insert({ name, slug: orgSlug(name, Math.random().toString(36).slice(2, 6)) });
+        if (err) throw new Error(err.message);
+        try { localStorage.removeItem("lc_pending_agency"); } catch { /* ignore */ }
+        await qc.invalidateQueries({ queryKey: workspaceKey });
+      }
       const { url } = await startCheckout({ data: { plan, cycle } });
       goExternal(url);
       setBusy(false);
@@ -93,10 +108,13 @@ function Checkout() {
         {error && <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
         {!ready ? null : !session ? (
           <Link to="/entrar" search={{ modo: "criar", seguir: here }} className={btnClass + " w-full py-3"}>Create an account to continue</Link>
-        ) : !ws.data && !ws.isLoading ? (
-          <Link to="/app" className={btnClass + " w-full py-3"}>Create your agency account first</Link>
         ) : (
-          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading} onClick={go}>{busy ? "Opening secure checkout…" : "Register card and start"}</Btn>
+          <>
+          {!ws.data && !ws.isLoading && (
+            <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} />
+          )}
+          <Btn className="w-full py-3" disabled={!agree || busy || ws.isLoading || (!ws.data && agency.trim().length < 2)} onClick={go}>{busy ? "Opening secure checkout…" : "Register card and start"}</Btn>
+          </>
         )}
         <p className="text-center text-xs text-muted-foreground">The card is requested on Stripe's secure page. Card details never touch Lockcopy.</p>
       </div>

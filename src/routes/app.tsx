@@ -75,6 +75,9 @@ function CreateAgency() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  useEffect(() => {
+    try { const n = localStorage.getItem("lc_pending_agency"); if (n) setName(n); } catch { /* ignore */ }
+  }, []);
 
   const create = async () => {
     setBusy(true);
@@ -83,6 +86,7 @@ function CreateAgency() {
       const suffix = Math.random().toString(36).slice(2, 6);
       const { error: err } = await getSupabase().from("organizations").insert({ name: name.trim(), slug: orgSlug(name, suffix) });
       if (err) throw new Error(err.message);
+      try { localStorage.removeItem("lc_pending_agency"); } catch { /* ignore */ }
       await qc.invalidateQueries({ queryKey: workspaceKey });
     } catch (e) {
       setError(friendlyError(e));

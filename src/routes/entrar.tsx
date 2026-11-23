@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { getSupabase, hasSupabase } from "@/integrations/supabase/client";
 import { useSession } from "@/lib/session";
-import { friendlyError } from "@/lib/lockcopy";
+import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 type Search = { modo?: "entrar" | "criar"; seguir?: string };
@@ -37,6 +37,7 @@ function SignIn() {
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [show, setShow] = useState(false);
+  const [agency, setAgency] = useState("");
   const [forgot, setForgot] = useState(false);
   const next = seguir ?? "/app";
 
@@ -65,6 +66,14 @@ function SignIn() {
           options: { emailRedirectTo: `${window.location.origin}${next}` },
         });
         if (err) throw err;
+        const name = agency.trim();
+        if (name.length >= 2) {
+          if (data.session) {
+            await supabase.from("organizations").insert({ name, slug: orgSlug(name, Math.random().toString(36).slice(2, 6)) });
+          } else {
+            try { localStorage.setItem("lc_pending_agency", name); } catch { /* ignore */ }
+          }
+        }
         if (!data.session) setInfo("We sent you a confirmation email. Open the link and sign in here again.");
       }
     } catch (err) {
@@ -122,7 +131,10 @@ function SignIn() {
                 </>
               )}
               <form onSubmit={submit} className="space-y-3">
-                <input className={inputClass} type="email" autoComplete="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
+                {mode === "criar" && !forgot && (
+                  <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} required minLength={2} />
+                )}
+                <input className={inputClass} type="email" autoComplete="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 {!forgot && (
                   <div className="relative">
                     <input className={inputClass + " pr-16"} type={show ? "text" : "password"} autoComplete={mode === "entrar" ? "current-password" : "new-password"} placeholder={mode === "criar" ? "Password (min. 8 characters)" : "Password"} minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
