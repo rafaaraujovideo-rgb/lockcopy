@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { Check } from "lucide-react";
 
 import { getPortalSupabase } from "@/integrations/supabase/portal-client";
 import { portalAttachWebp, portalLoad, portalRegisterFile, portalSave, type PortalField, type PortalSubmission } from "@/lib/api.functions";
@@ -42,6 +43,8 @@ async function toWebp(file: File): Promise<Blob | null> {
   }
 }
 
+const isDone = (st: string | undefined) => st === "submitted" || st === "approved";
+
 function Unavailable() {
   return (
     <div className="flex min-h-screen items-center justify-center px-5 text-center">
@@ -53,6 +56,7 @@ function Unavailable() {
 function Portal() {
   const { token } = Route.useParams();
   const valid = UUID.test(token);
+  const [tab, setTab] = useState(0);
   const q = useQuery({
     queryKey: ["portal", token],
     queryFn: () => portalLoad({ data: { token } }),
@@ -67,7 +71,9 @@ function Portal() {
   const p = q.data;
   const subs = new Map((p.submissions ?? []).map((s) => [s.field_id, s]));
   const allFields = p.sections.flatMap((s) => s.fields ?? []);
-  const done = allFields.filter((f) => ["submitted", "approved"].includes(subs.get(f.id)?.status ?? "")).length;
+  const done = allFields.filter((f) => isDone(subs.get(f.id)?.status)).length;
+  const cur = Math.min(tab, Math.max(0, p.sections.length - 1));
+  const sec = p.sections[cur];
   const pct = allFields.length ? Math.round((done / allFields.length) * 100) : 0;
 
   return (
@@ -84,13 +90,31 @@ function Portal() {
       </header>
       <main className="mx-auto max-w-3xl space-y-5 px-5 py-8">
         <p className="text-sm text-muted-foreground">Everything is saved automatically. You can leave and come back later with this same link.</p>
-        {p.sections.map((s) => (
-          <Card key={s.id}>
-            <h2 className="font-display text-2xl font-semibold">{s.title}</h2>
-            {s.description && <p className="text-sm text-muted-foreground">{s.description}</p>}
-            {(s.fields ?? []).map((f) => <FieldInput key={f.id} token={token} field={f} sub={subs.get(f.id)} />)}
+        <nav aria-label="Pages" className="flex gap-1 overflow-x-auto border-b border-border pb-px">
+          {p.sections.map((s, i) => {
+            const fs = s.fields ?? [];
+            const d = fs.filter((f) => isDone(subs.get(f.id)?.status)).length;
+            const complete = fs.length > 0 && d === fs.length;
+            return (
+              <button key={s.id} onClick={() => setTab(i)} className={"-mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-sm " + (i === cur ? "border-primary font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground")}>
+                {complete && <Check className="h-3.5 w-3.5 text-seal" />}{s.title}<span className="font-mono text-[10px] text-muted-foreground">{d}/{fs.length}</span>
+              </button>
+            );
+          })}
+        </nav>
+        {sec && (
+          <Card key={sec.id}>
+            <h2 className="font-display text-2xl font-semibold">{sec.title}</h2>
+            {sec.description && <p className="text-sm text-muted-foreground">{sec.description}</p>}
+            {(sec.fields ?? []).map((f) => <FieldInput key={f.id} token={token} field={f} sub={subs.get(f.id)} />)}
           </Card>
-        ))}
+        )}
+        <div className="flex justify-between gap-3">
+          <button disabled={cur === 0} onClick={() => { setTab(cur - 1); window.scrollTo(0, 0); }} className="rounded-md border border-border bg-card px-4 py-2 text-sm shadow-card disabled:opacity-40">← Previous</button>
+          {cur < p.sections.length - 1
+            ? <button onClick={() => { setTab(cur + 1); window.scrollTo(0, 0); }} className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn">Next page →</button>
+            : <span className="self-center text-sm text-muted-foreground">{pct === 100 ? "All done — your agency has been notified." : `${allFields.length - done} item(s) left across all pages.`}</span>}
+        </div>
       </main>
     </div>
   );

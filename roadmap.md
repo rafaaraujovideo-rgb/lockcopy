@@ -27,4 +27,4 @@
 ## Nível de mercado
 - [x] Bloco 1 — Landing: antes/depois, ZIP de exemplo real, calculadora de poupança.
 - [x] Bloco 2 — Entrar em ecrã dividido, onboarding em 3 passos (logótipo, pedido de exemplo, abrir portal).
-- [ ] Bloco 3 — Pedido editável, portal por páginas com progresso, upload múltiplo, copiar campo na revisão.
+- [x] Bloco 3 — (campos personalizados no pedido ficam para depois: precisam de SQL novo) Pedido editável, portal por páginas com progresso, upload múltiplo, copiar campo na revisão.

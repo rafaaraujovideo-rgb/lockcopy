@@ -168,6 +168,7 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
   const [error, setError] = useState("");
   const status = answerLabel(sub?.status);
 
+  const [copied, setCopied] = useState(false);
   const decide = async (decision: "approve" | "adjust") => {
     setBusy(true);
     setError("");
@@ -193,7 +194,7 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
 
   return (
     <div className="border-t border-border py-3">
-      <div className="flex items-center justify-between gap-2"><p className="text-sm font-medium">{field.label}</p><Badge s={status} /></div>
+      <div className="flex items-center justify-between gap-2"><p className="text-sm font-medium">{field.label}</p><span className="flex items-center gap-2">{sub?.value_text && <button type="button" onClick={() => { void navigator.clipboard.writeText(sub.value_text ?? ""); setCopied(true); setTimeout(() => setCopied(false), 1500); }} className="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted">{copied ? "Copied" : "Copy"}</button>}<Badge s={status} /></span></div>
       {sub?.value_text && <p className="mt-1 whitespace-pre-wrap text-sm">{sub.value_text}</p>}
       {isFileField(field.field_type) && files.length > 0 && (
         <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
