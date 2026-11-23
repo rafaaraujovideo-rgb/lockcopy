@@ -5,7 +5,7 @@ import { useSession } from "@/lib/session";
 
 export const workspaceKey = ["workspace"] as const;
 
-/** Conta da agência (organização, plano e limites). Só corre no browser com sessão. */
+/** Agency account (organization, plan and limits). Runs only in the browser with a session. */
 export function useWorkspace() {
   const { ready, session } = useSession();
   return useQuery({

@@ -25,7 +25,7 @@ function grantStatements(source: string) {
 }
 
 describe("db/*.sql", () => {
-  it("aplica os ficheiros na ordem prevista", () => {
+  it("applies the files in the expected order", () => {
     expect(files).toEqual([
       "0001_schema.sql",
       "0002_functions.sql",
@@ -38,7 +38,7 @@ describe("db/*.sql", () => {
     ]);
   });
 
-  it("concede acesso por tabela criada no esquema public", () => {
+  it("grants access for each table created in public", () => {
     const grants = grantStatements(sql).join("\n");
     const missing = tableNames(sql).filter(
       (t) => !new RegExp(`\\bpublic\\.${t}\\b`, "i").test(grants),
@@ -46,7 +46,7 @@ describe("db/*.sql", () => {
     expect(missing).toEqual([]);
   });
 
-  it("liga a RLS a todas as tabelas de public", () => {
+  it("enables RLS on every public table", () => {
     const missing = tableNames(sql).filter(
       (t) =>
         !new RegExp(`alter\\s+table\\s+public\\.${t}\\s+enable\\s+row\\s+level\\s+security`, "i").test(
@@ -56,18 +56,18 @@ describe("db/*.sql", () => {
     expect(missing).toEqual([]);
   });
 
-  it("não escreve em storage.buckets", () => {
+  it("does not write to storage.buckets", () => {
     expect(/insert\s+into\s+storage\.buckets/i.test(sql)).toBe(false);
     expect(/update\s+storage\.buckets/i.test(sql)).toBe(false);
   });
 
-  it("mantém os limites dos planos dos planos de negócio", () => {
+  it("keeps the business plan limits", () => {
     const solo = /'solo',\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+),\s*([\d.]+)/i.exec(sql);
     const agency = /'agency',\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+),\s*([\d.]+)/i.exec(sql);
-    const teste = /'teste',\s*(\d+),\s*(\d+),\s*(\d+)/i.exec(sql);
+    const trial = /'teste',\s*(\d+),\s*(\d+),\s*(\d+)/i.exec(sql);
 
-    expect(teste?.[1]).toBe("1");
-    expect(Number(teste?.[3])).toBe(500 * 1024 * 1024);
+    expect(trial?.[1]).toBe("1");
+    expect(Number(trial?.[3])).toBe(500 * 1024 * 1024);
     expect(solo?.[1]).toBe("15");
     expect(Number(solo?.[3])).toBe(5 * 1024 * 1024 * 1024);
     expect(solo?.[4]).toBe("19.00");
@@ -76,7 +76,7 @@ describe("db/*.sql", () => {
     expect(agency?.[5]).toBe("390.00");
   });
 
-  it("cria os 4 modelos com as suas secções e campos", () => {
+  it("creates the 4 templates with their sections and fields", () => {
     expect(sql).toContain("'institucional'");
     expect(sql).toContain("'landing'");
     expect(sql).toContain("'ecommerce'");

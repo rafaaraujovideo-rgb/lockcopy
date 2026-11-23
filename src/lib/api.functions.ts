@@ -11,7 +11,7 @@ const uuid = z.string().uuid();
 const email = z.string().trim().email().max(200);
 const text = (max: number) => z.string().trim().max(max);
 
-/** Org + plano + limites do utilizador autenticado. */
+/** Org + plan + limits of the signed-in user. */
 export const getWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -55,7 +55,7 @@ export const getWorkspace = createServerFn({ method: "POST" })
     };
   });
 
-/** Lista de pedidos da agência, mais recentes primeiro. */
+/** Agency requests, newest first. */
 export const listRequests = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -115,7 +115,7 @@ type RequestDetail = {
   events: Array<Tables<"request_events">>;
 };
 
-/** Pedido completo: secções, campos, respostas, anexos e histórico. */
+/** Full request: sections, fields, answers, files and history. */
 export const getRequestDetail = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) =>
@@ -178,7 +178,7 @@ export const getRequestDetail = createServerFn({ method: "POST" })
     };
   });
 
-/** Cria um pedido a partir de um modelo e devolve o link do cliente. */
+/** Creates a request from a template and returns the client link. */
 export const createRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) =>
@@ -252,7 +252,7 @@ export const reviewField = createServerFn({ method: "POST" })
     return result as { status: string; note: string | null };
   });
 
-/** Liga ou desliga o link público do pedido. */
+/** Switches the request's public link on or off. */
 export const setRequestLink = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) =>
@@ -284,7 +284,7 @@ export const sendReminder = createServerFn({ method: "POST" })
   });
 
 // ---------------------------------------------------------------------
-// Portal do cliente: público, validado pelo token do link
+// Client portal: public, validated by the link token
 // ---------------------------------------------------------------------
 
 export type PortalFile = {
@@ -348,7 +348,7 @@ async function portalClient() {
   return createServerSupabase();
 }
 
-/** Abre o portal pelo token. Sem sessão: o papel anon só passa nestas RPCs. */
+/** Opens the portal by token. No session: the anon role only passes these RPCs. */
 export const portalLoad = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ token: uuid }).parse(data))
   .handler(async ({ data }): Promise<PortalPayload> => {
@@ -383,8 +383,8 @@ export const portalSave = createServerFn({ method: "POST" })
   });
 
 /**
- * Regista um ficheiro já enviado para o bucket. O caminho é validado pela RPC:
- * tem de ser <org>/<token>/<field>/<nome>.
+ * Registers a file already uploaded to the bucket. The RPC validates the path:
+ * it must be <org>/<token>/<field>/<name>.
  */
 export const portalRegisterFile = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
@@ -414,8 +414,8 @@ export const portalRegisterFile = createServerFn({ method: "POST" })
   });
 
 /**
- * Anexa a versão WebP (gerada no browser) ao ficheiro original já registado.
- * O original é sempre preservado; o WebP serve para pré-visualizações leves.
+ * Attaches the WebP version (made in the browser) to the registered original.
+ * The original is always kept; the WebP is for light previews.
  */
 export const portalAttachWebp = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>

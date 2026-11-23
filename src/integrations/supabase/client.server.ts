@@ -35,13 +35,13 @@ export function createServerSupabase(
   const accessToken = options.accessToken;
 
   if (!url || !key) {
-    throw new Error("Servidor sem SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY.");
+    throw new Error("Server is missing SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY.");
   }
 
   return createClient<Database>(url, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     global: {
-      // Chaves sb_ não são JWTs: vão só como apikey. O bearer é o do utilizador.
+      // sb_ keys are not JWTs: they go only as apikey. The bearer is the user's.
       fetch: (input, init) => {
         const headers = new Headers(init?.headers);
         headers.set("apikey", key);
@@ -59,8 +59,8 @@ export function createServerSupabase(
  */
 export function createAdminSupabase(): SupabaseClient<Database> {
   const { url } = readKeys();
-  // O cofre de segredos reserva o prefixo SUPABASE_, por isso a chave do
-  // serviço entra como LOCKCOPY_DB_SECRET_KEY (aceita o nome antigo se existir).
+  // The secrets vault reserves the SUPABASE_ prefix, so the service
+  // key is LOCKCOPY_DB_SECRET_KEY (the old name is accepted if present).
   const key = (
     process.env["LOCKCOPY_DB_SECRET_KEY"] ??
     process.env["SUPABASE_SERVICE_ROLE_KEY"] ??
@@ -68,10 +68,10 @@ export function createAdminSupabase(): SupabaseClient<Database> {
   ).trim();
 
   if (!url || !key) {
-    throw new Error("Servidor sem SUPABASE_URL / LOCKCOPY_DB_SECRET_KEY.");
+    throw new Error("Server is missing SUPABASE_URL / LOCKCOPY_DB_SECRET_KEY.");
   }
   if (key.startsWith("sb_publishable_")) {
-    throw new Error("LOCKCOPY_DB_SECRET_KEY tem a chave publicável; precisa da sb_secret_.");
+    throw new Error("LOCKCOPY_DB_SECRET_KEY holds the publishable key; it needs the sb_secret_ key.");
   }
 
   return createClient<Database>(url, key, {
@@ -80,7 +80,7 @@ export function createAdminSupabase(): SupabaseClient<Database> {
       fetch: (input, init) => {
         const headers = new Headers(init?.headers);
         headers.set("apikey", key);
-        // Só as chaves antigas (JWT) vão como bearer; as sb_secret_ só como apikey.
+        // Only legacy (JWT) keys go as bearer; sb_secret_ keys only as apikey.
         if (key.startsWith("eyJ")) headers.set("Authorization", `Bearer ${key}`);
         else headers.delete("Authorization");
         return fetch(input, { ...init, headers });

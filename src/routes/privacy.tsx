@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/privacidade")({
+export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
       { title: "Privacy policy — Lockcopy" },
@@ -81,7 +81,7 @@ function Privacidade() {
         ))}
       </div>
       <p className="mt-12 text-sm text-muted-foreground">
-        See also: <Link to="/termos" className="underline hover:text-foreground">Terms of service</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
+        See also: <Link to="/terms" className="underline hover:text-foreground">Terms of service</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
       </p>
     </div>
   );

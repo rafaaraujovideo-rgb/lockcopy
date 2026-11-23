@@ -89,9 +89,9 @@ function seed(): Request {
   const answers = emptyAnswers(t.sections);
   answers["home-title"] = { text: "A family dental clinic in the city centre since 1998.", files: [], status: "enviado" };
   answers["home-hero"] = { text: "", files: [{ name: "facade.heic", size: 3_400_000, type: "image/heic", webp: "pending" }, { name: "reception.jpg", size: 2_100_000, type: "image/jpeg", webp: "ok" }], status: "enviado" };
-  answers["about-story"] = { text: "Founded by Dr. Sousa...", files: [], status: "ajuste", note: "Could you add 2-3 sentences about the current team?" };
+  answers["about-story"] = { text: "Founded by Dr. Reed...", files: [], status: "ajuste", note: "Could you add 2-3 sentences about the current team?" };
   return {
-    id: "p1", token: "demo-x7k2q9", client: "Sousa Clinic", clientEmail: "hello@sousaclinic.com",
+    id: "p1", token: "demo-x7k2q9", client: "Reed Clinic", clientEmail: "hello@reedclinic.com",
     title: "New business website", templateId: t.id, sections: t.sections,
     deadline: days(10), expiresAt: days(30), revoked: false, answers,
     history: [

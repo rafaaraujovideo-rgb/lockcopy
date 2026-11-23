@@ -4,8 +4,8 @@ import type { Session } from "@supabase/supabase-js";
 import { getSupabase, hasSupabase } from "@/integrations/supabase/client";
 
 /**
- * Sessão da agência no browser. Fica `ready: false` no servidor e no primeiro
- * render, para não haver diferenças entre SSR e hidratação.
+ * Agency session in the browser. Stays `ready: false` on the server and first
+ * render, so SSR and hydration never differ.
  */
 export function useSession() {
   const [state, setState] = useState<{ ready: boolean; session: Session | null }>({ ready: false, session: null });

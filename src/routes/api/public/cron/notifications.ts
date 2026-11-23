@@ -1,16 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Trabalhador de emails e lembretes.
+ * Email and reminder worker.
  *
- * Rota pública (sem sessão de utilizador), mas protegida por um segredo:
- * o chamador (cron externo, ex. cron-job.org ou agendamento do Supabase)
- * tem de enviar `Authorization: Bearer <CRON_SECRET>`.
+ * Public route (no user session), but protected by a secret:
+ * the caller (external cron, e.g. cron-job.org or Supabase scheduling)
+ * must send `Authorization: Bearer <CRON_SECRET>`.
  *
- * Fluxo: reivindica notificações pendentes (claim_notifications), envia cada
- * uma via Brevo e marca o resultado (finish_notification). Sem BREVO_API_KEY
- * as notificações são marcadas como falhadas com erro explícito, para não
- * fingirem envio.
+ * Flow: claims pending notifications (claim_notifications), sends each
+ * via Brevo and records the result (finish_notification). Without BREVO_API_KEY
+ * notifications are marked failed with an explicit error, so they never
+ * pretend to be sent.
  */
 
 const BREVO_URL = "https://api.brevo.com/v3/smtp/email";

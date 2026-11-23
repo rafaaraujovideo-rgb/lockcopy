@@ -9,7 +9,7 @@ import { framerJson, webflowCsv, zipEntries, type ExportInput } from "@/lib/expo
 import { workspaceKey } from "@/lib/workspace";
 import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 
-export const Route = createFileRoute("/app/pedidos/$id")({
+export const Route = createFileRoute("/app/requests/$id")({
   head: () => ({
     meta: [
       { title: "Review request — Lockcopy" },

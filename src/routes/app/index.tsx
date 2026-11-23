@@ -43,7 +43,7 @@ function Dashboard() {
           <h1 className="font-display text-4xl font-bold">Requests</h1>
           <p className="text-sm text-muted-foreground">{active} of {limit} active requests</p>
         </div>
-        <Link to="/app/novo" className={btnClass}>New request</Link>
+        <Link to="/app/new" className={btnClass}>New request</Link>
       </div>
       {q.isLoading ? (
         <p className="text-sm text-muted-foreground">Loading requests…</p>
@@ -56,7 +56,7 @@ function Dashboard() {
           {(q.data ?? []).map((r) => {
             const pct = r.fieldsTotal ? Math.round((r.fieldsDone / r.fieldsTotal) * 100) : 0;
             return (
-              <Link key={r.id} to="/app/pedidos/$id" params={{ id: r.id }}>
+              <Link key={r.id} to="/app/requests/$id" params={{ id: r.id }}>
                 <Card className="transition-colors hover:border-primary">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>

@@ -17,7 +17,7 @@ let cached: SupabaseClient<Database> | null = null;
 export function getSupabase(): SupabaseClient<Database> {
   if (!hasSupabase) {
     throw new Error(
-      "Sem ligação ao Supabase: faltam VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY.",
+      "No database connection: VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are missing.",
     );
   }
   if (!cached) {

@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { downloadTemplate, FREE_TEMPLATES } from "@/lib/free-templates";
 import { Card } from "@/components/ui-bits";
 
-export const Route = createFileRoute("/modelos")({
+export const Route = createFileRoute("/templates")({
   head: () => ({
     meta: [
       { title: "Free content checklist templates — Lockcopy" },
@@ -46,7 +46,7 @@ function Modelos() {
         <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
           In Lockcopy these templates become a portal with a link, a deadline and automatic reminders — and every answer is ready to export.
         </p>
-        <Link to="/comecar" className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
+        <Link to="/start" className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
           Try 14 days
         </Link>
       </div>

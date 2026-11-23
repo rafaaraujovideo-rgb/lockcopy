@@ -37,3 +37,4 @@ use the editor.
 
 - Stripe: STRIPE_MODE=test makes billing read STRIPE_TEST_* secrets — lets checkout be tested without real cards; remove it to go live.
 - Owner-only admin pages check the verified Auth user's email on the server (src/lib/admin.ts) before any privileged read — UI hiding is cosmetic.
+- Everything users can see (pages, URLs, search params, sample data, errors, emails) is English; database error codes are translated in friendlyError — src/test/english-only.test.ts guards it.

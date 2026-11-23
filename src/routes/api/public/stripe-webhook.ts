@@ -3,11 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { AppPlan, Json, SubscriptionStatus } from "@/lib/supabase-types";
 
 /**
- * Webhook do Stripe.
+ * Stripe webhook.
  *
- * É a única fonte de verdade para o estado de cobrança: o browser nunca decide
- * se a conta é ativa. A assinatura do evento é verificada antes de qualquer
- * escrita, e cada evento fica registado para que repetições não dobrem efeitos.
+ * The only source of truth for billing state: the browser never decides
+ * whether the account is active. The event signature is verified before any
+ * write, and each event is recorded so retries never double effects.
  */
 
 const TOLERANCE_SECONDS = 300;
@@ -134,7 +134,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
         );
         const admin = createAdminSupabase();
 
-        // Regista primeiro: se o evento já lá está, é repetição e não repete efeitos.
+        // Record first: if the event already exists, it's a retry and has no effect.
         const { error: insertError } = await admin
           .from("subscription_events")
           .insert({
@@ -156,7 +156,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
           typeof object.customer === "string" ? object.customer : object.customer?.id ?? null;
 
         let orgId: string | null = object.client_reference_id ?? object.metadata?.["org_id"] ?? null;
-        // Faturas não trazem o metadata da subscrição: procura a conta pelo cliente Stripe.
+        // Invoices lack subscription metadata: find the account by Stripe customer.
         if (!orgId && customer) {
           const { data: org } = await admin
             .from("organizations")

@@ -1,4 +1,4 @@
-/** Exportações preparadas a partir de um pedido real (não é sincronização). */
+/** Exports built from a real request (not a live sync). */
 import { slugify } from "@/lib/lockcopy";
 
 export type ExportField = { id: string; label: string; field_type: string };

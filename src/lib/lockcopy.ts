@@ -1,4 +1,4 @@
-/** Regras de apresentação partilhadas pelo painel e pelo portal. */
+/** Display rules shared by the dashboard and the portal. */
 
 export type SubmissionStatus = "pending" | "submitted" | "approved" | "rejected";
 
@@ -33,17 +33,38 @@ export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 
-/** Slug válido para a organização: 3–40 caracteres, minúsculas, números e hífenes. */
+/** Valid organization slug: 3–40 chars, lowercase, digits and hyphens. */
 export function orgSlug(name: string, suffix: string) {
   const base = slugify(name).slice(0, 30).replace(/-+$/, "") || "agency";
   return `${base.length < 2 ? base + "x" : base}-${suffix}`.slice(0, 40);
 }
 
-/** Erros das funções da base de dados vêm como "codigo — mensagem"; mostra só a mensagem. */
+/** English text for database error codes (older SQL raises them with non-English messages). */
+const DB_ERRORS: Record<string, string> = {
+  conta_sem_plano: "Your subscription needs attention before you can create new requests.",
+  limite_pedidos: "You've reached your plan's limit of active requests. Requests already open keep receiving content.",
+  sem_espaco: "No storage left on your plan. Delete files or upgrade.",
+  ultimo_proprietario: "The account must keep at least one owner.",
+  limite_membros: "You've reached your plan's user limit.",
+  sem_permissoes: "You don't have access to this.",
+  link_invalido: "This link is no longer available.",
+  campo_inexistente: "This field doesn't belong to this request.",
+  texto_longo: "This text is longer than the field allows.",
+  campo_trancado: "This field was already approved by the agency.",
+  ficheiro_invalido: "The file is empty or larger than 50 MB.",
+  ficheiro_inexistente: "This file doesn't belong to this request.",
+  tipo_negado: "This file type isn't accepted in this field.",
+  caminho_invalido: "The storage path doesn't match this request.",
+  modelo_inexistente: "Template not found.",
+};
+
+/** Database errors arrive as "code — message"; show readable English text. */
 export function friendlyError(e: unknown) {
   const msg = e instanceof Error ? e.message : String(e);
   const parts = msg.split(" — ");
-  return parts.length > 1 ? parts.slice(1).join(" — ") : msg;
+  if (parts.length < 2) return msg;
+  const code = (parts[0] ?? "").trim().split(/\s+/).pop() ?? "";
+  return DB_ERRORS[code] ?? parts.slice(1).join(" — ");
 }
 
 const EVENT_TEXT: Record<string, string> = {
@@ -67,7 +88,7 @@ export function eventText(kind: string, detail: unknown) {
 export const ACCEPTED_UPLOADS = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/svg+xml", "image/gif", "application/pdf"];
 export const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
 
-/** Valida um ficheiro antes de enviar. Devolve a mensagem de erro ou null. */
+/** Validates a file before upload. Returns the error message or null. */
 export function uploadProblem(file: { name: string; size: number; type: string }, allowed?: string[] | null) {
   const type = file.type || (file.name.toLowerCase().endsWith(".heic") ? "image/heic" : "");
   const list = allowed && allowed.length ? allowed : ACCEPTED_UPLOADS;

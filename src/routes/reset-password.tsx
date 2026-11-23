@@ -5,7 +5,7 @@ import { getSupabase } from "@/integrations/supabase/client";
 import { friendlyError } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
-export const Route = createFileRoute("/nova-password")({
+export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
       { title: "Set a new password — Lockcopy" },

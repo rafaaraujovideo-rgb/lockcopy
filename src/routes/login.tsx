@@ -6,12 +6,12 @@ import { useSession } from "@/lib/session";
 import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
-type Search = { modo?: "entrar" | "criar"; seguir?: string };
+type Search = { mode?: "signin" | "signup"; next?: string };
 
-export const Route = createFileRoute("/entrar")({
+export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    modo: s["modo"] === "criar" ? "criar" : "entrar",
-    seguir: typeof s["seguir"] === "string" && s["seguir"].startsWith("/") ? s["seguir"] : "/app",
+    mode: s["mode"] === "signup" ? "signup" : "signin",
+    next: typeof s["next"] === "string" && s["next"].startsWith("/") ? s["next"] : "/app",
   }),
   head: () => ({
     meta: [
@@ -27,10 +27,10 @@ export const Route = createFileRoute("/entrar")({
 });
 
 function SignIn() {
-  const { modo, seguir } = Route.useSearch();
+  const { mode: initialMode, next: nextParam } = Route.useSearch();
   const nav = useNavigate();
   const { ready, session } = useSession();
-  const [mode, setMode] = useState<"entrar" | "criar">(modo ?? "entrar");
+  const [mode, setMode] = useState<"signin" | "signup">(initialMode ?? "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -39,7 +39,7 @@ function SignIn() {
   const [show, setShow] = useState(false);
   const [agency, setAgency] = useState("");
   const [forgot, setForgot] = useState(false);
-  const next = seguir ?? "/app";
+  const next = nextParam ?? "/app";
 
   useEffect(() => {
     if (ready && session) nav({ to: next });
@@ -53,10 +53,10 @@ function SignIn() {
     try {
       const supabase = getSupabase();
       if (forgot) {
-        const { error: err } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/nova-password` });
+        const { error: err } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
         if (err) throw err;
         setInfo("If an account exists for this email, a reset link is on its way.");
-      } else if (mode === "entrar") {
+      } else if (mode === "signin") {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw new Error(err.message === "Invalid login credentials" ? "Incorrect email or password." : err.message === "Email not confirmed" ? "Please confirm the email we sent you first." : err.message);
       } else {
@@ -85,7 +85,7 @@ function SignIn() {
 
   const google = async () => {
     setError("");
-    const { error: err } = await getSupabase().auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/entrar?seguir=${encodeURIComponent(next)}` } });
+    const { error: err } = await getSupabase().auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/login?next=${encodeURIComponent(next)}` } });
     if (err) setError(err.message.includes("not enabled") ? "Google sign-in isn't switched on yet. Use email for now." : friendlyError(err));
   };
 
@@ -111,9 +111,9 @@ function SignIn() {
         </Link>
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
-            {(["entrar", "criar"] as const).map((m) => (
+            {(["signin", "signup"] as const).map((m) => (
               <button key={m} type="button" onClick={() => { setMode(m); setForgot(false); setError(""); setInfo(""); }} className={"rounded py-1.5 " + (mode === m ? "bg-card font-medium shadow-card" : "text-muted-foreground")}>
-                {m === "entrar" ? "Sign in" : "Create account"}
+                {m === "signin" ? "Sign in" : "Create account"}
               </button>
             ))}
           </div>
@@ -131,24 +131,24 @@ function SignIn() {
                 </>
               )}
               <form onSubmit={submit} className="space-y-3">
-                {mode === "criar" && !forgot && (
+                {mode === "signup" && !forgot && (
                   <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} required minLength={2} />
                 )}
                 <input className={inputClass} type="email" autoComplete="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 {!forgot && (
                   <div className="relative">
-                    <input className={inputClass + " pr-16"} type={show ? "text" : "password"} autoComplete={mode === "entrar" ? "current-password" : "new-password"} placeholder={mode === "criar" ? "Password (min. 8 characters)" : "Password"} minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <input className={inputClass + " pr-16"} type={show ? "text" : "password"} autoComplete={mode === "signin" ? "current-password" : "new-password"} placeholder={mode === "signup" ? "Password (min. 8 characters)" : "Password"} minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
                     <button type="button" onClick={() => setShow((v) => !v)} className="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs text-muted-foreground hover:bg-muted" aria-label={show ? "Hide password" : "Show password"}>{show ? "Hide" : "Show"}</button>
                   </div>
                 )}
-                {mode === "entrar" && (
+                {mode === "signin" && (
                   <button type="button" onClick={() => { setForgot((v) => !v); setError(""); setInfo(""); }} className="text-xs text-muted-foreground underline-offset-2 hover:underline">
                     {forgot ? "← Back to sign in" : "Forgot password?"}
                   </button>
                 )}
                 {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
                 {info && <p className="rounded-md bg-accent p-2 text-sm text-accent-foreground">{info}</p>}
-                <Btn className="w-full" disabled={busy} type="submit">{busy ? "One moment…" : forgot ? "Send reset link" : mode === "entrar" ? "Sign in" : "Create account"}</Btn>
+                <Btn className="w-full" disabled={busy} type="submit">{busy ? "One moment…" : forgot ? "Send reset link" : mode === "signin" ? "Sign in" : "Create account"}</Btn>
               </form>
             </div>
           )}

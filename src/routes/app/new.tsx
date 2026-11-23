@@ -8,7 +8,7 @@ import { friendlyError, isFileField } from "@/lib/lockcopy";
 import { workspaceKey } from "@/lib/workspace";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
-export const Route = createFileRoute("/app/novo")({
+export const Route = createFileRoute("/app/new")({
   head: () => ({
     meta: [
       { title: "New request — Lockcopy" },
@@ -62,7 +62,7 @@ function NewRequest() {
     try {
       const r = await createRequest({ data: { templateId: t.id, title: form.title, clientName: form.client, clientEmail: form.clientEmail, dueDate: form.deadline } });
       await Promise.all([qc.invalidateQueries({ queryKey: ["requests"] }), qc.invalidateQueries({ queryKey: workspaceKey })]);
-      nav({ to: "/app/pedidos/$id", params: { id: r.id } });
+      nav({ to: "/app/requests/$id", params: { id: r.id } });
     } catch (e) {
       setError(friendlyError(e));
       setBusy(false);

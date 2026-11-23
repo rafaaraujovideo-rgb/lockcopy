@@ -1,6 +1,6 @@
-// Tipos do projeto Supabase próprio (Lockcopy).
-// Mantidos à mão a partir de db/0001_schema.sql + db/0004_portal.sql,
-// porque este projeto não usa o Lovable Cloud nem o gerador de tipos.
+// Types for the project's own Supabase (Lockcopy).
+// Maintained by hand from db/0001_schema.sql + db/0004_portal.sql,
+// because this project uses an external Supabase without the type generator.
 
 export type AppPlan = "teste" | "solo" | "agency";
 export type OrgRole = "owner" | "member";

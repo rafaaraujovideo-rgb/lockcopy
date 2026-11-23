@@ -30,24 +30,24 @@ function Landing() {
           <a href="#" className="flex items-center gap-2 text-lg font-bold tracking-tight"><span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground shadow-btn"><Lock className="h-3.5 w-3.5" /></span>Lockcopy</a>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
             <a href="#demo" className="hover:text-foreground">Demo</a>
-            <a href="#como" className="hover:text-foreground">Features</a>
-            <a href="#precos" className="hover:text-foreground">Pricing</a>
-            <Link to="/entrar" search={{ modo: "criar", seguir: "/app" }} className="hover:text-foreground">Create account</Link>
+            <a href="#features" className="hover:text-foreground">Features</a>
+            <a href="#pricing" className="hover:text-foreground">Pricing</a>
+            <Link to="/login" search={{ mode: "signup", next: "/app" }} className="hover:text-foreground">Create account</Link>
           </nav>
           <div className="hidden items-center gap-2 text-sm md:flex">
-            <Link to="/entrar" className="rounded-md px-4 py-2 text-muted-foreground hover:text-foreground">Sign in</Link>
-            <Link to="/comecar" className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Try for free</Link>
+            <Link to="/login" className="rounded-md px-4 py-2 text-muted-foreground hover:text-foreground">Sign in</Link>
+            <Link to="/start" className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Try for free</Link>
           </div>
           <button aria-label="Menu" onClick={() => setOpen(!open)} className="rounded-lg p-2 md:hidden">{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
         </div>
         {open && (
           <div className="border-t border-border bg-background px-6 py-4 md:hidden">
             <nav className="flex flex-col gap-3 text-sm" onClick={() => setOpen(false)}>
-              <a href="#demo">Demo</a><a href="#como">Features</a><a href="#precos">Pricing</a>
-              <Link to="/entrar" search={{ modo: "criar", seguir: "/app" }}>Create account</Link>
+              <a href="#demo">Demo</a><a href="#features">Features</a><a href="#pricing">Pricing</a>
+              <Link to="/login" search={{ mode: "signup", next: "/app" }}>Create account</Link>
               <div className="mt-2 flex gap-2">
-                <Link to="/entrar" className="flex-1 rounded-md border border-border py-2 text-center">Sign in</Link>
-                <Link to="/comecar" className="flex-1 rounded-md bg-primary py-2 text-center font-medium text-primary-foreground">Try it</Link>
+                <Link to="/login" className="flex-1 rounded-md border border-border py-2 text-center">Sign in</Link>
+                <Link to="/start" className="flex-1 rounded-md bg-primary py-2 text-center font-medium text-primary-foreground">Try it</Link>
               </div>
             </nav>
           </div>
@@ -66,7 +66,7 @@ function Landing() {
               Send one link. Your client fills in each page and uploads files — no account. You approve field by field, lock it, and export to Webflow or Framer.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/comecar" className="rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
+              <Link to="/start" className="rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
               <a href="#demo" className="rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">Try the demo ↓</a>
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">Card upfront · $0 for 14 days · cancel anytime</p>
@@ -97,7 +97,7 @@ function Landing() {
         </div>
       </section>
 
-      <section id="como" className="scroll-mt-16 border-b border-border">
+      <section id="features" className="scroll-mt-16 border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <p className="eyebrow">What you get</p>
           <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Built around the part of the project nobody enjoys.</h2>
@@ -129,7 +129,7 @@ function Landing() {
         </div>
       </section>
 
-      <section id="precos" className="scroll-mt-16 mx-auto max-w-4xl px-6 py-24">
+      <section id="pricing" className="scroll-mt-16 mx-auto max-w-4xl px-6 py-24">
         <div className="text-center">
           <p className="eyebrow">Pricing</p><h2 className="mt-2 font-display text-4xl md:text-5xl">Two plans. No surprises.</h2>
           <div className="mt-6 inline-flex rounded-md border border-border bg-muted p-1 text-sm">
@@ -151,7 +151,7 @@ function Landing() {
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                   {[`${p.requests} active requests`, `${p.users} ${p.users > 1 ? "users" : "user"}`, `${p.storageGb} GB of files`, "Field-by-field approval & lock", "Automatic WebP conversion", "Webflow CSV, Framer JSON & ZIP", "Your logo and color on the portal"].map((f) => <li key={f} className="flex gap-2"><span className="text-seal">✓</span>{f}</li>)}
                 </ul>
-                <Link to="/comecar" search={{ plano: k, ciclo: billing }} className={"mt-8 block rounded-md py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft" : "border border-border hover:bg-muted")}>Try 14 days</Link>
+                <Link to="/start" search={{ plan: k, cycle: billing }} className={"mt-8 block rounded-md py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft" : "border border-border hover:bg-muted")}>Try 14 days</Link>
               </div>
             );
           })}
@@ -171,7 +171,7 @@ function Landing() {
             <h2 className="font-display text-3xl md:text-4xl">Stop chasing clients for content.</h2>
             <p className="mt-2 text-sm opacity-80">14-day trial. Nothing is charged during the trial.</p>
           </div>
-          <Link to="/comecar" className="shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start now</Link>
+          <Link to="/start" className="shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start now</Link>
         </div>
       </section>
 
@@ -182,9 +182,9 @@ function Landing() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">Collect, approve and lock client content. Built for web freelancers and agencies.</p>
           </div>
           {[
-            ["Product", [["Demo", "#demo"], ["Features", "#como"], ["Pricing", "#precos"]]],
-            ["Resources", [["Free templates", "/modelos"], ["Lockcopy vs Content Snare", "/comparar/content-snare"], ["14-day trial", "/comecar"]]],
-            ["Legal", [["Privacy", "/privacidade"], ["Terms", "/termos"], ["Data processing", "/dpa"]]],
+            ["Product", [["Demo", "#demo"], ["Features", "#features"], ["Pricing", "#pricing"]]],
+            ["Resources", [["Free templates", "/templates"], ["Lockcopy vs Content Snare", "/compare/content-snare"], ["14-day trial", "/start"]]],
+            ["Legal", [["Privacy", "/privacy"], ["Terms", "/terms"], ["Data processing", "/dpa"]]],
           ].map(([t, links]) => (
             <div key={t as string}>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">{t as string}</h4>

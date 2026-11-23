@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/termos")({
+export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
       { title: "Terms of service — Lockcopy" },
@@ -78,7 +78,7 @@ function Termos() {
         ))}
       </div>
       <p className="mt-12 text-sm text-muted-foreground">
-        See also: <Link to="/privacidade" className="underline hover:text-foreground">Privacy policy</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
+        See also: <Link to="/privacy" className="underline hover:text-foreground">Privacy policy</Link> · <Link to="/dpa" className="underline hover:text-foreground">Data processing agreement</Link>
       </p>
     </div>
   );

@@ -9,7 +9,7 @@ import { getSupabase, hasSupabase } from "./client";
  */
 export const attachSupabaseAuth = createMiddleware({ type: "function" }).client(
   async ({ next }) => {
-    // .client() também corre durante SSR: sem window não há sessão para ler.
+    // .client() also runs during SSR: without window there is no session to read.
     if (typeof window === "undefined" || !hasSupabase) return next();
 
     const { data } = await getSupabase().auth.getSession();

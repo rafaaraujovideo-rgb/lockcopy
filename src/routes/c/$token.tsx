@@ -25,7 +25,7 @@ export const Route = createFileRoute("/c/$token")({
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Converte uma imagem para WebP no browser (máx. 2048 px no lado maior). */
+/** Converts an image to WebP in the browser (max. 2048 px on the longest side). */
 async function toWebp(file: File): Promise<Blob | null> {
   try {
     const bitmap = await createImageBitmap(file);

@@ -77,7 +77,7 @@ function Dpa() {
         ))}
       </div>
       <p className="mt-12 text-sm text-muted-foreground">
-        See also: <Link to="/privacidade" className="underline hover:text-foreground">Privacy policy</Link> · <Link to="/termos" className="underline hover:text-foreground">Terms of service</Link>
+        See also: <Link to="/privacy" className="underline hover:text-foreground">Privacy policy</Link> · <Link to="/terms" className="underline hover:text-foreground">Terms of service</Link>
       </p>
     </div>
   );

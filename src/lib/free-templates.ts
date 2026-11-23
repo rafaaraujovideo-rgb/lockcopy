@@ -1,6 +1,6 @@
 /**
- * Modelos gratuitos de checklist de conteúdos, para download direto (CSV).
- * São os mesmos formatos que a exportação Webflow usa: página, campo, tipo, obrigatório, limite.
+ * Free content checklist templates, for direct download (CSV).
+ * Same format the Webflow export uses: page, field, type, required, limit.
  */
 
 export type FreeTemplate = {

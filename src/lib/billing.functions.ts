@@ -4,17 +4,17 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
- * Cobrança com Stripe.
+ * Billing with Stripe.
  *
- * Regra do produto: o teste de 14 dias só começa depois de o Stripe confirmar
- * o cartão. Por isso o checkout é criado com trial_period_days e o estado da
- * conta é aplicado pelo webhook, nunca por código do browser.
+ * Product rule: the 14-day trial only starts after Stripe confirms
+ * the card. So checkout is created with trial_period_days and the account
+ * state is applied by the webhook, never by browser code.
  */
 
 const PLANS = ["solo", "agency"] as const;
 type Plan = (typeof PLANS)[number];
 
-/** Com STRIPE_MODE=test, lê STRIPE_TEST_* em vez das chaves reais. */
+/** With STRIPE_MODE=test, reads STRIPE_TEST_* instead of the live keys. */
 function env(name: string) {
   const test = (process.env["STRIPE_MODE"] ?? "").trim() === "test";
   const key = test && name.startsWith("STRIPE_") ? name.replace("STRIPE_", "STRIPE_TEST_") : name;
@@ -27,8 +27,8 @@ function priceFor(plan: Plan, cycle: "month" | "year") {
 }
 
 /**
- * Cria a sessão de checkout do Stripe e devolve o URL para onde o browser
- * vai pagar. Nada muda na conta aqui: só o webhook confirma.
+ * Creates the Stripe checkout session and returns the URL the browser
+ * goes to pay. Nothing changes on the account here: only the webhook confirms.
  */
 export const startCheckout = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -68,7 +68,7 @@ export const startCheckout = createServerFn({ method: "POST" })
     const origin = env("APP_URL") || "https://lockcopy.com";
     const body = new URLSearchParams();
     body.set("mode", "subscription");
-    // O cartão é sempre pedido, mesmo com teste grátis: sem cartão, não há teste.
+    // The card is always required, even for the free trial: no card, no trial.
     body.set("payment_method_collection", "always");
     body.set("line_items[0][price]", price);
     body.set("line_items[0][quantity]", "1");
@@ -111,7 +111,7 @@ export const startCheckout = createServerFn({ method: "POST" })
     return { url: session.url };
   });
 
-/** Abre o portal do Stripe para gerir cartão, faturas ou cancelar. */
+/** Opens the Stripe portal to manage card, invoices or cancel. */
 export const openBillingPortal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -137,7 +137,7 @@ export const openBillingPortal = createServerFn({ method: "POST" })
     const origin = env("APP_URL") || "https://lockcopy.com";
     const body = new URLSearchParams();
     body.set("customer", org.stripe_customer_id);
-    body.set("return_url", `${origin}/app/faturacao`);
+    body.set("return_url", `${origin}/app/billing`);
 
     const response = await fetch("https://api.stripe.com/v1/billing_portal/sessions", {
       method: "POST",

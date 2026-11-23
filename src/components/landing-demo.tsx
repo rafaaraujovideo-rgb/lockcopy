@@ -13,8 +13,8 @@ type St = "enviado" | "aprovado" | "ajuste";
 const FIELDS = [
   { id: "hero", page: "Home", label: "Main headline", value: "A family dental clinic in the city centre since 1998." },
   { id: "capa", page: "Home", label: "Cover photo", value: "facade.jpg · 2.1 MB" },
-  { id: "historia", page: "About", label: "Your story", value: "Founded by Dr. Sousa, the clinic…" },
-  { id: "logo", page: "Contact", label: "Logo", value: "logo-sousa.svg · 48 KB" },
+  { id: "historia", page: "About", label: "Your story", value: "Founded by Dr. Reed, the clinic…" },
+  { id: "logo", page: "Contact", label: "Logo", value: "logo-reed.svg · 48 KB" },
 ];
 const HERO_TEXT = FIELDS[0]!.value;
 
@@ -73,7 +73,7 @@ export function LandingDemo() {
         <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" /><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/25" />
           <span className="ml-3 rounded-md bg-muted px-3 py-1 text-xs text-muted-foreground">
-            {step === 1 ? "lockcopy.app/c/x7k2q9" : "lockcopy.app/app/pedidos/sousa-clinic"}
+            {step === 1 ? "lockcopy.app/c/x7k2q9" : "lockcopy.app/app/requests/reed-clinic"}
           </span>
         </div>
 
@@ -82,7 +82,7 @@ export function LandingDemo() {
             <div className="space-y-5">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">New request</p>
-                <h4 className="mt-1 text-xl font-bold">Sousa Clinic · Business website</h4>
+                <h4 className="mt-1 text-xl font-bold">Reed Clinic · Business website</h4>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {["Business site", "Landing page", "E-commerce"].map((m, i) => (
@@ -188,23 +188,23 @@ export function LandingDemo() {
 {fmt === "webflow" && `page,field,value
 home,main-headline,"A family dental clinic in the city centre since 1998."
 home,cover-photo,assets/home/facade.webp
-about,story,"Founded by Dr. Sousa, the clinic…"
-contact,logo,assets/contact/logo-sousa.svg`}
+about,story,"Founded by Dr. Reed, the clinic…"
+contact,logo,assets/contact/logo-reed.svg`}
 {fmt === "framer" && `{
   "home": {
     "mainHeadline": "A family dental clinic in the city centre since 1998.",
     "coverPhoto": "assets/home/facade.webp"
   },
-  "about": { "story": "Founded by Dr. Sousa, the clinic…" }
+  "about": { "story": "Founded by Dr. Reed, the clinic…" }
 }`}
-{fmt === "zip" && `sousa-clinic.zip
+{fmt === "zip" && `reed-clinic.zip
 ├── home/
 │   ├── texts.md
 │   └── facade.webp
 ├── about/
 │   └── texts.md
 └── contact/
-    └── logo-sousa.svg`}
+    └── logo-reed.svg`}
               </pre>
               <button className="inline-flex items-center gap-2 rounded-lg bg-seal px-4 py-2 text-sm font-medium text-primary-foreground"><Download className="h-4 w-4" /> Download</button>
             </div>

@@ -40,7 +40,7 @@ export function BeforeAfter() {
         <p className="mt-2 text-sm text-muted-foreground">One link, one checklist per page, every field reviewed.</p>
         <div className="mt-5 rounded-md border border-border bg-background">
           <div className="flex items-center justify-between border-b border-border px-3 py-2 text-xs">
-            <span className="font-medium">Sousa Clinic · Business site</span><span className="font-mono text-muted-foreground">3/4</span>
+            <span className="font-medium">Reed Clinic · Business site</span><span className="font-mono text-muted-foreground">3/4</span>
           </div>
           <ul className="divide-y divide-border">
             {done.map(([f, s]) => (
@@ -60,7 +60,7 @@ export function BeforeAfter() {
 
 const SAMPLE: ExportInput = {
   title: "Business site",
-  client: "Sousa Dental Clinic",
+  client: "Reed Dental Clinic",
   sections: [
     { id: "home", title: "Home", fields: [{ id: "hero", label: "Main headline", field_type: "short_text" }, { id: "cover", label: "Cover photo", field_type: "image" }] },
     { id: "about", title: "About", fields: [{ id: "story", label: "Your story", field_type: "long_text" }] },
@@ -68,12 +68,12 @@ const SAMPLE: ExportInput = {
   ],
   text: {
     hero: "A family dental clinic in the city centre since 1998.",
-    story: "Founded by Dr. Ana Sousa, the clinic has cared for three generations of families with calm, honest dentistry.",
+    story: "Founded by Dr. Anna Reed, the clinic has cared for three generations of families with calm, honest dentistry.",
     phone: "+351 210 000 000",
   },
   files: [
     { field_id: "cover", file_name: "facade.webp", storage_path: "", webp_storage_path: null },
-    { field_id: "logo", file_name: "logo-sousa.webp", storage_path: "", webp_storage_path: null },
+    { field_id: "logo", file_name: "logo-reed.webp", storage_path: "", webp_storage_path: null },
   ],
 };
 
@@ -100,11 +100,11 @@ export function SampleExport() {
     try {
       const { zipSync, strToU8 } = await import("fflate");
       const zip = zipSync({
-        "README.txt": strToU8("Lockcopy sample export — Sousa Dental Clinic\n\nwebflow.csv  → import into a Webflow CMS collection\nframer.json  → structured content per page for Framer\nhome/, contact/ → images per page and field, converted to WebP\n"),
+        "README.txt": strToU8("Lockcopy sample export — Reed Dental Clinic\n\nwebflow.csv  → import into a Webflow CMS collection\nframer.json  → structured content per page for Framer\nhome/, contact/ → images per page and field, converted to WebP\n"),
         "webflow.csv": strToU8(webflowCsv(SAMPLE)),
         "framer.json": strToU8(framerJson(SAMPLE)),
         "home/cover-photo/webp/facade.webp": await sampleImage("Cover photo", 1600, 900),
-        "contact/logo/webp/logo-sousa.webp": await sampleImage("Logo", 600, 600),
+        "contact/logo/webp/logo-reed.webp": await sampleImage("Logo", 600, 600),
       });
       const url = URL.createObjectURL(new Blob([zip as BlobPart], { type: "application/zip" }));
       const a = document.createElement("a");
@@ -183,7 +183,7 @@ export function StackBar() {
 type RowState = "todo" | "typing" | "review" | "locked";
 const HERO_ROWS: Array<{ l: string; v: string; meta?: string }> = [
   { l: "Home · Hero headline", v: "Fresh bread, every morning since 1987" },
-  { l: "About · Our story", v: "Three generations of bakers on Rua da Lua" },
+  { l: "About · Our story", v: "Three generations of bakers on Elm Street" },
   { l: "Team photos", v: "4 files", meta: "2.4 MB → 412 KB WebP" },
   { l: "Contact · Opening hours", v: "Mon–Sat · 7:00–19:00" },
 ];
@@ -206,11 +206,11 @@ export function HeroPreview() {
       <div className="rounded-xl border border-border bg-card shadow-window">
         <div className="flex items-center gap-3 border-b border-border px-3 py-2.5">
           <div className="flex gap-1.5">{[0, 1, 2].map((i) => <span key={i} className="h-2.5 w-2.5 rounded-full bg-border" />)}</div>
-          <div className="mx-auto flex items-center gap-1.5 rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5" />lockcopy.com/c/padaria-lua</div>
+          <div className="mx-auto flex items-center gap-1.5 rounded-md bg-muted px-3 py-1 font-mono text-[10px] text-muted-foreground"><Lock className="h-2.5 w-2.5" />lockcopy.com/c/bloom-bakery</div>
           <span className="w-10" />
         </div>
         <div className="flex items-center justify-between px-4 pt-4">
-          <div><p className="text-sm font-bold tracking-tight">Padaria Lua · Website</p><p className="font-mono text-[10px] text-muted-foreground">{locked}/4 locked · autosave on</p></div>
+          <div><p className="text-sm font-bold tracking-tight">Bloom Bakery · Website</p><p className="font-mono text-[10px] text-muted-foreground">{locked}/4 locked · autosave on</p></div>
           <span className="flex items-center gap-1.5 font-mono text-[10px] text-seal"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-seal" />Live</span>
         </div>
         <div className="mx-4 mt-3 h-1 overflow-hidden rounded-full bg-muted"><div className="h-1 bg-seal transition-all duration-700" style={{ width: `${(locked / 4) * 100}%` }} /></div>

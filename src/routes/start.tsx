@@ -12,12 +12,12 @@ import { useWorkspace } from "@/lib/workspace";
 import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, btnClass, Card, inputClass } from "@/components/ui-bits";
 
-type Search = { plano?: "solo" | "agency"; ciclo?: "month" | "year" };
+type Search = { plan?: "solo" | "agency"; cycle?: "month" | "year" };
 
-export const Route = createFileRoute("/comecar")({
+export const Route = createFileRoute("/start")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    plano: s["plano"] === "agency" ? "agency" : "solo",
-    ciclo: s["ciclo"] === "year" ? "year" : "month",
+    plan: s["plan"] === "agency" ? "agency" : "solo",
+    cycle: s["cycle"] === "year" ? "year" : "month",
   }),
   head: () => ({
     meta: [
@@ -33,11 +33,11 @@ export const Route = createFileRoute("/comecar")({
 });
 
 function Checkout() {
-  const { plano, ciclo } = Route.useSearch();
+  const { plan: initialPlan, cycle: initialCycle } = Route.useSearch();
   const { ready, session } = useSession();
   const ws = useWorkspace();
-  const [plan, setPlan] = useState<"solo" | "agency">(plano ?? "solo");
-  const [cycle, setCycle] = useState<"month" | "year">(ciclo ?? "month");
+  const [plan, setPlan] = useState<"solo" | "agency">(initialPlan ?? "solo");
+  const [cycle, setCycle] = useState<"month" | "year">(initialCycle ?? "month");
   const [agree, setAgree] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -49,7 +49,7 @@ function Checkout() {
   const p = PLANS[plan];
   const price = cycle === "month" ? p.month : p.year;
   const first = new Date(Date.now() + 14 * 864e5).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-  const here = `/comecar?plano=${plan}&ciclo=${cycle}`;
+  const here = `/start?plan=${plan}&cycle=${cycle}`;
 
   const go = async () => {
     setBusy(true);
@@ -107,7 +107,7 @@ function Checkout() {
         </Card>
         {error && <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
         {!ready ? null : !session ? (
-          <Link to="/entrar" search={{ modo: "criar", seguir: here }} className={btnClass + " w-full py-3"}>Create an account to continue</Link>
+          <Link to="/login" search={{ mode: "signup", next: here }} className={btnClass + " w-full py-3"}>Create an account to continue</Link>
         ) : (
           <>
           {!ws.data && !ws.isLoading && (

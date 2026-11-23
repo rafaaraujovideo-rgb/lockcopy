@@ -7,7 +7,7 @@ import { useWorkspace } from "@/lib/workspace";
 import { fmtDate, friendlyError } from "@/lib/lockcopy";
 import { Btn, btnClass, Card } from "@/components/ui-bits";
 
-export const Route = createFileRoute("/app/faturacao")({
+export const Route = createFileRoute("/app/billing")({
   head: () => ({
     meta: [
       { title: "Billing — Lockcopy" },
@@ -67,7 +67,7 @@ function Billing() {
       {!hasCard ? (
         <Card>
           <p className="text-sm">You haven't registered a card yet. The 14-day trial starts when you do.</p>
-          <Link to="/comecar" className={btnClass + " mt-3"}>Register card and start 14 days</Link>
+          <Link to="/start" className={btnClass + " mt-3"}>Register card and start 14 days</Link>
         </Card>
       ) : (
         <Card className="space-y-2">

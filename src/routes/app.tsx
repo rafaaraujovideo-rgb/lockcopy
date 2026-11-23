@@ -29,7 +29,7 @@ function AppLayout() {
   const ws = useWorkspace();
 
   useEffect(() => {
-    if (ready && !session) nav({ to: "/entrar", search: { modo: "entrar", seguir: "/app" } });
+    if (ready && !session) nav({ to: "/login", search: { mode: "signin", next: "/app" } });
   }, [ready, session, nav]);
 
   const link = "rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground";
@@ -44,8 +44,8 @@ function AppLayout() {
           {org && (
             <>
               <Link to="/app" activeOptions={{ exact: true }} className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Requests</Link>
-              <Link to="/app/novo" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>New request</Link>
-              <Link to="/app/faturacao" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Billing</Link>
+              <Link to="/app/new" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>New request</Link>
+              <Link to="/app/billing" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Billing</Link>
               {isAdminUser(session?.user) && <Link to="/app/admin" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Admin</Link>}
             </>
           )}

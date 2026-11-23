@@ -18,32 +18,32 @@ afterEach(() => {
   }
 });
 
-describe("cliente privilegiado do servidor", () => {
-  it("usa a chave guardada como LOCKCOPY_DB_SECRET_KEY", () => {
-    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+describe("server admin client", () => {
+  it("uses the key stored as LOCKCOPY_DB_SECRET_KEY", () => {
+    process.env["SUPABASE_URL"] = "https://example.supabase.co";
     delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
-    process.env["LOCKCOPY_DB_SECRET_KEY"] = "sb_secret_teste";
+    process.env["LOCKCOPY_DB_SECRET_KEY"] = "sb_secret_test";
     expect(() => createAdminSupabase()).not.toThrow();
   });
 
-  it("continua a aceitar o nome antigo SUPABASE_SERVICE_ROLE_KEY", () => {
-    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+  it("still accepts the old SUPABASE_SERVICE_ROLE_KEY name", () => {
+    process.env["SUPABASE_URL"] = "https://example.supabase.co";
     delete process.env["LOCKCOPY_DB_SECRET_KEY"];
-    process.env["SUPABASE_SERVICE_ROLE_KEY"] = "sb_secret_teste";
+    process.env["SUPABASE_SERVICE_ROLE_KEY"] = "sb_secret_test";
     expect(() => createAdminSupabase()).not.toThrow();
   });
 
-  it("falha sem nenhuma chave de serviço", () => {
-    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+  it("fails without any service key", () => {
+    process.env["SUPABASE_URL"] = "https://example.supabase.co";
     delete process.env["LOCKCOPY_DB_SECRET_KEY"];
     delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
     expect(() => createAdminSupabase()).toThrow(/LOCKCOPY_DB_SECRET_KEY/);
   });
 
-  it("recusa a chave publicável no lugar da secreta", () => {
-    process.env["SUPABASE_URL"] = "https://exemplo.supabase.co";
+  it("rejects the publishable key in place of the secret one", () => {
+    process.env["SUPABASE_URL"] = "https://example.supabase.co";
     delete process.env["SUPABASE_SERVICE_ROLE_KEY"];
-    process.env["LOCKCOPY_DB_SECRET_KEY"] = "sb_publishable_teste";
+    process.env["LOCKCOPY_DB_SECRET_KEY"] = "sb_publishable_test";
     expect(() => createAdminSupabase()).toThrow(/sb_secret_/);
   });
 });

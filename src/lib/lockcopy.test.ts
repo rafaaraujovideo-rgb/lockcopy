@@ -40,7 +40,7 @@ describe("50 MB upload limit", () => {
 
 describe("agency slug", () => {
   it("generates a database-safe slug even with accents", () => {
-    expect(orgSlug("Estúdio Ção & Filhos", "ab12")).toMatch(/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/);
+    expect(orgSlug("Studio Çaö & Sons", "ab12")).toMatch(/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/);
   });
 });
 
@@ -48,18 +48,18 @@ describe("ZIP per page", () => {
   it("organizes original and WebP by page and field, with no duplicate names", () => {
     const entries = zipEntries({
       title: "Site",
-      client: "Cliente",
-      sections: [{ id: "s", title: "Início", fields: [{ id: "f", label: "Fotografia de capa", field_type: "image" }] }],
+      client: "Client",
+      sections: [{ id: "s", title: "Café Home", fields: [{ id: "f", label: "Cover photo", field_type: "image" }] }],
       text: {},
       files: [
-        { field_id: "f", file_name: "capa.jpg", storage_path: "o/t/f/1", webp_storage_path: "o/t/f/1.webp" },
-        { field_id: "f", file_name: "capa.jpg", storage_path: "o/t/f/2", webp_storage_path: null },
+        { field_id: "f", file_name: "cover.jpg", storage_path: "o/t/f/1", webp_storage_path: "o/t/f/1.webp" },
+        { field_id: "f", file_name: "cover.jpg", storage_path: "o/t/f/2", webp_storage_path: null },
       ],
     }).map((e) => e.zipPath);
     expect(entries).toEqual([
-      "inicio/fotografia-de-capa/original/capa.jpg",
-      "inicio/fotografia-de-capa/webp/capa.webp",
-      "inicio/fotografia-de-capa/original/capa-2.jpg",
+      "cafe-home/cover-photo/original/cover.jpg",
+      "cafe-home/cover-photo/webp/cover.webp",
+      "cafe-home/cover-photo/original/cover-2.jpg",
     ]);
   });
 });
