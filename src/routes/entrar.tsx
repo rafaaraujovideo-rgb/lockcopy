@@ -69,9 +69,23 @@ function SignIn() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-5 py-12">
+    <div className="grid min-h-screen lg:grid-cols-2">
+      <aside className="relative hidden flex-col justify-between border-r border-border bg-muted/50 p-10 lg:flex">
+        <Link to="/" className="flex items-center gap-2 text-[15px] font-bold tracking-tight"><span className="grid h-6 w-6 place-items-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground shadow-btn">L</span>Lockcopy</Link>
+        <div className="max-w-md">
+          <p className="eyebrow">For web agencies</p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">Every page's content, approved, before you start building.</h2>
+          <ul className="mt-6 space-y-2.5 text-sm text-muted-foreground">
+            {["One link per client — no client accounts", "Autosave, uploads per field, WebP conversion", "Approve or request changes field by field", "Export to Webflow CSV, Framer JSON or ZIP"].map((x) => (
+              <li key={x} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-seal" />{x}</li>
+            ))}
+          </ul>
+        </div>
+        <p className="font-mono text-[11px] text-muted-foreground">14-day trial · card required · cancel anytime</p>
+      </aside>
+      <div className="flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-sm space-y-5">
-        <Link to="/" className="flex items-center justify-center gap-2 text-lg font-semibold tracking-tight">
+        <Link to="/" className="flex items-center justify-center gap-2 lg:hidden text-lg font-semibold tracking-tight">
           <span className="h-2 w-2 rounded-full bg-seal" />Lockcopy
         </Link>
         <Card className="space-y-4">
@@ -95,6 +109,7 @@ function SignIn() {
           )}
         </Card>
         <p className="text-center text-xs text-muted-foreground">Your clients never need an account: they fill everything in through the link.</p>
+      </div>
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ import { listRequests } from "@/lib/api.functions";
 import { useWorkspace } from "@/lib/workspace";
 import { fmtDate, friendlyError, requestLinkState } from "@/lib/lockcopy";
 import { Badge, btnClass, Card } from "@/components/ui-bits";
+import { Onboarding } from "@/components/onboarding";
+import { useSession } from "@/lib/session";
 
 export const Route = createFileRoute("/app/")({
   validateSearch: (s: Record<string, unknown>): { checkout?: "ok" | "cancel" } =>
@@ -25,6 +27,7 @@ export const Route = createFileRoute("/app/")({
 function Dashboard() {
   const { checkout } = Route.useSearch();
   const ws = useWorkspace();
+  const { session } = useSession();
   const q = useQuery({ queryKey: ["requests"], queryFn: () => listRequests() });
   const limit = ws.data?.limits?.requests_limit ?? 1;
   const active = ws.data?.activeRequests ?? 0;
@@ -46,15 +49,11 @@ function Dashboard() {
         <p className="text-sm text-muted-foreground">Loading requests…</p>
       ) : q.error ? (
         <Card><p className="text-sm text-destructive">{friendlyError(q.error)}</p></Card>
-      ) : !q.data?.length ? (
-        <Card className="border-dashed">
-          <p className="font-display text-xl font-semibold">No requests yet</p>
-          <p className="mt-1 text-sm text-muted-foreground">Pick a template, generate the link and send it to the client.</p>
-          <Link to="/app/novo" className={btnClass + " mt-4"}>Create the first request</Link>
-        </Card>
+      ) : !q.data?.length && ws.data?.org ? (
+        <Onboarding org={ws.data.org} email={session?.user.email ?? ""} />
       ) : (
         <div className="grid gap-3">
-          {q.data.map((r) => {
+          {(q.data ?? []).map((r) => {
             const pct = r.fieldsTotal ? Math.round((r.fieldsDone / r.fieldsTotal) * 100) : 0;
             return (
               <Link key={r.id} to="/app/pedidos/$id" params={{ id: r.id }}>
