@@ -71,3 +71,15 @@ export function zipEntries(x: ExportInput) {
       }
   return out;
 }
+
+/** Text answers as one .txt per page (field label + answer), placed at the ZIP root of each page folder. */
+export function zipTextEntries(x: ExportInput) {
+  const out: Array<{ zipPath: string; content: string }> = [];
+  for (const s of x.sections) {
+    const parts = s.fields
+      .filter((f) => (x.text[f.id] ?? "").trim())
+      .map((f) => `${f.label}\n${"-".repeat(Math.min(60, f.label.length))}\n${(x.text[f.id] ?? "").trim()}\n`);
+    if (parts.length) out.push({ zipPath: `${slugify(s.title) || "page"}/copy.txt`, content: `${s.title}\n\n${parts.join("\n")}` });
+  }
+  return out;
+}

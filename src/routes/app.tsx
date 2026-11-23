@@ -46,6 +46,7 @@ function AppLayout() {
             <>
               <Link to="/app" activeOptions={{ exact: true }} className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Requests</Link>
               <Link to="/app/new" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>New request</Link>
+              <Link to="/app/settings" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Brand</Link>
               <Link to="/app/billing" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Billing</Link>
               {isAdminUser(session?.user) && <Link to="/app/admin" className={link} activeProps={{ className: "bg-card text-foreground font-medium shadow-card" }}>Admin</Link>}
             </>

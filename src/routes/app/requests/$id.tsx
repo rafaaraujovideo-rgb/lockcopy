@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getSupabase } from "@/integrations/supabase/client";
 import { getRequestDetail, reviewField, sendReminder, setRequestLink } from "@/lib/api.functions";
 import { answerLabel, eventText, fmtDate, fmtMb, friendlyError, isFileField, requestLinkState } from "@/lib/lockcopy";
-import { framerJson, webflowCsv, zipEntries, type ExportInput } from "@/lib/exports";
+import { framerJson, webflowCsv, zipEntries, zipTextEntries, type ExportInput } from "@/lib/exports";
 import { workspaceKey } from "@/lib/workspace";
 import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 
@@ -74,9 +74,11 @@ function RequestPage() {
   const zip = () =>
     run("zip", async () => {
       const entries = zipEntries(exp);
-      if (!entries.length) throw new Error("There are no files in this request yet.");
-      const { zipSync } = await import("fflate");
+      const texts = zipTextEntries(exp);
+      if (!entries.length && !texts.length) throw new Error("There is no content in this request yet.");
+      const { zipSync, strToU8 } = await import("fflate");
       const files: Record<string, Uint8Array> = {};
+      for (const t of texts) files[t.zipPath] = strToU8(t.content);
       for (const e of entries) {
         const res = await fetch(await signedUrl(e.storagePath));
         if (!res.ok) throw new Error(`Could not download ${e.zipPath}.`);

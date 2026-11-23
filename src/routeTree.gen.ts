@@ -22,6 +22,7 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAdminRouteImport } from './routes/app/admin'
 import { Route as AppBillingRouteImport } from './routes/app/billing'
 import { Route as AppNewRouteImport } from './routes/app/new'
+import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as CTokenRouteImport } from './routes/c/$token'
 import { Route as CompareContentSnareRouteImport } from './routes/compare/content-snare'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
@@ -93,6 +94,11 @@ const AppNewRoute = AppNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const CTokenRoute = CTokenRouteImport.update({
   id: '/c/$token',
   path: '/c/$token',
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/app/admin': typeof AppAdminRoute
   '/app/billing': typeof AppBillingRoute
   '/app/new': typeof AppNewRoute
+  '/app/settings': typeof AppSettingsRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/app/': typeof AppIndexRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/app/admin': typeof AppAdminRoute
   '/app/billing': typeof AppBillingRoute
   '/app/new': typeof AppNewRoute
+  '/app/settings': typeof AppSettingsRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/app': typeof AppIndexRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/app/admin': typeof AppAdminRoute
   '/app/billing': typeof AppBillingRoute
   '/app/new': typeof AppNewRoute
+  '/app/settings': typeof AppSettingsRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/app/': typeof AppIndexRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/app/admin'
     | '/app/billing'
     | '/app/new'
+    | '/app/settings'
     | '/c/$token'
     | '/compare/content-snare'
     | '/app/'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/app/admin'
     | '/app/billing'
     | '/app/new'
+    | '/app/settings'
     | '/c/$token'
     | '/compare/content-snare'
     | '/app'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/app/admin'
     | '/app/billing'
     | '/app/new'
+    | '/app/settings'
     | '/c/$token'
     | '/compare/content-snare'
     | '/app/'
@@ -351,6 +363,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/c/$token': {
       id: '/c/$token'
       path: '/c/$token'
@@ -393,6 +412,7 @@ interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRoute
   AppBillingRoute: typeof AppBillingRoute
   AppNewRoute: typeof AppNewRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppRequestsIdRoute: typeof AppRequestsIdRoute
 }
@@ -401,6 +421,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRoute,
   AppBillingRoute: AppBillingRoute,
   AppNewRoute: AppNewRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
   AppRequestsIdRoute: AppRequestsIdRoute,
 }
