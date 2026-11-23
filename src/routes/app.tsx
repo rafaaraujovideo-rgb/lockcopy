@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useWorkspace, workspaceKey } from "@/lib/workspace";
 import { useSession, signOut } from "@/lib/session";
+import { isAdminUser } from "@/lib/admin";
 import { getSupabase } from "@/integrations/supabase/client";
 import { friendlyError, orgSlug, fmtDate } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
@@ -45,6 +46,7 @@ function AppLayout() {
               <Link to="/app" activeOptions={{ exact: true }} className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>Requests</Link>
               <Link to="/app/novo" className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>New request</Link>
               <Link to="/app/faturacao" className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>Billing</Link>
+              {isAdminUser(session?.user) && <Link to="/app/admin" className={link} activeProps={{ className: "bg-muted text-foreground font-medium" }}>Admin</Link>}
             </>
           )}
           <span className="ml-auto flex items-center gap-3 text-xs text-muted-foreground">

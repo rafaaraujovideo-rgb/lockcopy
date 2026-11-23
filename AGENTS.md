@@ -36,3 +36,4 @@ use the editor.
 - Subscription state changes only in the Stripe webhook, never in browser code — the trial must start only after Stripe confirms the card.
 
 - Stripe: STRIPE_MODE=test makes billing read STRIPE_TEST_* secrets — lets checkout be tested without real cards; remove it to go live.
+- Owner-only admin pages check the verified Auth user's email on the server (src/lib/admin.ts) before any privileged read — UI hiding is cosmetic.

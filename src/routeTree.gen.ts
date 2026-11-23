@@ -18,6 +18,7 @@ import { Route as ModelosRouteImport } from './routes/modelos'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppAdminRouteImport } from './routes/app/admin'
 import { Route as AppFaturacaoRouteImport } from './routes/app/faturacao'
 import { Route as AppNovoRouteImport } from './routes/app/novo'
 import { Route as CTokenRouteImport } from './routes/c/$token'
@@ -71,6 +72,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFaturacaoRoute = AppFaturacaoRouteImport.update({
   id: '/faturacao',
   path: '/faturacao',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/modelos': typeof ModelosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos': typeof TermosRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/modelos': typeof ModelosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos': typeof TermosRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/modelos': typeof ModelosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos': typeof TermosRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/faturacao': typeof AppFaturacaoRoute
   '/app/novo': typeof AppNovoRoute
   '/c/$token': typeof CTokenRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/modelos'
     | '/privacidade'
     | '/termos'
+    | '/app/admin'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/modelos'
     | '/privacidade'
     | '/termos'
+    | '/app/admin'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/modelos'
     | '/privacidade'
     | '/termos'
+    | '/app/admin'
     | '/app/faturacao'
     | '/app/novo'
     | '/c/$token'
@@ -298,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/faturacao': {
       id: '/app/faturacao'
       path: '/faturacao'
@@ -351,6 +370,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppFaturacaoRoute: typeof AppFaturacaoRoute
   AppNovoRoute: typeof AppNovoRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -358,6 +378,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppFaturacaoRoute: AppFaturacaoRoute,
   AppNovoRoute: AppNovoRoute,
   AppIndexRoute: AppIndexRoute,
