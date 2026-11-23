@@ -1,3 +1,4 @@
+import { goExternal } from "@/lib/redirect";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -47,7 +48,8 @@ function Checkout() {
     setError("");
     try {
       const { url } = await startCheckout({ data: { plan, cycle } });
-      window.location.assign(url);
+      goExternal(url);
+      setBusy(false);
     } catch (e) {
       setError(friendlyError(e));
       setBusy(false);

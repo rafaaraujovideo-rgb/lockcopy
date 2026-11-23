@@ -1,3 +1,4 @@
+import { goExternal } from "@/lib/redirect";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -43,7 +44,8 @@ function Billing() {
     setError("");
     try {
       const { url } = await openBillingPortal();
-      window.location.assign(url);
+      goExternal(url);
+      setBusy(false);
     } catch (e) {
       setError(friendlyError(e));
       setBusy(false);
