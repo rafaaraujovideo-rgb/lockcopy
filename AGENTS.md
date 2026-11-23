@@ -34,3 +34,5 @@ use the editor.
 - Agency pages under `/app` gate on the browser session and call server functions in `src/lib/*.functions.ts` with the bearer middleware — RLS then applies as the signed-in user.
 - The client portal (`/c/$token`) uses only token-checked RPCs and a separate session-less anon client for uploads — so an agency session in the same browser never widens client access.
 - Subscription state changes only in the Stripe webhook, never in browser code — the trial must start only after Stripe confirms the card.
+
+- Stripe: STRIPE_MODE=test makes billing read STRIPE_TEST_* secrets — lets checkout be tested without real cards; remove it to go live.

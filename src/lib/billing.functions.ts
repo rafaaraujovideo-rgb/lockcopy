@@ -14,8 +14,11 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const PLANS = ["solo", "agency"] as const;
 type Plan = (typeof PLANS)[number];
 
+/** Com STRIPE_MODE=test, lê STRIPE_TEST_* em vez das chaves reais. */
 function env(name: string) {
-  return (process.env[name] ?? "").trim();
+  const test = (process.env["STRIPE_MODE"] ?? "").trim() === "test";
+  const key = test && name.startsWith("STRIPE_") ? name.replace("STRIPE_", "STRIPE_TEST_") : name;
+  return (process.env[key] ?? "").trim();
 }
 
 function priceFor(plan: Plan, cycle: "month" | "year") {

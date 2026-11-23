@@ -107,7 +107,10 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
     handlers: {
       POST: async ({ request }) => {
         const rawBody = await request.text();
-        const secret = (process.env["STRIPE_WEBHOOK_SECRET"] ?? "").trim();
+        const testMode = (process.env["STRIPE_MODE"] ?? "").trim() === "test";
+        const secret = (
+          process.env[testMode ? "STRIPE_TEST_WEBHOOK_SECRET" : "STRIPE_WEBHOOK_SECRET"] ?? ""
+        ).trim();
 
         if (
           !(await verifyStripeSignature(
