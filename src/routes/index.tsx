@@ -11,9 +11,9 @@ import { BeforeAfter, SampleExport, SavingsCalc, StackBar, WebpTry, Faq, LockTog
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Lockcopy — stop chasing clients for content" },
+      { title: "Lockcopy · Collect website content from clients" },
       { name: "description", content: "Per-page checklists, organized uploads and export to Webflow and Framer. For web freelancers and agencies." },
-      { property: "og:title", content: "Lockcopy — stop chasing clients for content" },
+      { property: "og:title", content: "Lockcopy · Collect website content from clients" },
       { property: "og:description", content: "Per-page checklists, organized uploads and export to Webflow and Framer." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

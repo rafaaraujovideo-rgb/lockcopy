@@ -46,7 +46,7 @@ function Modelos() {
       <div className="mt-12 rounded-lg border border-border bg-card p-8 shadow-card">
         <h2 className="font-display text-2xl font-semibold">Want the client to fill this in by themselves?</h2>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          In Lockcopy these templates become a portal with a link, a deadline and automatic reminders — and every answer is ready to export.
+          In Lockcopy these templates become a portal with a link, a deadline and automatic reminders, and you can export every answer.
         </p>
         <Link to="/start" className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
           Try 14 days

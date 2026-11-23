@@ -254,7 +254,7 @@ export function WebpTry() {
           <div className="font-mono text-[11px]"><p className="text-muted-foreground line-through">{kb(r.a)}</p><p className="font-medium text-seal">{kb(r.b)} WebP · −{Math.max(0, Math.round((1 - r.b / r.a) * 100))}%</p></div>
         </div>
       ) : (
-        <p className="text-muted-foreground"><span className="font-medium text-foreground">{busy ? "Converting…" : "Pick a photo"}</span> — it's converted right here, never uploaded.</p>
+        <p className="text-muted-foreground"><span className="font-medium text-foreground">{busy ? "Converting…" : "Pick a photo"}</span>. It's converted right here, never uploaded.</p>
       )}
     </label>
   );

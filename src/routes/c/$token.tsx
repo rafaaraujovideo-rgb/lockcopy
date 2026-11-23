@@ -251,7 +251,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
       </div>
       {field.help_text && <p className="text-xs text-muted-foreground">{field.help_text}</p>}
       {status === "rejected" && sub?.rejection_note && <p className="mt-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive">The agency asks: {sub.rejection_note}</p>}
-      {locked && <p className="mt-1 text-xs text-muted-foreground">Approved by the agency — nothing else needed here.</p>}
+      {locked && <p className="mt-1 text-xs text-muted-foreground">Approved by the agency. You don't need to change anything here.</p>}
       {field.field_type === "textarea" && <textarea id={field.id} disabled={locked} rows={4} maxLength={field.char_limit ?? 20000} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
       {(field.field_type === "text" || field.field_type === "select") && <input id={field.id} disabled={locked} maxLength={field.char_limit ?? 20000} className={inputClass + " mt-2"} value={text} onChange={(e) => setText(e.target.value)} />}
       {isFileField(field.field_type) && (

@@ -99,7 +99,7 @@ function SignIn() {
           <p className="eyebrow">For web agencies</p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">Every page's content, approved, before you start building.</h2>
           <ul className="mt-6 space-y-2.5 text-sm text-muted-foreground">
-            {["One link per client — no client accounts", "Autosave, uploads per field, WebP conversion", "Approve or request changes field by field", "Export to Webflow CSV, Framer JSON or ZIP"].map((x) => (
+            {["One link per client, no sign-up for them", "Autosave, uploads per field, WebP conversion", "Approve or request changes field by field", "Export to Webflow CSV, Framer JSON or ZIP"].map((x) => (
               <li key={x} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-seal" />{x}</li>
             ))}
           </ul>

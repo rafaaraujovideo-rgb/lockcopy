@@ -75,7 +75,7 @@ function Billing() {
       <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Billing</h1>
       <Card className="space-y-2 text-sm">
         <p><span className="text-muted-foreground">Plan:</span> <b>{PLAN_NAME[org.plan]}</b> · {STATUS[org.subscription_status] ?? org.subscription_status}</p>
-        {org.trial_ends_at && !hasCard && <p><span className="text-muted-foreground">Trial until:</span> <b>{fmtDate(org.trial_ends_at)}</b> — no charges until then</p>}
+        {org.trial_ends_at && !hasCard && <p><span className="text-muted-foreground">Trial until:</span> <b>{fmtDate(org.trial_ends_at)}</b>. No charges until then.</p>}
         {org.current_period_ends_at && <p><span className="text-muted-foreground">Next renewal:</span> {fmtDate(org.current_period_ends_at)}</p>}
         {limits && (
           <p><span className="text-muted-foreground">Limits:</span> {limits.requests_limit} active requests · {limits.users_limit} user(s) · {Math.round(limits.storage_bytes / 1e9)} GB</p>
@@ -86,7 +86,7 @@ function Billing() {
       {checkout === "cancel" && <Card className="text-sm text-muted-foreground">No card was added. Nothing was charged.</Card>}
       {!hasCard ? (
         <Card className="space-y-3">
-          <p className="text-sm">Your trial runs without a card. Add one to keep going after it ends — you're only charged when the trial is over.</p>
+          <p className="text-sm">Your trial runs without a card. Add one if you want to keep using Lockcopy. You're only charged after the trial ends.</p>
           <div className="flex flex-wrap gap-2 text-sm">
             {(["solo", "agency"] as const).map((k) => (
               <button key={k} type="button" onClick={() => setPlan(k)} className={"rounded-md border px-3 py-1.5 " + (plan === k ? "border-primary bg-primary/5 font-medium" : "border-border")}>{PLAN_NAME[k]}</button>

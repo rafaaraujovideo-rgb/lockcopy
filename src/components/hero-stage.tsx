@@ -82,7 +82,7 @@ function Client({ fields, st, set, onSend }: { fields: F[]; st: Record<string, S
             <div key={f.id} className="space-y-1.5">
               <div className="flex items-center justify-between gap-2"><span className="text-sm font-medium">{f.label}</span>{locked ? <span className="inline-flex items-center gap-1 text-[11px] text-seal"><Lock className="h-3 w-3" />Approved — locked</span> : st[f.id] === "sent" && <span className="font-mono text-[10px] text-seal">● saved</span>}</div>
               {f.kind === "text" ? (
-                <input className={inputClass} disabled={locked} value={f.value} placeholder="Type here — it autosaves" onChange={(e) => set(f.id, e.target.value)} />
+                <input className={inputClass} disabled={locked} value={f.value} placeholder="Type here. It saves automatically." onChange={(e) => set(f.id, e.target.value)} />
               ) : f.value ? (
                 <p className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs">{f.value}</p>
               ) : (
