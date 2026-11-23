@@ -161,3 +161,66 @@ export function SavingsCalc() {
     </div>
   );
 }
+
+export function StackBar() {
+  const tools = ["Webflow", "Framer", "WordPress", "Figma", "Notion", "Google Drive"];
+  return (
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Exports fit the stack you already use</p>
+      <ul className="flex flex-wrap gap-x-7 gap-y-2 text-sm font-semibold tracking-tight text-ink-soft">
+        {tools.map((t) => <li key={t}>{t}</li>)}
+      </ul>
+    </div>
+  );
+}
+
+export function HeroPreview() {
+  const rows: Array<[string, string, "ok" | "saved" | "todo"]> = [
+    ["Hero headline", "Fresh bread, every morning since 1987", "ok"],
+    ["About · Our story", "Three generations of bakers on Rua da Lua…", "saved"],
+    ["Team photos", "4 files · converted to WebP", "ok"],
+    ["Opening hours", "", "todo"],
+  ];
+  return (
+    <div className="rounded-xl border border-border bg-card p-2 shadow-float">
+      <div className="rounded-lg border border-border bg-background">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <div><p className="text-sm font-bold tracking-tight">Padaria Lua · Website</p><p className="font-mono text-[10px] text-muted-foreground">Home 3/4 · About 2/3</p></div>
+          <span className="font-mono text-[11px] text-seal">● Saved</span>
+        </div>
+        <div className="h-1 bg-muted"><div className="h-1 w-3/4 bg-seal" /></div>
+        <ul className="divide-y divide-border">
+          {rows.map(([l, v, s]) => (
+            <li key={l} className="flex items-center justify-between gap-3 px-4 py-3">
+              <div className="min-w-0"><p className="text-[11px] text-muted-foreground">{l}</p><p className="truncate text-sm font-medium">{v || <span className="text-muted-foreground">Waiting for client</span>}</p></div>
+              {s === "ok" && <span className="shrink-0 rounded-md bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-foreground">✓ Locked</span>}
+              {s === "saved" && <span className="shrink-0 rounded-md border border-border px-2 py-0.5 text-[11px]">Review</span>}
+              {s === "todo" && <span className="shrink-0 rounded-md bg-warn px-2 py-0.5 text-[11px] text-warn-foreground">Missing</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+const FAQS: Array<[string, string]> = [
+  ["Does my client need an account?", "No. They get a private link, fill in each page at their own pace, and everything autosaves."],
+  ["Can I use my own logo and colors?", "Yes. Add your logo and brand color and the client portal shows your studio, not ours."],
+  ["How does the 14-day trial work?", "You add a card, nothing is charged for 14 days, and you can cancel from the billing page in one click before day 14."],
+  ["What if I don't use Webflow or Framer?", "Download a ZIP organized by page, with copy in text files and images already converted to WebP — it works with any builder."],
+  ["Are my clients' files safe?", "Files are stored privately and isolated per agency. Only your team and the client with the link can see them."],
+];
+
+export function Faq() {
+  return (
+    <div className="divide-y divide-border rounded-lg border border-border bg-card shadow-card">
+      {FAQS.map(([q, a]) => (
+        <details key={q} className="group px-5 py-4">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold">{q}<span className="font-mono text-muted-foreground transition-transform group-open:rotate-45">+</span></summary>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{a}</p>
+        </details>
+      ))}
+    </div>
+  );
+}

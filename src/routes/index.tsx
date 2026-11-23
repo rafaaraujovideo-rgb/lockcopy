@@ -4,7 +4,7 @@ import type React from "react";
 import { PLANS } from "@/lib/store";
 import { Lock, Menu, X } from "lucide-react";
 import { LandingDemo } from "@/components/landing-demo";
-import { BeforeAfter, SampleExport, SavingsCalc } from "@/components/landing-sections";
+import { BeforeAfter, SampleExport, SavingsCalc, StackBar, HeroPreview, Faq } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -56,15 +56,13 @@ function Landing() {
 
       <section className="relative overflow-hidden border-b border-border">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 md:grid-cols-[1.1fr_1fr] md:items-end md:pt-24">
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 md:grid-cols-[1fr_1fr] md:items-center md:pt-24">
           <div>
             <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-card"><span className="h-1.5 w-1.5 rounded-full bg-seal" />Content collection for web studios</span>
             <h1 className="mt-7 font-display text-[2.6rem] leading-[1.02] md:text-[4.2rem]">
               Get the copy.<br />Get the photos.<br /><span className="text-muted-foreground">Skip the email chase.</span>
             </h1>
-          </div>
-          <div className="md:pb-2">
-            <p className="max-w-md text-lg leading-relaxed text-ink-soft">
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-soft">
               Send one link. Your client fills in each page and uploads files — no account. You approve field by field, lock it, and export to Webflow or Framer.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -73,7 +71,12 @@ function Landing() {
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">Card upfront · $0 for 14 days · cancel anytime</p>
           </div>
+          <HeroPreview />
         </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-8"><StackBar /></div>
       </section>
 
       <section className="border-b border-border">
@@ -146,14 +149,20 @@ function Landing() {
                 </div>
                 <p className="mt-4"><span className="font-display text-5xl">${billing === "month" ? p.month : p.year}</span><span className="text-muted-foreground"> /{billing === "month" ? "month" : "year"}</span></p>
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
-                  <li>{p.requests} active requests</li><li>{p.users} {p.users > 1 ? "users" : "user"}</li><li>{p.storageGb} GB of files</li>
+                  {[`${p.requests} active requests`, `${p.users} ${p.users > 1 ? "users" : "user"}`, `${p.storageGb} GB of files`, "Field-by-field approval & lock", "Automatic WebP conversion", "Webflow CSV, Framer JSON & ZIP", "Your logo and color on the portal"].map((f) => <li key={f} className="flex gap-2"><span className="text-seal">✓</span>{f}</li>)}
                 </ul>
                 <Link to="/comecar" search={{ plano: k, ciclo: billing }} className={"mt-8 block rounded-md py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft" : "border border-border hover:bg-muted")}>Try 14 days</Link>
               </div>
             );
           })}
         </div>
-        <p className="mt-5 text-center text-xs text-muted-foreground">During the trial: 1 active request and 500 MB. Prices exclude taxes.</p>
+        <p className="mt-5 text-center text-xs text-muted-foreground">During the trial: 1 active request and 500 MB. Cancel in 1 click before day 14 and pay nothing. Prices exclude taxes.</p>
+      </section>
+
+      <section id="faq" className="scroll-mt-16 mx-auto max-w-3xl px-6 pb-24">
+        <p className="eyebrow">FAQ</p>
+        <h2 className="mt-2 font-display text-3xl md:text-4xl">Before you add your card.</h2>
+        <div className="mt-8"><Faq /></div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
