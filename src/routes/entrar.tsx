@@ -36,6 +36,8 @@ function SignIn() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
+  const [show, setShow] = useState(false);
+  const [forgot, setForgot] = useState(false);
   const next = seguir ?? "/app";
 
   useEffect(() => {
@@ -49,7 +51,11 @@ function SignIn() {
     setBusy(true);
     try {
       const supabase = getSupabase();
-      if (mode === "entrar") {
+      if (forgot) {
+        const { error: err } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/nova-password` });
+        if (err) throw err;
+        setInfo("If an account exists for this email, a reset link is on its way.");
+      } else if (mode === "entrar") {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw new Error(err.message === "Invalid login credentials" ? "Incorrect email or password." : err.message === "Email not confirmed" ? "Please confirm the email we sent you first." : err.message);
       } else {
@@ -66,6 +72,12 @@ function SignIn() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const google = async () => {
+    setError("");
+    const { error: err } = await getSupabase().auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/entrar?seguir=${encodeURIComponent(next)}` } });
+    if (err) setError(err.message.includes("not enabled") ? "Google sign-in isn't switched on yet. Use email for now." : friendlyError(err));
   };
 
   return (
@@ -91,7 +103,7 @@ function SignIn() {
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
             {(["entrar", "criar"] as const).map((m) => (
-              <button key={m} type="button" onClick={() => setMode(m)} className={"rounded py-1.5 " + (mode === m ? "bg-card font-medium shadow-card" : "text-muted-foreground")}>
+              <button key={m} type="button" onClick={() => { setMode(m); setForgot(false); setError(""); setInfo(""); }} className={"rounded py-1.5 " + (mode === m ? "bg-card font-medium shadow-card" : "text-muted-foreground")}>
                 {m === "entrar" ? "Sign in" : "Create account"}
               </button>
             ))}
@@ -99,13 +111,34 @@ function SignIn() {
           {!hasSupabase ? (
             <p className="text-sm text-muted-foreground">The account connection is not configured yet.</p>
           ) : (
-            <form onSubmit={submit} className="space-y-3">
-              <input className={inputClass} type="email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              <input className={inputClass} type="password" autoComplete={mode === "entrar" ? "current-password" : "new-password"} placeholder="Password (min. 8 characters)" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
-              {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
-              {info && <p className="rounded-md bg-accent p-2 text-sm text-accent-foreground">{info}</p>}
-              <Btn className="w-full" disabled={busy} type="submit">{busy ? "One moment…" : mode === "entrar" ? "Sign in" : "Create account"}</Btn>
-            </form>
+            <div className="space-y-3">
+              {!forgot && (
+                <>
+                  <button type="button" onClick={google} className="flex h-10 w-full items-center justify-center gap-2.5 rounded-md border border-[#747775] bg-[#FFFFFF] px-3 text-sm font-medium text-[#1F1F1F]">
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    Continue with Google
+                  </button>
+                  <div className="flex items-center gap-3 text-[11px] uppercase tracking-wide text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
+                </>
+              )}
+              <form onSubmit={submit} className="space-y-3">
+                <input className={inputClass} type="email" autoComplete="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
+                {!forgot && (
+                  <div className="relative">
+                    <input className={inputClass + " pr-16"} type={show ? "text" : "password"} autoComplete={mode === "entrar" ? "current-password" : "new-password"} placeholder={mode === "criar" ? "Password (min. 8 characters)" : "Password"} minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <button type="button" onClick={() => setShow((v) => !v)} className="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs text-muted-foreground hover:bg-muted" aria-label={show ? "Hide password" : "Show password"}>{show ? "Hide" : "Show"}</button>
+                  </div>
+                )}
+                {mode === "entrar" && (
+                  <button type="button" onClick={() => { setForgot((v) => !v); setError(""); setInfo(""); }} className="text-xs text-muted-foreground underline-offset-2 hover:underline">
+                    {forgot ? "← Back to sign in" : "Forgot password?"}
+                  </button>
+                )}
+                {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
+                {info && <p className="rounded-md bg-accent p-2 text-sm text-accent-foreground">{info}</p>}
+                <Btn className="w-full" disabled={busy} type="submit">{busy ? "One moment…" : forgot ? "Send reset link" : mode === "entrar" ? "Sign in" : "Create account"}</Btn>
+              </form>
+            </div>
           )}
         </Card>
         <p className="text-center text-xs text-muted-foreground">Your clients never need an account: they fill everything in through the link.</p>

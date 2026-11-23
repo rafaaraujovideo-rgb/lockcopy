@@ -15,6 +15,7 @@ import { Route as ComecarRouteImport } from './routes/comecar'
 import { Route as DpaRouteImport } from './routes/dpa'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as ModelosRouteImport } from './routes/modelos'
+import { Route as NovaPasswordRouteImport } from './routes/nova-password'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AppIndexRouteImport } from './routes/app/index'
@@ -55,6 +56,11 @@ const EntrarRoute = EntrarRouteImport.update({
 const ModelosRoute = ModelosRouteImport.update({
   id: '/modelos',
   path: '/modelos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NovaPasswordRoute = NovaPasswordRouteImport.update({
+  id: '/nova-password',
+  path: '/nova-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/dpa': typeof DpaRoute
   '/entrar': typeof EntrarRoute
   '/modelos': typeof ModelosRoute
+  '/nova-password': typeof NovaPasswordRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos': typeof TermosRoute
   '/app/admin': typeof AppAdminRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/dpa': typeof DpaRoute
   '/entrar': typeof EntrarRoute
   '/modelos': typeof ModelosRoute
+  '/nova-password': typeof NovaPasswordRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos': typeof TermosRoute
   '/app/admin': typeof AppAdminRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/dpa': typeof DpaRoute
   '/entrar': typeof EntrarRoute
   '/modelos': typeof ModelosRoute
+  '/nova-password': typeof NovaPasswordRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos': typeof TermosRoute
   '/app/admin': typeof AppAdminRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/dpa'
     | '/entrar'
     | '/modelos'
+    | '/nova-password'
     | '/privacidade'
     | '/termos'
     | '/app/admin'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/dpa'
     | '/entrar'
     | '/modelos'
+    | '/nova-password'
     | '/privacidade'
     | '/termos'
     | '/app/admin'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/dpa'
     | '/entrar'
     | '/modelos'
+    | '/nova-password'
     | '/privacidade'
     | '/termos'
     | '/app/admin'
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   DpaRoute: typeof DpaRoute
   EntrarRoute: typeof EntrarRoute
   ModelosRoute: typeof ModelosRoute
+  NovaPasswordRoute: typeof NovaPasswordRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   TermosRoute: typeof TermosRoute
   CTokenRoute: typeof CTokenRoute
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       path: '/modelos'
       fullPath: '/modelos'
       preLoaderRoute: typeof ModelosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nova-password': {
+      id: '/nova-password'
+      path: '/nova-password'
+      fullPath: '/nova-password'
+      preLoaderRoute: typeof NovaPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -394,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   DpaRoute: DpaRoute,
   EntrarRoute: EntrarRoute,
   ModelosRoute: ModelosRoute,
+  NovaPasswordRoute: NovaPasswordRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   TermosRoute: TermosRoute,
   CTokenRoute: CTokenRoute,
