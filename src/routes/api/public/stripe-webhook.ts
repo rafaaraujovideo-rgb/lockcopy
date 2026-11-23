@@ -96,7 +96,7 @@ export async function verifyStripeSignature(
   if (!Number.isFinite(timestamp) || signatures.length === 0) return false;
   if (Math.abs(Date.now() / 1000 - timestamp) > TOLERANCE_SECONDS) return false;
 
-  const key = secret.startsWith("whsec_") ? secret.slice(6) : secret;
+  const key = secret;
   const expected = await hmacHex(key, `${timestamp}.${rawBody}`);
 
   return signatures.some((signature) => timingSafeEqual(expected, signature));
