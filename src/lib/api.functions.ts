@@ -192,6 +192,8 @@ export const createRequest = createServerFn({ method: "POST" })
         clientPhone: text(40).optional().or(z.literal("")),
         dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().or(z.literal("")),
         expiresAt: z.string().datetime().optional(),
+        skip: z.array(z.object({ section: text(200), label: text(200) })).max(200).optional(),
+        extra: z.array(z.object({ label: text(200).min(1), type: z.enum(["text", "textarea", "image", "file"]) })).max(30).optional(),
       })
       .parse(data),
   )
@@ -226,7 +228,11 @@ export const createRequest = createServerFn({ method: "POST" })
     );
 
     if (error) throw new Error(error.message);
-    return result as { id: string; token: string; url: string };
+    const created = result as { id: string; token: string; url: string };
+    if (data.skip?.length || data.extra?.length) {
+      await customizeFields(supabase, created.id, data.skip ?? [], data.extra ?? []);
+    }
+    return created;
   });
 
 /** Aprova ou devolve um campo ao cliente. */
@@ -437,3 +443,31 @@ export const portalAttachWebp = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/** Removes skipped template fields and appends the agency's own questions to a new request. */
+async function customizeFields(
+  supabase: { from: (t: string) => any },
+  requestId: string,
+  skip: Array<{ section: string; label: string }>,
+  extra: Array<{ label: string; type: "text" | "textarea" | "image" | "file" }>,
+) {
+  const { data: secs, error } = await supabase.from("sections").select("id, title, order_index, fields(id, label)").eq("request_id", requestId);
+  if (error) throw new Error(error.message);
+  const rows = (secs ?? []) as Array<{ id: string; title: string; order_index: number; fields: Array<{ id: string; label: string }> }>;
+  const key = (a: string, b: string) => `${a}\u0000${b}`;
+  const drop = new Set(skip.map((x) => key(x.section, x.label)));
+  const ids = rows.flatMap((sec) => sec.fields.filter((f) => drop.has(key(sec.title, f.label))).map((f) => f.id));
+  if (ids.length) {
+    const del = await supabase.from("fields").delete().in("id", ids);
+    if (del.error) throw new Error(del.error.message);
+  }
+  const empty = rows.filter((sec) => sec.fields.length > 0 && sec.fields.every((f) => ids.includes(f.id))).map((sec) => sec.id);
+  if (empty.length) await supabase.from("sections").delete().in("id", empty);
+  if (extra.length) {
+    const next = rows.reduce((m, r) => Math.max(m, r.order_index), 0) + 1;
+    const ins = await supabase.from("sections").insert({ request_id: requestId, title: "Extra questions", order_index: next }).select("id").single();
+    if (ins.error) throw new Error(ins.error.message);
+    const f = await supabase.from("fields").insert(extra.map((x, i) => ({ section_id: ins.data.id, label: x.label, field_type: x.type, is_required: false, order_index: i })));
+    if (f.error) throw new Error(f.error.message);
+  }
+}

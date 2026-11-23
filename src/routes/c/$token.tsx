@@ -1,3 +1,4 @@
+import type React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
@@ -75,12 +76,15 @@ function Portal() {
   const cur = Math.min(tab, Math.max(0, p.sections.length - 1));
   const sec = p.sections[cur];
   const pct = allFields.length ? Math.round((done / allFields.length) * 100) : 0;
+  const brand = /^#[0-9a-f]{6}$/i.test(p.request.brand_color ?? "") ? p.request.brand_color! : null;
+  const logo = /^https:\/\//.test(p.request.logo_url ?? "") ? p.request.logo_url : null;
+  const brandStyle = brand ? ({ "--primary": brand, "--ring": brand } as React.CSSProperties) : undefined;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={brandStyle}>
       <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto max-w-3xl px-5 py-3">
-          <p className="text-xs text-muted-foreground">{p.request.agency_name} · for {p.request.client_name} · due {fmtDate(p.request.due_date)}</p>
+          <div className="flex items-center gap-2">{logo && <img src={logo} alt={p.request.agency_name} className="h-6 max-w-[120px] object-contain" />}<p className="text-xs text-muted-foreground">{p.request.agency_name} · for {p.request.client_name} · due {fmtDate(p.request.due_date)}</p></div>
           <div className="mt-1 flex items-center gap-3">
             <p className="font-display text-lg font-semibold">{p.request.title}</p>
             <div className="h-2 flex-1 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} /></div>
