@@ -47,7 +47,7 @@ function Dashboard() {
       ) : q.error ? (
         <Card><p className="text-sm text-destructive">{friendlyError(q.error)}</p></Card>
       ) : !q.data?.length ? (
-        <Card className="text-center">
+        <Card className="border-dashed">
           <p className="font-display text-xl font-semibold">No requests yet</p>
           <p className="mt-1 text-sm text-muted-foreground">Pick a template, generate the link and send it to the client.</p>
           <Link to="/app/novo" className={btnClass + " mt-4"}>Create the first request</Link>

@@ -155,9 +155,9 @@ export function LandingDemo() {
                         <p className="truncate text-sm">{f.value}</p>
                       </div>
                       {s === "aprovado" ? (
-                        <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "enviado" }); }} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground"><Lock className="h-3 w-3" /> Locked</button>
+                        <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "enviado" }); }} className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1 text-xs font-medium text-accent-foreground"><Lock className="h-3 w-3" /> Locked</button>
                       ) : s === "ajuste" ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"><MessageSquare className="h-3 w-3" /> Change requested</span>
+                        <span className="inline-flex items-center gap-1.5 rounded-md bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"><MessageSquare className="h-3 w-3" /> Change requested</span>
                       ) : (
                         <div className="flex gap-1.5">
                           <button onClick={() => { setAuto(false); setSt({ ...st, [f.id]: "ajuste" }); }} className="rounded-lg border border-border px-2.5 py-1 text-xs hover:bg-muted">Request change</button>

@@ -116,7 +116,7 @@ function RequestPage() {
           <p className="text-xs text-muted-foreground">Expires on {fmtDate(r.expires_at)}</p>
           <div className="flex gap-2">
             <Btn variant="outline" className="flex-1" disabled={ls !== "active"} onClick={() => { navigator.clipboard.writeText(link); setCopied(true); }}>{copied ? "Copied" : "Copy"}</Btn>
-            <a href={`/c/${r.token}`} target="_blank" rel="noreferrer" className="inline-flex flex-1 items-center justify-center rounded-full border border-border text-sm hover:bg-muted">Open</a>
+            <a href={`/c/${r.token}`} target="_blank" rel="noreferrer" className="inline-flex flex-1 items-center justify-center rounded-md border border-border bg-card text-sm shadow-card hover:bg-muted">Open</a>
           </div>
           {ls === "active" ? (
             <>

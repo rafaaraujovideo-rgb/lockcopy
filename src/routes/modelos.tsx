@@ -34,19 +34,19 @@ function Modelos() {
             <p className="mt-3 text-xs text-muted-foreground">{t.rows.length} fields · CSV (Excel / Google Sheets)</p>
             <button
               onClick={() => downloadTemplate(t)}
-              className="mt-5 w-full rounded-full bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              className="mt-5 w-full rounded-md bg-primary shadow-btn py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
             >
               Download CSV
             </button>
           </Card>
         ))}
       </div>
-      <div className="mt-12 rounded-lg border border-border bg-card p-8 text-center">
+      <div className="mt-12 rounded-lg border border-border bg-card p-8 shadow-card">
         <h2 className="font-display text-2xl font-semibold">Want the client to fill this in by themselves?</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
           In Lockcopy these templates become a portal with a link, a deadline and automatic reminders — and every answer is ready to export.
         </p>
-        <Link to="/comecar" className="mt-5 inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
+        <Link to="/comecar" className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
           Try 14 days
         </Link>
       </div>

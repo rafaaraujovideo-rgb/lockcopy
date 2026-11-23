@@ -75,9 +75,9 @@ function SignIn() {
           <span className="h-2 w-2 rounded-full bg-seal" />Lockcopy
         </Link>
         <Card className="space-y-4">
-          <div className="grid grid-cols-2 gap-1 rounded-full bg-muted p-1 text-sm">
+          <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
             {(["entrar", "criar"] as const).map((m) => (
-              <button key={m} type="button" onClick={() => setMode(m)} className={"rounded-full py-1.5 " + (mode === m ? "bg-card font-medium shadow-sm" : "text-muted-foreground")}>
+              <button key={m} type="button" onClick={() => setMode(m)} className={"rounded py-1.5 " + (mode === m ? "bg-card font-medium shadow-card" : "text-muted-foreground")}>
                 {m === "entrar" ? "Sign in" : "Create account"}
               </button>
             ))}
