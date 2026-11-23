@@ -69,7 +69,7 @@ function NewRequest() {
     }
   };
 
-  if (templates.isLoading) return <p className="text-sm text-muted-foreground">Loading templates…</p>;
+  if (templates.isLoading) return <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded-md bg-muted" /><div className="grid grid-cols-2 gap-2">{[0,1,2,3].map((i) => <div key={i} className="h-16 animate-pulse rounded-md border border-border bg-muted/60" />)}</div></div>;
   if (templates.error) return <Card><p className="text-sm text-destructive">{friendlyError(templates.error)}</p></Card>;
 
   return (
@@ -78,7 +78,7 @@ function NewRequest() {
         <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">New request</h1>
         <div className="grid grid-cols-2 gap-2">
           {list.map((x) => (
-            <button key={x.id} onClick={() => setTplId(x.id)} className={"rounded-md border p-3 text-left text-sm " + (t?.id === x.id ? "border-primary bg-primary/5" : "border-border bg-card")}>
+            <button key={x.id} onClick={() => setTplId(x.id)} className={"rounded-md border p-3 text-left text-sm shadow-card transition-colors " + (t?.id === x.id ? "border-primary bg-primary/5" : "border-border bg-card hover:bg-muted")}>
               <span className="font-semibold">{x.name}</span><br /><span className="text-muted-foreground">{x.description}</span>
             </button>
           ))}
@@ -93,7 +93,7 @@ function NewRequest() {
         </Card>
       </div>
       <Card>
-        <p className="mb-3 text-sm font-medium text-muted-foreground">The client will fill in</p>
+        <p className="eyebrow mb-3">The client will fill in</p>
         {t?.template_sections.map((s) => (
           <div key={s.id} className="mb-4">
             <p className="font-display text-lg font-semibold">{s.title}</p>

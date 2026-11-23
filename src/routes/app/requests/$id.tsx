@@ -46,8 +46,8 @@ function RequestPage() {
   const d = q.data;
   const exp = useMemo<ExportInput | null>(() => (d ? toExport(d) : null), [d]);
 
-  if (q.isLoading) return <p className="text-sm text-muted-foreground">Loading request…</p>;
-  if (q.error || !d || !exp) return <p>{q.error ? friendlyError(q.error) : "Request not found."} <Link to="/app" className="underline">Back</Link></p>;
+  if (q.isLoading) return <div className="space-y-3"><div className="h-8 w-56 animate-pulse rounded-md bg-muted" />{[0,1].map((i) => <div key={i} className="h-40 animate-pulse rounded-lg border border-border bg-muted/60" />)}</div>;
+  if (q.error || !d || !exp) return <Card><p className="text-sm text-destructive">{q.error ? friendlyError(q.error) : "Request not found."}</p><Link to="/app" className="mt-2 inline-block text-sm text-muted-foreground hover:underline">← Requests</Link></Card>;
 
   const r = d.request;
   const subs = new Map(d.submissions.map((s) => [s.field_id, s]));
@@ -97,7 +97,7 @@ function RequestPage() {
         <div>
           <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Requests</Link>
           <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">{r.client_name}</h1>
-          <p className="text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
+          <p className="mt-1 font-mono text-xs text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
         </div>
         {d.sections.map((s) => (
           <Card key={s.id}>
