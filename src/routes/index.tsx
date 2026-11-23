@@ -11,9 +11,9 @@ import { BeforeAfter, SampleExport, SavingsCalc, StackBar, WebpTry, Faq, LockTog
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Lockcopy · Collect website content from clients" },
+      { title: "Lockcopy · Collect website content from clients through one link" },
       { name: "description", content: "Per-page checklists, organized uploads and export to Webflow and Framer. For web freelancers and agencies." },
-      { property: "og:title", content: "Lockcopy · Collect website content from clients" },
+      { property: "og:title", content: "Lockcopy · Collect website content from clients through one link" },
       { property: "og:description", content: "Per-page checklists, organized uploads and export to Webflow and Framer." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,16 +32,16 @@ function Landing() {
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
         <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-16 md:pt-24">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-card"><span className="h-1.5 w-1.5 rounded-full bg-seal" />For web designers and agencies</span>
+            <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-card"><span className="h-1.5 w-1.5 rounded-full bg-seal" />Client content collection for website projects</span>
             <h1 className="mt-7 font-display text-[2.6rem] leading-[1.02] md:text-[4.6rem]">
-              Client content for your website projects,<br /><span className="text-muted-foreground">in one place.</span>
+              Get every text and photo for a client's website<br /><span className="text-muted-foreground">through one link.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-              Send your client a link with a checklist for each page. They add the text and photos without signing up. You approve each item and export it to Webflow, Framer or a ZIP file.
+              For web designers and agencies. You send a checklist for each page of the site, your client fills it in without an account, and you approve each answer before exporting it to Webflow, Framer or a ZIP.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link to="/start" className="press rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
-              <a href="#demo" className="press rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">Try the demo ↓</a>
+              <Link to="/start" className="press rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start your free trial</Link>
+              <a href="#demo" className="press rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">See how it works ↓</a>
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">14 days free · no credit card</p>
           </div>
@@ -56,7 +56,7 @@ function Landing() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className="eyebrow">The problem</p>
-          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Content usually arrives by email, in pieces.</h2>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">If your client sends content by email, you're probably still waiting for some of it.</h2>
           <div className="mt-10"><BeforeAfter /></div>
         </div>
       </section>
@@ -64,7 +64,7 @@ function Landing() {
       <section id="demo" className="scroll-mt-20 border-b border-border bg-muted/50">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div><p className="eyebrow">Live demo</p><h2 className="mt-2 font-display text-3xl md:text-4xl">See how a request works.</h2></div>
+            <div><p className="eyebrow">Live demo</p><h2 className="mt-2 font-display text-3xl md:text-4xl">Try a request from both sides.</h2></div>
             <p className="max-w-xs text-sm text-muted-foreground">Four steps, using the same screens as the app.</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-2 shadow-float"><LandingDemo /></div>
@@ -74,7 +74,7 @@ function Landing() {
       <section id="features" className="scroll-mt-16 border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <p className="eyebrow">What you get</p>
-          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">What's included</h2>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">What you can do with Lockcopy</h2>
           <div className="mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
             <Feature n="01" t="Per-page templates" d="Templates for a business site, landing page, online store and rebrand. Each page lists the text and files you need.">
               <div className="space-y-1.5 font-mono text-[11px]">{["Home · Hero headline", "Home · 3 service blurbs", "About · Team photos"].map((x) => <div key={x} className="flex justify-between rounded-md border border-border bg-background px-2.5 py-1.5"><span>{x}</span><span className="text-muted-foreground">required</span></div>)}</div>
@@ -100,7 +100,7 @@ function Landing() {
           <SampleExport />
           <div>
             <p className="eyebrow">Time</p>
-            <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">How much time do you spend asking for content?</h2>
+            <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Work out how many hours you spend asking for content.</h2>
             <div className="mt-8"><SavingsCalc /></div>
           </div>
         </div>
@@ -138,17 +138,17 @@ function Landing() {
 
       <section id="faq" className="scroll-mt-16 mx-auto max-w-3xl px-6 pb-24">
         <p className="eyebrow">FAQ</p>
-        <h2 className="mt-2 font-display text-3xl md:text-4xl">Common questions</h2>
+        <h2 className="mt-2 font-display text-3xl md:text-4xl">Questions before you sign up</h2>
         <div className="mt-8"><Faq /></div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="flex flex-col items-center justify-between gap-6 rounded-lg bg-primary px-8 py-12 shadow-float text-primary-foreground md:flex-row">
           <div>
-            <h2 className="font-display text-3xl md:text-4xl">Try Lockcopy on your next project.</h2>
-            <p className="mt-2 text-sm opacity-80">14 days free. You only pay if you add a card.</p>
+            <h2 className="font-display text-3xl md:text-4xl">Use Lockcopy for your next client's website.</h2>
+            <p className="mt-2 text-sm opacity-80">Free for 14 days, no card needed. Set up your first request in a few minutes.</p>
           </div>
-          <Link to="/start" className="shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start now</Link>
+          <Link to="/start" className="shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start your free trial</Link>
         </div>
       </section>
 
