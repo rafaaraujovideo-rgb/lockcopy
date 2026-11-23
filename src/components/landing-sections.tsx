@@ -10,7 +10,7 @@ export function BeforeAfter() {
     { from: "You", s: "Still missing the About page", n: "", w: false },
     { from: "Client", s: "sorry, here's the logo", n: "logo.jpg · 64 px wide", w: true },
   ];
-  const done = [
+  const done: Array<[string, string]> = [
     ["Home · Main headline", "Approved"],
     ["Home · Cover photo", "Approved · WebP"],
     ["About · Your story", "Approved"],
