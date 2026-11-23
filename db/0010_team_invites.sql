@@ -83,3 +83,43 @@ $$;
 grant execute on function public.accept_invite(text) to authenticated;
 
 commit;
+
+-- =====================================================================
+-- Client "Send to agency": logs the hand-off and emails every member.
+-- =====================================================================
+begin;
+
+create or replace function public.portal_send_to_agency(_token uuid)
+returns jsonb
+language plpgsql security definer set search_path = public
+as $$
+declare
+  r public.requests;
+  total int;
+  ready int;
+  recent boolean;
+begin
+  if not public.portal_token_active(_token) then
+    raise exception 'link_invalido' using errcode = '42501';
+  end if;
+  select * into r from public.requests where token = _token;
+  select count(*) into total from public.fields f join public.sections s on s.id = f.section_id where s.request_id = r.id;
+  select count(*) into ready from public.submissions where request_id = r.id and status in ('submitted', 'approved');
+  select exists (select 1 from public.request_events where request_id = r.id and kind = 'client_sent' and created_at > now() - interval '10 minutes') into recent;
+  if not recent then
+    insert into public.request_events (request_id, org_id, actor, kind, detail)
+    values (r.id, r.org_id, 'client', 'client_sent', jsonb_build_object('ready', ready, 'total', total));
+    insert into public.notifications (org_id, request_id, channel, kind, recipient, subject, body)
+    select r.org_id, r.id, 'email', 'client_sent', u.email,
+           r.client_name || ' sent their content',
+           r.client_name || ' sent ' || ready || ' of ' || total || ' items for "' || r.title || '". Open Lockcopy to review.'
+    from public.org_members m join auth.users u on u.id = m.user_id
+    where m.org_id = r.org_id and m.notify_instant and u.email is not null;
+  end if;
+  return jsonb_build_object('ready', ready, 'total', total);
+end;
+$$;
+revoke execute on function public.portal_send_to_agency(uuid) from public;
+grant execute on function public.portal_send_to_agency(uuid) to anon, authenticated, service_role;
+
+commit;

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 import { getPortalSupabase } from "@/integrations/supabase/portal-client";
-import { portalAttachWebp, portalLoad, portalRegisterFile, portalSave, type PortalField, type PortalSubmission } from "@/lib/api.functions";
+import { portalAttachWebp, portalLoad, portalRegisterFile, portalSave, portalSendToAgency, type PortalField, type PortalSubmission } from "@/lib/api.functions";
 import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 
@@ -66,8 +66,17 @@ function Portal() {
     refetchOnWindowFocus: false,
   });
 
+  const [sent, setSent] = useState<"idle" | "sending" | "sent">("idle");
+  const [sendError, setSendError] = useState("");
+
   if (!valid || q.error) return <Unavailable />;
-  if (!q.data) return <p className="p-8 text-center text-sm text-muted-foreground">Opening the request…</p>;
+  if (!q.data) return (
+    <div className="mx-auto max-w-3xl space-y-4 p-6" aria-label="Loading">
+      <div className="h-8 w-1/2 animate-pulse rounded-md bg-muted" />
+      <div className="h-10 animate-pulse rounded-md bg-muted/70" />
+      <div className="h-64 animate-pulse rounded-lg border border-border bg-muted/50" />
+    </div>
+  );
 
   const p = q.data;
   const subs = new Map((p.submissions ?? []).map((s) => [s.field_id, s]));
@@ -84,7 +93,7 @@ function Portal() {
     <div className="min-h-screen" style={brandStyle}>
       <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto max-w-3xl px-5 py-3">
-          <div className="flex items-center gap-2">{logo && <img src={logo} alt={p.request.agency_name} className="h-6 max-w-[120px] object-contain" />}<p className="text-xs text-muted-foreground">{p.request.agency_name} · for {p.request.client_name} · due {fmtDate(p.request.due_date)}</p></div>
+          <div className="flex items-center gap-2">{logo && <img src={logo} alt={p.request.agency_name} className="h-6 max-w-[120px] object-contain" />}<p className="text-xs text-muted-foreground">{p.request.agency_name} · for {p.request.client_name} · due {fmtDate(p.request.due_date)}{daysLeft(p.request.due_date)}</p></div>
           <div className="mt-1 flex items-center gap-3">
             <p className="font-display text-lg font-semibold">{p.request.title}</p>
             <div className="h-2 flex-1 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} /></div>
@@ -117,8 +126,28 @@ function Portal() {
           <button disabled={cur === 0} onClick={() => { setTab(cur - 1); window.scrollTo(0, 0); }} className="rounded-md border border-border bg-card px-4 py-2 text-sm shadow-card disabled:opacity-40">← Previous</button>
           {cur < p.sections.length - 1
             ? <button onClick={() => { setTab(cur + 1); window.scrollTo(0, 0); }} className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn">Next page →</button>
-            : <span className="self-center text-sm text-muted-foreground">{pct === 100 ? "All done — your agency has been notified." : `${allFields.length - done} item(s) left across all pages.`}</span>}
+            : <button
+                disabled={sent !== "idle" || done === 0}
+                onClick={async () => {
+                  setSent("sending"); setSendError("");
+                  try { await portalSendToAgency({ data: { token } }); setSent("sent"); window.scrollTo(0, 0); }
+                  catch (e) { setSendError(friendlyError(e)); setSent("idle"); }
+                }}
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn disabled:opacity-50"
+                style={brand ? { background: brand } : undefined}
+              >{sent === "sending" ? "Sending…" : sent === "sent" ? "Sent" : "Send to agency"}</button>}
         </div>
+        {cur === p.sections.length - 1 && sent === "idle" && (
+          <p className="text-right text-xs text-muted-foreground">{pct === 100 ? "Everything is filled in." : `${allFields.length - done} item(s) left. You can send now and finish later.`}</p>
+        )}
+        {sendError && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{sendError}</p>}
+        {sent === "sent" && (
+          <Card className="text-center">
+            <Check className="mx-auto h-6 w-6 text-seal" />
+            <p className="mt-2 font-display text-lg font-semibold">Sent to {p.request.agency_name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">They've been emailed and will review it. This link stays open if they ask for a change.</p>
+          </Card>
+        )}
       </main>
     </div>
   );
@@ -223,10 +252,16 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
             </label>
           )}
           {uploads.map((n) => <p key={n} className="text-xs text-muted-foreground">Uploading {n}…</p>)}
-          <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id}>📎 {x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></li>)}</ul>
+          <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id}>{x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></li>)}</ul>
         </div>
       )}
       {errors.map((e) => <p key={e} className="mt-1 text-xs text-destructive">{e}</p>)}
     </div>
   );
+}
+
+function daysLeft(due: string | null) {
+  if (!due) return "";
+  const n = Math.ceil((new Date(due).getTime() - Date.now()) / 86400000);
+  return n > 1 ? ` · ${n} days left` : n === 1 ? " · 1 day left" : n === 0 ? " · due today" : " · overdue";
 }

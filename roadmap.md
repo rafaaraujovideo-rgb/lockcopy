@@ -33,6 +33,6 @@
 - [x] Texto dos preços do teste corrigido (Solo completo, sem cartão).
 - [x] Equipa: página Team, convites por email, aceitar em /join (db/0010_team_invites.sql).
 - [ ] Correr db/0010_team_invites.sql no Supabase (utilizador).
-- [ ] Arquivar/filtrar pedidos e "Approve all".
-- [ ] "Send to agency" no portal + email à agência.
-- [ ] Acabamento visual (emojis, loading do portal).
+- [x] Arquivar/filtrar pedidos e "Approve all".
+- [x] "Send to agency" no portal + email à agência (SQL em 0010).
+- [x] Acabamento visual (emojis, loading do portal).

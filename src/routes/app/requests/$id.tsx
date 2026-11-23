@@ -103,7 +103,17 @@ function RequestPage() {
         </div>
         {d.sections.map((s) => (
           <Card key={s.id}>
-            <h2 className="mb-2 font-display text-xl font-semibold">{s.title}</h2>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h2 className="font-display text-xl font-semibold">{s.title}</h2>
+              {(() => {
+                const pending = d.fields.filter((f) => f.section_id === s.id && subs.get(f.id)?.status === "submitted");
+                return pending.length > 0 ? (
+                  <Btn variant="outline" className="px-3 py-1 text-xs" disabled={!!busy} onClick={() => run(`all-${s.id}`, async () => { for (const f of pending) await reviewField({ data: { fieldId: f.id, decision: "approve", note: "" } }); }, `${pending.length} fields approved.`)}>
+                    {busy === `all-${s.id}` ? "Approving…" : `Approve all (${pending.length})`}
+                  </Btn>
+                ) : null;
+              })()}
+            </div>
             {d.fields.filter((f) => f.section_id === s.id).map((f) => (
               <FieldReview key={f.id} field={f} sub={subs.get(f.id)} files={d.files.filter((x) => x.field_id === f.id)} onDone={refresh} />
             ))}
@@ -202,7 +212,7 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
         <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
           {files.map((x) => (
             <li key={x.id}>
-              <button className="underline-offset-2 hover:underline" onClick={() => open(x.storage_path)}>📎 {x.file_name}</button> · {fmtMb(x.size_bytes)} · {x.image_status === "done" ? "WebP ready" : x.image_status === "pending" || x.image_status === "processing" ? "WebP processing" : "original only"}
+              <button className="underline-offset-2 hover:underline" onClick={() => open(x.storage_path)}>{x.file_name}</button> · {fmtMb(x.size_bytes)} · {x.image_status === "done" ? "WebP ready" : x.image_status === "pending" || x.image_status === "processing" ? "WebP processing" : "original only"}
             </li>
           ))}
         </ul>

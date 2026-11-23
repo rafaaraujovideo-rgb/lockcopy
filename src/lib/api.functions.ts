@@ -258,6 +258,19 @@ export const reviewField = createServerFn({ method: "POST" })
     return result as { status: string; note: string | null };
   });
 
+/** Archives a request (frees a plan slot) or brings it back. */
+export const setArchived = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ requestId: uuid, archived: z.boolean() }).parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("requests")
+      .update({ status: data.archived ? "archived" : "in_progress" })
+      .eq("id", data.requestId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 /** Switches the request's public link on or off. */
 export const setRequestLink = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -364,6 +377,16 @@ export const portalLoad = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
     return result as unknown as PortalPayload;
+  });
+
+/** Client hands the content over: logs it and emails the agency team. */
+export const portalSendToAgency = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = (await portalClient()) as unknown as { rpc: (f: string, a: unknown) => Promise<{ data: unknown; error: { message: string } | null }> };
+    const { data: result, error } = await supabase.rpc("portal_send_to_agency", { _token: data.token });
+    if (error) throw new Error(error.message);
+    return result as { ready: number; total: number };
   });
 
 /** Guarda uma resposta com autosave. */
