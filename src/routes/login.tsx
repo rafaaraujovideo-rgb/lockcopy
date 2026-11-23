@@ -103,7 +103,7 @@ function SignIn() {
             ))}
           </ul>
         </div>
-        <p className="font-mono text-[11px] text-muted-foreground">14-day trial · card required · cancel anytime</p>
+        <p className="font-mono text-[11px] text-muted-foreground">14-day trial · no credit card required · cancel anytime</p>
       </aside>
       <div className="flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-sm space-y-5">

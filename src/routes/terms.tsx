@@ -26,8 +26,8 @@ const sections: [string, string[]][] = [
   [
     "Trial and billing",
     [
-      "The 14-day trial only starts after you enter a payment method in Stripe. Nothing is charged during the trial.",
-      "If you do not cancel before the trial ends, the chosen subscription (monthly or yearly) is charged automatically.",
+      "The 14-day trial starts without a payment method. Nothing is charged during the trial.",
+      "If you add a card and do not cancel before the trial ends, the chosen subscription (monthly or yearly) is charged automatically. Without a card, the trial simply ends.",
       "You can cancel at any time in the billing portal; access remains until the end of the period already paid.",
       "Displayed prices do not include taxes, which are added according to applicable law.",
     ],

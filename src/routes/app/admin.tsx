@@ -23,7 +23,7 @@ export const Route = createFileRoute("/app/admin")({
   component: AdminPage,
 });
 
-const PLAN: Record<string, string> = { teste: "No card", solo: "Solo", agency: "Agency" };
+const PLAN: Record<string, string> = { teste: "No trial", solo: "Solo", agency: "Agency" };
 const money = (c: number) => `$${(c / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
 function AdminPage() {
@@ -39,7 +39,7 @@ function AdminPage() {
   const { orgs, stripe } = q.data;
   const stats = [
     { label: "Agencies", value: String(orgs.length) },
-    { label: "Card registered", value: String(orgs.filter((o) => o.stripeCustomer).length) },
+    { label: "Stripe customers", value: String(orgs.filter((o) => o.stripeCustomer).length) },
     { label: "On trial", value: String(stripe.trialing) },
     { label: "Paying", value: String(stripe.active) },
     { label: "Overdue", value: String(stripe.pastDue) },

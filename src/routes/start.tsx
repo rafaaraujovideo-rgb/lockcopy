@@ -97,13 +97,13 @@ function Checkout() {
         <Card className="bg-muted">
           <dl className="grid grid-cols-2 gap-y-2 text-sm">
             <dt className="text-muted-foreground">Today</dt><dd className="text-right font-semibold">$0</dd>
-            <dt className="text-muted-foreground">First charge</dt><dd className="text-right font-semibold">{first}</dd>
+            <dt className="text-muted-foreground">Trial ends</dt><dd className="text-right font-semibold">{first}</dd>
             <dt className="text-muted-foreground">Amount</dt><dd className="text-right font-semibold">${price} {cycle === "month" ? "per month" : "per year"} + taxes</dd>
             <dt className="text-muted-foreground">Cancel</dt><dd className="text-right">In Billing, at any time</dd>
           </dl>
           <label className="mt-4 flex items-start gap-2 text-sm">
             <input type="checkbox" className="mt-1" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-            <span>I authorize the automatic charge of ${price} {cycle === "month" ? "per month" : "per year"} starting on {first}, unless I cancel before. I receive a notice before the trial ends.</span>
+            <span>I understand that if I add a card, ${price} {cycle === "month" ? "per month" : "per year"} is charged from {first} unless I cancel. Without a card, the trial simply ends.</span>
           </label>
         </Card>
         {error && <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}

@@ -66,8 +66,8 @@ function Billing() {
       </Card>
       {!hasCard ? (
         <Card>
-          <p className="text-sm">You haven't registered a card yet. The 14-day trial starts when you do.</p>
-          <Link to="/start" className={btnClass + " mt-3"}>Register card and start 14 days</Link>
+          <p className="text-sm">You haven't started your trial yet. It's 14 days free, no credit card required.</p>
+          <Link to="/start" className={btnClass + " mt-3"}>Start 14-day free trial</Link>
         </Card>
       ) : (
         <Card className="space-y-2">
