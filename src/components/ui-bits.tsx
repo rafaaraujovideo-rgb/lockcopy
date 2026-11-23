@@ -20,7 +20,7 @@ export const btnClass = "inline-flex items-center justify-center gap-2 rounded-m
 export const inputClass = "w-full rounded-md border border-input bg-card px-3 py-2 text-sm outline-none transition-shadow focus:border-ring focus:ring-4 focus:ring-ring/15";
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-lg border border-border bg-card p-5 shadow-card", className)}>{children}</div>;
+  return <div className={cn("rounded-lg border border-border bg-card p-5 shadow-card [box-shadow:inset_0_1px_0_oklch(1_0_0/70%),var(--shadow-card)]", className)}>{children}</div>;
 }
 
 const tones: Record<string, string> = {

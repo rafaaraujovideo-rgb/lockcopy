@@ -49,7 +49,7 @@ function AdminPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-2">
-        <h1 className="font-display text-4xl font-bold">Owner overview</h1>
+        <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Owner overview</h1>
         <span className="text-xs text-muted-foreground">Stripe: {stripe.live ? "live" : "test mode"}</span>
       </div>
       {stripe.error && <Card><p className="text-sm text-destructive">Stripe: {stripe.error}</p></Card>}

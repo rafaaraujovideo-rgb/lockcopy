@@ -96,7 +96,7 @@ function RequestPage() {
       <div className="space-y-5">
         <div>
           <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Requests</Link>
-          <h1 className="font-display text-4xl font-bold">{r.client_name}</h1>
+          <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">{r.client_name}</h1>
           <p className="text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
         </div>
         {d.sections.map((s) => (

@@ -55,9 +55,9 @@ function AppLayout() {
           </span>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-10">
+      <main className="mx-auto max-w-6xl px-5 py-8 sm:py-10">
         {!ready || !session || ws.isLoading ? (
-          <p className="text-sm text-muted-foreground">Loading…</p>
+          <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded-md bg-muted" /><div className="h-40 animate-pulse rounded-lg border border-border bg-muted/60" /></div>
         ) : ws.error ? (
           <Card><p className="text-sm text-destructive">Could not open the account: {friendlyError(ws.error)}</p></Card>
         ) : !ws.data ? (

@@ -54,7 +54,7 @@ function Billing() {
 
   return (
     <div className="max-w-2xl space-y-4">
-      <h1 className="font-display text-4xl font-bold">Billing</h1>
+      <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Billing</h1>
       <Card className="space-y-2 text-sm">
         <p><span className="text-muted-foreground">Plan:</span> <b>{PLAN_NAME[org.plan]}</b> · {STATUS[org.subscription_status] ?? org.subscription_status}</p>
         {org.trial_ends_at && <p><span className="text-muted-foreground">Trial until:</span> <b>{fmtDate(org.trial_ends_at)}</b> — no charges until then</p>}

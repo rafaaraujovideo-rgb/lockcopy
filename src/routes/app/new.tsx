@@ -75,7 +75,7 @@ function NewRequest() {
   return (
     <div className="grid gap-6 md:grid-cols-[1fr_1fr]">
       <div className="space-y-4">
-        <h1 className="font-display text-4xl font-bold">New request</h1>
+        <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">New request</h1>
         <div className="grid grid-cols-2 gap-2">
           {list.map((x) => (
             <button key={x.id} onClick={() => setTplId(x.id)} className={"rounded-md border p-3 text-left text-sm " + (t?.id === x.id ? "border-primary bg-primary/5" : "border-border bg-card")}>
