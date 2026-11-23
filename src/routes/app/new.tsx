@@ -9,6 +9,7 @@ import { workspaceKey } from "@/lib/workspace";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/new")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "New request — Lockcopy" },

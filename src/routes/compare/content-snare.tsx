@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/compare/content-snare")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Lockcopy vs Content Snare — an honest comparison" },

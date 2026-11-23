@@ -8,6 +8,7 @@ import { fmtDate, friendlyError } from "@/lib/lockcopy";
 import { Btn, Card } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/billing")({
+  staticData: { sitemap: false },
   validateSearch: (s: Record<string, unknown>): { checkout?: "ok" | "cancel" } =>
     s["checkout"] === "ok" || s["checkout"] === "cancel" ? { checkout: s["checkout"] } : {},
   head: () => ({

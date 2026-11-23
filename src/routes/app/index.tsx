@@ -10,6 +10,7 @@ import { Onboarding } from "@/components/onboarding";
 import { useSession } from "@/lib/session";
 
 export const Route = createFileRoute("/app/")({
+  staticData: { sitemap: false },
   validateSearch: (s: Record<string, unknown>): { checkout?: "ok" | "cancel" } =>
     s["checkout"] === "ok" || s["checkout"] === "cancel" ? { checkout: s["checkout"] } : {},
   head: () => ({

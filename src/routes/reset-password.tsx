@@ -6,6 +6,7 @@ import { friendlyError } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/reset-password")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Set a new password — Lockcopy" },

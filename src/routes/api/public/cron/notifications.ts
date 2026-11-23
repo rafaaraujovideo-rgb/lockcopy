@@ -56,6 +56,7 @@ async function sendEmail(from: string, apiKey: string, n: Notification): Promise
 }
 
 export const Route = createFileRoute("/api/public/cron/notifications")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {

@@ -9,6 +9,7 @@ import { workspaceKey } from "@/lib/workspace";
 import { Btn, Card, btnClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/join/$token")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Join your team — Lockcopy" },

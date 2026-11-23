@@ -10,6 +10,7 @@ import { workspaceKey } from "@/lib/workspace";
 import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/requests/$id")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Review request — Lockcopy" },

@@ -9,6 +9,7 @@ import { LandingDemo } from "@/components/landing-demo";
 import { BeforeAfter, SampleExport, SavingsCalc, StackBar, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Lockcopy · Collect website content from clients through one link" },

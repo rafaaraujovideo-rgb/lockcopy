@@ -74,6 +74,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  staticData: { sitemap: false },
   head: () => ({
     // Replace these placeholders with the app's name and description when first building the app.
     // Each content route, / included, must still set its own head(). Never add og:image or
@@ -87,7 +88,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Per-page checklists for web agencies to collect texts and files from clients." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-          ],
+      { name: "google-site-verification", content: "LHvunAwNgiLoPaNOn0KwEn73uwMs6u7bjj3j2HLDhSk" },
+    ],
     links: [
       {
         rel: "stylesheet",

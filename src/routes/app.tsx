@@ -11,6 +11,7 @@ import { friendlyError, orgSlug, fmtDate } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app")({
+  staticData: { sitemap: "exclude-subtree" },
   head: () => ({
     meta: [
       { title: "Agency area — Lockcopy" },

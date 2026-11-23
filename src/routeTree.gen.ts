@@ -15,6 +15,7 @@ import { Route as DpaRouteImport } from './routes/dpa'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StartRouteImport } from './routes/start'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -59,6 +60,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StartRoute = StartRouteImport.update({
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/start': typeof StartRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/start': typeof StartRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/start': typeof StartRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
@@ -216,6 +225,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/start'
     | '/templates'
     | '/terms'
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/start'
     | '/templates'
     | '/terms'
@@ -261,6 +272,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/start'
     | '/templates'
     | '/terms'
@@ -285,6 +297,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StartRoute: typeof StartRoute
   TemplatesRoute: typeof TemplatesRoute
   TermsRoute: typeof TermsRoute
@@ -337,6 +350,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/start': {
@@ -476,6 +496,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   StartRoute: StartRoute,
   TemplatesRoute: TemplatesRoute,
   TermsRoute: TermsRoute,

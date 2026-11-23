@@ -5,6 +5,7 @@ import { downloadTemplate, FREE_TEMPLATES } from "@/lib/free-templates";
 import { Card } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/templates")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Free content checklist templates — Lockcopy" },

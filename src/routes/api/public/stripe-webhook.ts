@@ -103,6 +103,7 @@ export async function verifyStripeSignature(
 }
 
 export const Route = createFileRoute("/api/public/stripe-webhook")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {

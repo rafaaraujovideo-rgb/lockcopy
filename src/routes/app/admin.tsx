@@ -9,6 +9,7 @@ import { fmtDate } from "@/lib/lockcopy";
 import { Card } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/admin")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Owner overview — Lockcopy" },

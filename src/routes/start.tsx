@@ -14,6 +14,7 @@ import { Btn, btnClass, Card, inputClass } from "@/components/ui-bits";
 type Search = { plan?: "solo" | "agency"; cycle?: "month" | "year" };
 
 export const Route = createFileRoute("/start")({
+  staticData: { sitemap: true },
   validateSearch: (s: Record<string, unknown>): Search => ({
     plan: s["plan"] === "agency" ? "agency" : "solo",
     cycle: s["cycle"] === "year" ? "year" : "month",

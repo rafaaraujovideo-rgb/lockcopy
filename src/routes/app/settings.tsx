@@ -8,6 +8,7 @@ import { friendlyError } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/settings")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Brand settings — Lockcopy" },

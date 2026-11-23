@@ -10,6 +10,7 @@ import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem,
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/c/$token")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Send your website content — Lockcopy" },

@@ -9,6 +9,7 @@ import { inviteMember } from "@/lib/team.functions";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/team")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Team — Lockcopy" },

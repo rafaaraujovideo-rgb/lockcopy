@@ -2,6 +2,7 @@ import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dpa")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Data processing agreement (DPA) — Lockcopy" },

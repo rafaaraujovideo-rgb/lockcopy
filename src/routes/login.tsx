@@ -10,6 +10,7 @@ import { Btn, Card, inputClass } from "@/components/ui-bits";
 type Search = { mode?: "signin" | "signup"; next?: string };
 
 export const Route = createFileRoute("/login")({
+  staticData: { sitemap: true },
   validateSearch: (s: Record<string, unknown>): Search => ({
     mode: s["mode"] === "signup" ? "signup" : "signin",
     next: typeof s["next"] === "string" && s["next"].startsWith("/") ? s["next"] : "/app",

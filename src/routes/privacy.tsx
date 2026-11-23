@@ -2,6 +2,7 @@ import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/privacy")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Privacy policy — Lockcopy" },
