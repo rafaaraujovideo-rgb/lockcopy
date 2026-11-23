@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /** Lockcopy mark: a lock whose body is a page of copy, with an approved (sage) line. */
-export function LogoMark({ className }: { className?: string }) {
+export function LogoMark({ className }: { className?: string | undefined }) {
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true" className={cn("h-7 w-7 shrink-0", className)}>
       <rect width="32" height="32" rx="7.5" className="fill-primary" />
