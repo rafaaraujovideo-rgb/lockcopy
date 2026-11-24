@@ -12,8 +12,13 @@ export type ExportInput = {
   files: ExportFile[];
 };
 
+/** Stops spreadsheets from running client text as a formula. */
+export function csvSafe(v: string) {
+  return /^[=+\-@\t\r]/.test(v) ? `'${v}` : v;
+}
+
 export function webflowCsv(x: ExportInput) {
-  const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  const esc = (v: string) => `"${csvSafe(v).replace(/"/g, '""')}"`;
   const rows = [["Name", "Slug", "Page", "Field", "Content", "Files"]];
   for (const s of x.sections)
     for (const f of s.fields)

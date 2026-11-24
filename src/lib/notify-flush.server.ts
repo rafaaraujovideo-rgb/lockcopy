@@ -26,8 +26,10 @@ async function sendEmail(from: string, apiKey: string, n: Notification): Promise
   return `Brevo ${res.status}: ${(await res.text()).slice(0, 300)}`;
 }
 
-export async function flushNotifications(supabase: Admin, batch = 10) {
-  const { data, error } = await supabase.rpc("claim_notifications", { _batch: batch });
+export async function flushNotifications(supabase: Admin, batch = 10, portalToken?: string) {
+  const { data, error } = portalToken
+    ? await (supabase.rpc as unknown as (f: string, a: unknown) => Promise<{ data: unknown; error: { message: string } | null }>)("claim_portal_notifications", { _token: portalToken, _batch: batch })
+    : await supabase.rpc("claim_notifications", { _batch: batch });
   if (error) throw new Error(error.message);
   const apiKey = (process.env["BREVO_API_KEY"] ?? "").trim();
   const from = (process.env["EMAIL_FROM"] ?? "").trim() || `Lockcopy <${DEFAULT_SENDER}>`;

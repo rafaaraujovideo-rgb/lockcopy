@@ -39,6 +39,8 @@ describe("db/*.sql", () => {
       "0010_team_invites.sql",
       "0011_logo_and_file_removal.sql",
       "0012_client_questions.sql",
+    "0013_tighten_policies.sql",
+    "0014_security_fixes.sql",
     ]);
   });
 

@@ -44,11 +44,12 @@ export const startCheckout = createServerFn({ method: "POST" })
 
     const { data: membership } = await context.supabase
       .from("org_members")
-      .select("org_id")
+      .select("org_id, role")
       .eq("user_id", context.userId)
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
+    if (membership && membership.role !== "owner") throw new Error("Only the agency owner can manage billing.");
 
     if (!membership) throw new Error("No organization linked to this account.");
 
@@ -118,11 +119,12 @@ export const openBillingPortal = createServerFn({ method: "POST" })
 
     const { data: membership } = await context.supabase
       .from("org_members")
-      .select("org_id")
+      .select("org_id, role")
       .eq("user_id", context.userId)
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
+    if (membership && membership.role !== "owner") throw new Error("Only the agency owner can manage billing.");
     if (!membership) throw new Error("No organization linked to this account.");
 
     const { data: org } = await context.supabase

@@ -411,7 +411,7 @@ export const portalSendToAgency = createServerFn({ method: "POST" })
     try {
       const { createAdminSupabase } = await import("@/integrations/supabase/client.server");
       const { flushNotifications } = await import("@/lib/notify-flush.server");
-      await flushNotifications(createAdminSupabase());
+      await flushNotifications(createAdminSupabase(), 10, data.token);
     } catch (e) {
       console.error("instant agency email failed", e);
     }
