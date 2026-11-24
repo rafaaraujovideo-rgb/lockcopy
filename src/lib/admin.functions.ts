@@ -15,8 +15,11 @@ export type AdminOrg = {
   createdAt: string;
 };
 
+export type AdminFeedback = { id: string; kind: string; message: string; page: string | null; email: string | null; createdAt: string };
+
 export type AdminOverview = {
   orgs: AdminOrg[];
+  feedback: AdminFeedback[];
   stripe: { live: boolean; mrrCents: number; trialing: number; active: number; pastDue: number; error: string | null };
 };
 
@@ -41,6 +44,12 @@ export const getAdminOverview = createServerFn({ method: "POST" })
     const { data: users } = await admin.auth.admin.listUsers({ perPage: 1000 });
     const emailById = new Map((users?.users ?? []).map((u) => [u.id, u.email ?? null]));
     const ownerByOrg = new Map((owners ?? []).map((o) => [o.org_id, emailById.get(o.user_id) ?? null]));
+
+    const { data: fb } = await (admin as unknown as { from: (t: string) => any })
+      .from("feedback").select("id, kind, message, page, user_id, created_at")
+      .order("created_at", { ascending: false }).limit(100);
+    const feedback: AdminFeedback[] = ((fb ?? []) as { id: string; kind: string; message: string; page: string | null; user_id: string; created_at: string }[])
+      .map((f) => ({ id: f.id, kind: f.kind, message: f.message, page: f.page, email: emailById.get(f.user_id) ?? null, createdAt: f.created_at }));
 
     const test = (process.env["STRIPE_MODE"] ?? "").trim() === "test";
     const secret = (process.env[test ? "STRIPE_TEST_SECRET_KEY" : "STRIPE_SECRET_KEY"] ?? "").trim();
@@ -75,6 +84,7 @@ export const getAdminOverview = createServerFn({ method: "POST" })
 
     return {
       stripe,
+      feedback,
       orgs: (orgs ?? []).map((o) => ({
         id: o.id,
         name: o.name,

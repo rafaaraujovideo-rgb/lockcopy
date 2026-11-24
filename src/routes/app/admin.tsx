@@ -59,6 +59,26 @@ function AdminPage() {
           <Card key={s.label}><p className="text-xs text-muted-foreground">{s.label}</p><p className="mt-1 text-2xl font-semibold">{s.value}</p></Card>
         ))}
       </div>
+      <section className="space-y-2">
+        <h2 className="text-sm font-semibold">Feedback <span className="font-normal text-muted-foreground">· {q.data.feedback.length}</span></h2>
+        {q.data.feedback.length === 0 ? (
+          <Card><p className="text-sm text-muted-foreground">Nothing yet. Messages sent from the app land here and in your inbox.</p></Card>
+        ) : (
+          <Card className="divide-y divide-border p-0">
+            {q.data.feedback.map((f) => (
+              <div key={f.id} className="p-3">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span className="rounded border border-border px-1.5 py-0.5 font-medium capitalize text-foreground">{f.kind}</span>
+                  {f.email ? <a className="underline" href={`mailto:${f.email}`}>{f.email}</a> : <span>—</span>}
+                  <span>· {fmtDate(f.createdAt)}</span>
+                  {f.page && <span className="font-mono">· {f.page}</span>}
+                </div>
+                <p className="mt-1.5 whitespace-pre-wrap text-sm">{f.message}</p>
+              </div>
+            ))}
+          </Card>
+        )}
+      </section>
       <Card className="overflow-x-auto p-0">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-border text-xs text-muted-foreground">

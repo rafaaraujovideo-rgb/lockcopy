@@ -43,6 +43,7 @@ describe("db/*.sql", () => {
     "0014_security_fixes.sql",
     "0015_private_limit_helpers.sql",
     "0016_private_enqueue_notification.sql",
+    "0017_feedback.sql",
     ]);
   });
 

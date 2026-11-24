@@ -1,5 +1,5 @@
 import { Logo, LogoMark } from "@/components/logo";
-import { CreditCard, FilePlus2, Inbox, LogOut, Palette, Plus, Shield, Users } from "lucide-react";
+import { CreditCard, FilePlus2, Inbox, LogOut, MessageSquare, Palette, Plus, Shield, Users } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 import { alertText, planAlert, type PlanAlert } from "@/lib/trial";
 import { X } from "lucide-react";
+import { FeedbackDialog } from "@/components/feedback-dialog";
 
 export const Route = createFileRoute("/app")({
   staticData: { sitemap: "exclude-subtree" },
@@ -126,6 +127,7 @@ function AppSidebar() {
   const org = ws.data?.org;
   const path = useRouterState({ select: (r) => r.location.pathname.replace(/\/$/, "") || "/app" });
   const { setOpenMobile } = useSidebar();
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const planName = org ? { teste: "Trial", solo: "Solo", agency: "Agency" }[org.plan] : "";
   const daysLeft = org?.trial_ends_at ? Math.max(0, Math.ceil((new Date(org.trial_ends_at).getTime() - Date.now()) / 86400000)) : null;
   const active = ws.data?.activeRequests ?? 0;
@@ -180,6 +182,14 @@ function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="gap-2 p-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="Feedback" onClick={() => { setOpenMobile(false); setFeedbackOpen(true); }} className="text-muted-foreground hover:text-foreground">
+              <MessageSquare className="h-4 w-4" /><span>Feedback &amp; support</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} {...(org?.id ? { orgId: org.id } : {})} />
         <div className={"rounded-lg border p-3 shadow-card group-data-[collapsible=icon]:hidden " + tone}>
           <div className="flex items-center justify-between text-xs">
             <span className="font-medium">{status}</span>
