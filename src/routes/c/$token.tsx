@@ -96,7 +96,7 @@ function Portal() {
         <div className="mx-auto max-w-3xl px-5 py-3">
           <div className="flex items-center gap-2">{logo && <img src={logo} alt={p.request.agency_name} className="h-6 max-w-[120px] object-contain" />}<p className="text-xs text-muted-foreground">{p.request.agency_name} · for {p.request.client_name} · due {fmtDate(p.request.due_date)}{daysLeft(p.request.due_date)}</p></div>
           <div className="mt-1 flex items-center gap-3">
-            <p className="font-display text-lg font-semibold">{p.request.title}</p>
+            <h1 className="font-display text-lg font-semibold">{p.request.title || `Website content for ${p.request.agency_name}`}</h1>
             <div className="h-2 flex-1 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} /></div>
             <span className="text-xs">{pct}%</span>
           </div>
