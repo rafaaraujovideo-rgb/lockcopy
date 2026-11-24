@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 
-import { getSupabase, hasSupabase } from "@/integrations/supabase/client";
+import { getSupabase, hasSupabase } from "@/lib/supabase-browser";
 
 /**
  * Agency session in the browser. Stays `ready: false` on the server and first

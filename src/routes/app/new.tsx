@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { getSupabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { createRequest } from "@/lib/api.functions";
 import { friendlyError, isFileField } from "@/lib/lockcopy";
 import { useWorkspace, workspaceKey } from "@/lib/workspace";

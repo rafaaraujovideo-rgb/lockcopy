@@ -2,7 +2,7 @@ import { Logo } from "@/components/logo";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { getSupabase, hasSupabase } from "@/integrations/supabase/client";
+import { getSupabase, hasSupabase } from "@/lib/supabase-browser";
 import { useSession } from "@/lib/session";
 import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";

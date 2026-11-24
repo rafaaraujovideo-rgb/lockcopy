@@ -1,6 +1,6 @@
 import { createMiddleware } from "@tanstack/react-start";
 
-import { getSupabase, hasSupabase } from "./client";
+import { getSupabase, hasSupabase } from "@/lib/supabase-browser";
 
 /**
  * Attaches the signed-in user's bearer token to every server function call.

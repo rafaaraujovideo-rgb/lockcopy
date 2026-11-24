@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useWorkspace, workspaceKey } from "@/lib/workspace";
 import { useSession, signOut } from "@/lib/session";
 import { isAdminUser } from "@/lib/admin";
-import { getSupabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 

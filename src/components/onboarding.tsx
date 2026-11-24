@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, ExternalLink } from "lucide-react";
 
-import { getSupabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { createRequest } from "@/lib/api.functions";
 import { workspaceKey } from "@/lib/workspace";
 import { friendlyError } from "@/lib/lockcopy";

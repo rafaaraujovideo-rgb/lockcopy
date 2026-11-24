@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
-import { getSupabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { getRequestDetail, reviewField, sendReminder, setRequestLink } from "@/lib/api.functions";
 import { answerLabel, eventText, fmtDate, fmtMb, friendlyError, isFileField, requestLinkState } from "@/lib/lockcopy";
 import { framerJson, webflowCsv, zipEntries, zipTextEntries, type ExportInput } from "@/lib/exports";

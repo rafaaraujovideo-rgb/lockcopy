@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { getSupabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { useWorkspace, workspaceKey } from "@/lib/workspace";
 import { friendlyError } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
