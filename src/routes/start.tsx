@@ -73,7 +73,7 @@ function Checkout() {
   return (
     <div className="mx-auto max-w-2xl px-5 py-12">
       <Link to="/" className="mb-8 block"><Logo className="text-base" markClassName="h-6 w-6" /></Link>
-      <h1 className="font-display text-4xl font-bold">Start your trial</h1>
+      <h1 className="font-display text-4xl font-bold">Start your Lockcopy trial</h1>
       <p className="mt-2 text-muted-foreground">14 full days, no credit card required. Add a card only if you decide to stay.</p>
       <div className="mt-6 space-y-4">
         <Card>
