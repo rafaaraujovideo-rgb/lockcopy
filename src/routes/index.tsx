@@ -128,7 +128,7 @@ function Landing() {
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                   {[`${p.requests} active requests`, `${p.users} ${p.users > 1 ? "users" : "user"}`, `${p.storageGb} GB of files`, "Field-by-field approval & lock", "Automatic WebP conversion", "Webflow CSV, Framer JSON & ZIP", "Your logo and color on the portal"].map((f) => <li key={f} className="flex gap-2"><span className="text-seal">✓</span>{f}</li>)}
                 </ul>
-                <Link to="/login" search={{ mode: "signup" }} className={"mt-8 block rounded-md py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft" : "border border-border hover:bg-muted")}>Try 14 days</Link>
+                <Link to="/login" search={{ mode: "signup" }} className={"press mt-8 block rounded-md py-3 text-center text-sm font-medium " + (k === "agency" ? "bg-primary text-primary-foreground shadow-btn hover:bg-ink-soft" : "border border-border hover:bg-muted")}>Try 14 days</Link>
               </div>
             );
           })}
@@ -148,7 +148,7 @@ function Landing() {
             <h2 className="font-display text-3xl md:text-4xl">Use Lockcopy for your next client's website.</h2>
             <p className="mt-2 text-sm opacity-80">Free for 14 days, no card needed. Set up your first request in a few minutes.</p>
           </div>
-          <Link to="/login" search={{ mode: "signup" }} className="shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start your free trial</Link>
+          <Link to="/login" search={{ mode: "signup" }} className="press shrink-0 rounded-md bg-background px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">Start your free trial</Link>
         </div>
       </section>
 

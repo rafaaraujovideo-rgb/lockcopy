@@ -122,7 +122,7 @@ export function SampleExport() {
         <p className="mt-1.5 max-w-md text-sm text-muted-foreground">These are the files you get: a Webflow CSV, a Framer JSON file and WebP images sorted by page.</p>
         <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">{["webflow.csv", "framer.json", "home/…/facade.webp", "README.txt"].map((x) => <span key={x} className="rounded-md border border-border bg-background px-2 py-1">{x}</span>)}</div>
       </div>
-      <button onClick={get} disabled={busy} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft disabled:opacity-60">
+      <button onClick={get} disabled={busy} className="press inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft disabled:opacity-60">
         <Download className="h-4 w-4" />{busy ? "Preparing…" : "Download sample ZIP"}
       </button>
     </div>
@@ -199,10 +199,11 @@ export function ExportPeek() {
   const [f, setF] = useState<"csv" | "json">("csv");
   return (
     <div className="rounded-md border border-border bg-background text-[11px]">
-      <div className="flex border-b border-border">
-        {(["csv", "json"] as const).map((k) => <button key={k} type="button" onClick={() => setF(k)} className={"px-3 py-1.5 font-mono transition-colors " + (f === k ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground")}>{k === "csv" ? "webflow.csv" : "framer.json"}</button>)}
+      <div className="relative grid w-fit grid-cols-2 border-b border-border">
+        <span aria-hidden className="pill absolute inset-y-0 left-0 w-1/2 bg-card shadow-card" style={{ transform: f === "json" ? "translateX(100%)" : "none" }} />
+        {(["csv", "json"] as const).map((k) => <button key={k} type="button" onClick={() => setF(k)} className={"relative px-3 py-1.5 font-mono transition-colors " + (f === k ? "text-foreground" : "text-muted-foreground hover:text-foreground")}>{k === "csv" ? "webflow.csv" : "framer.json"}</button>)}
       </div>
-      <pre className="overflow-hidden px-3 py-2 font-mono leading-relaxed text-ink-soft">{f === "csv" ? "Name,Slug,Hero headline\nHome,home,Fresh bread…" : '{ "home": { "hero": "Fresh bread…" } }'}</pre>
+      <pre key={f} className="animate-lc-in overflow-hidden px-3 py-2 font-mono leading-relaxed text-ink-soft">{f === "csv" ? "Name,Slug,Hero headline\nHome,home,Fresh bread…" : '{ "home": { "hero": "Fresh bread…" } }'}</pre>
     </div>
   );
 }
@@ -221,7 +222,7 @@ export function Faq() {
       {FAQS.map(([q, a]) => (
         <details key={q} className="group px-5 py-4">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold">{q}<span className="font-mono text-muted-foreground transition-transform group-open:rotate-45">+</span></summary>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{a}</p>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground group-open:animate-lc-in">{a}</p>
         </details>
       ))}
     </div>

@@ -228,6 +228,8 @@ body { font-family: var(--font-sans); background: var(--background); color: var(
   .reveal { opacity: 0; transform: translateY(14px); filter: blur(4px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1), filter .7s cubic-bezier(.2,.7,.2,1); }
   .reveal[data-shown="true"] { opacity: 1; transform: none; filter: none; }
   /* Staggered children: cards keep their surface, their content rises in sequence. */
+  /* Stagger only where cards sit side by side; on a phone the column is too tall to cascade at once. */
+  @media (max-width: 767px) { .reveal .stagger > * > * { opacity: 1 !important; transform: none !important; } }
   .reveal .stagger > * > * { opacity: 0; transform: translateY(10px); transition: opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1); }
   .reveal[data-shown="true"] .stagger > * > * { opacity: 1; transform: none; }
   .stagger > :nth-child(2) > * { transition-delay: 70ms; } .stagger > :nth-child(3) > * { transition-delay: 140ms; }
