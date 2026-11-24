@@ -5,6 +5,7 @@ import { PLANS } from "@/lib/store";
 import { Lock } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { HeroStage } from "@/components/hero-stage";
+import { Reveal, ReminderTimeline } from "@/components/reveal";
 import { BeforeAfter, SampleExport, SavingsCalc, StackBar, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
@@ -57,7 +58,7 @@ function Landing() {
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className="eyebrow">The problem</p>
           <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">If your client sends content by email, you're probably still waiting for some of it.</h2>
-          <div className="mt-10"><BeforeAfter /></div>
+          <Reveal><div className="mt-10"><BeforeAfter /></div></Reveal>
         </div>
       </section>
 
@@ -65,7 +66,7 @@ function Landing() {
         <div className="mx-auto max-w-6xl px-6 py-24">
           <p className="eyebrow">What you get</p>
           <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">What you can do with Lockcopy</h2>
-          <div className="mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
+          <Reveal><div className="mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
             <Feature n="01" t="Per-page templates" d="Templates for a business site, landing page, online store and rebrand. Each page lists the text and files you need.">
               <div className="space-y-1.5 font-mono text-[11px]">{["Home · Hero headline", "Home · 3 service blurbs", "About · Team photos"].map((x) => <div key={x} className="flex justify-between rounded-md border border-border bg-background px-2.5 py-1.5"><span>{x}</span><span className="text-muted-foreground">required</span></div>)}</div>
             </Feature>
@@ -78,20 +79,23 @@ function Landing() {
             <Feature n="04" t="Exports for your site builder" d="A ZIP with a folder per page, a CSV for the Webflow CMS and a JSON file for Framer. Images are converted to WebP.">
               <ExportPeek />
             </Feature>
-            <div className="md:col-span-2"><Feature n="05" t="Smaller images" d="Images your client uploads are converted to WebP. You can try it here with one of your photos.">
+            <Feature n="05" t="Smaller images" d="Images your client uploads are converted to WebP. You can try it here with one of your photos.">
               <WebpTry />
-            </Feature></div>
-          </div>
+            </Feature>
+            <Feature n="06" t="Reminders that send themselves" d="Set a deadline and Lockcopy emails your client 3 days before, on the day and 2 days after. Each email says how many items are still missing.">
+              <ReminderTimeline />
+            </Feature>
+          </div></Reveal>
         </div>
       </section>
 
       <section className="border-b border-border">
         <div className="mx-auto max-w-6xl space-y-16 px-6 py-20">
-          <SampleExport />
+          <Reveal><SampleExport /></Reveal>
           <div>
             <p className="eyebrow">Time</p>
             <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Work out how many hours you spend asking for content.</h2>
-            <div className="mt-8"><SavingsCalc /></div>
+            <Reveal><div className="mt-8"><SavingsCalc /></div></Reveal>
           </div>
         </div>
       </section>
@@ -105,7 +109,7 @@ function Landing() {
             ))}
           </div>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
+        <Reveal><div className="mt-10 grid gap-5 md:grid-cols-2">
           {(["solo", "agency"] as const).map((k) => {
             const p = PLANS[k];
             return (
@@ -122,14 +126,14 @@ function Landing() {
               </div>
             );
           })}
-        </div>
+        </div></Reveal>
         <p className="mt-5 text-center text-xs text-muted-foreground">During the 14-day trial you get the full Solo plan, with no credit card. Add a card only if you want to continue. Prices exclude taxes.</p>
       </section>
 
       <section id="faq" className="scroll-mt-16 mx-auto max-w-3xl px-6 pb-24">
         <p className="eyebrow">FAQ</p>
         <h2 className="mt-2 font-display text-3xl md:text-4xl">Questions before you sign up</h2>
-        <div className="mt-8"><Faq /></div>
+        <Reveal><div className="mt-8"><Faq /></div></Reveal>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
