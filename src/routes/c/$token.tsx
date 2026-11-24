@@ -8,6 +8,7 @@ import { getPortalSupabase } from "@/integrations/supabase/portal-client";
 import { portalAttachWebp, portalLoad, portalRegisterFile, portalRemoveFile, portalSave, portalSendToAgency, portalSetNote, portalNotes, type PortalField, type PortalSubmission } from "@/lib/api.functions";
 import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
+import { HScroll } from "@/components/h-scroll";
 
 export const Route = createFileRoute("/c/$token")({
   staticData: { sitemap: false },
@@ -104,7 +105,8 @@ function Portal() {
       </header>
       <main className="mx-auto max-w-3xl space-y-5 px-5 py-8">
         <p className="text-sm text-muted-foreground">Autosaved as you type. Come back anytime with this link.</p>
-        <nav aria-label="Pages" className="flex gap-1 overflow-x-auto border-b border-border pb-px">
+        <HScroll className="border-b border-border pb-px">
+        <nav aria-label="Pages" className="flex gap-1">
           {p.sections.map((s, i) => {
             const fs = s.fields ?? [];
             const d = fs.filter((f) => isDone(subs.get(f.id)?.status)).length;
@@ -116,6 +118,7 @@ function Portal() {
             );
           })}
         </nav>
+        </HScroll>
         {sec && (
           <Card key={sec.id}>
             <h2 className="font-display text-2xl font-semibold">{sec.title}</h2>
@@ -291,7 +294,7 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
       ) : (
         <div className="mt-2">
           <label className="text-xs text-muted-foreground" htmlFor={`${field.id}-note`}>Question or note for the agency</label>
-          <textarea id={`${field.id}-note`} rows={2} maxLength={2000} className={inputClass + " mt-1 text-sm"} placeholder="e.g. What size should this photo be?" value={note ?? savedNote} onChange={(e) => { setNote(e.target.value); setNoteState(""); }} onBlur={saveNote} autoFocus={note === "" && !savedNote} />
+          <textarea id={`${field.id}-note`} rows={2} maxLength={2000} className={inputClass + " mt-1"} placeholder="e.g. What size should this photo be?" value={note ?? savedNote} onChange={(e) => { setNote(e.target.value); setNoteState(""); }} onBlur={saveNote} autoFocus={note === "" && !savedNote} />
           {noteState && <p className="text-[11px] text-muted-foreground">{noteState === "saving" ? "Saving…" : "Sent to the agency."}</p>}
         </div>
       ))}

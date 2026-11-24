@@ -1,4 +1,5 @@
 import { SiteShell } from "@/components/site-chrome";
+import { HScroll } from "@/components/h-scroll";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Card } from "@/components/ui-bits";
@@ -43,11 +44,12 @@ function CompareFileRequestPro() {
         the copy for every page and field, together with the images, already in the format Webflow or Framer imports.
       </p>
 
-      <Card className="mt-10 overflow-x-auto p-0">
+      <Card className="mt-10 overflow-hidden p-0">
+        <HScroll hint="Swipe the table to compare →" left={false}>
         <table className="w-full min-w-[560px] text-sm">
           <thead>
             <tr className="border-b border-border text-left">
-              <th className="p-4 font-medium text-muted-foreground"></th>
+              <th className="sticky left-0 z-10 bg-card p-4 font-medium text-muted-foreground shadow-[inset_-1px_0_0_0_var(--border)]"></th>
               <th className="p-4 font-semibold">Lockcopy</th>
               <th className="p-4 font-semibold">File Request Pro</th>
             </tr>
@@ -55,13 +57,14 @@ function CompareFileRequestPro() {
           <tbody>
             {rows.map(([k, a, b]) => (
               <tr key={k} className="border-b border-border last:border-0">
-                <td className="p-4 font-medium">{k}</td>
+                <td className="sticky left-0 z-10 bg-card p-4 font-medium shadow-[inset_-1px_0_0_0_var(--border)]">{k}</td>
                 <td className="p-4 text-muted-foreground">{a}</td>
                 <td className="p-4 text-muted-foreground">{b}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        </HScroll>
       </Card>
 
       <section className="mt-12 space-y-4 text-sm leading-relaxed text-muted-foreground">
