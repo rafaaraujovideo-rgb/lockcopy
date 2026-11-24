@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { SearchX } from "lucide-react";
 
 import { listRequests, setArchived } from "@/lib/api.functions";
 import { useWorkspace } from "@/lib/workspace";
@@ -90,7 +91,14 @@ function Dashboard() {
             </div>
           </div>
           <div className="overflow-hidden rounded-lg border border-border bg-card shadow-window">
-            {rows.length === 0 && <p className="px-4 py-6 text-sm text-muted-foreground">No requests match.</p>}
+            {rows.length === 0 && (
+              <div className="flex flex-col items-start gap-2 px-4 py-8">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground"><SearchX className="h-4 w-4" /></span>
+                <p className="text-sm font-medium">No requests match{term ? ` "${search.trim()}"` : " this view"}</p>
+                <p className="text-xs text-muted-foreground">Try another client name, or switch tabs.</p>
+                {(term || tab !== "all") && <button type="button" onClick={() => { setSearch(""); setTab("all"); }} className="mt-1 rounded-md border border-border bg-card px-2.5 py-1 text-xs shadow-card hover:bg-muted">Clear filters</button>}
+              </div>
+            )}
             <div className="hidden grid-cols-[1fr_9rem_10rem_7rem] gap-4 border-b border-border bg-muted/50 px-4 py-2 sm:grid">
               <span className="eyebrow">Client</span><span className="eyebrow">Due</span><span className="eyebrow">Progress</span><span className="eyebrow text-right">Status</span>
             </div>

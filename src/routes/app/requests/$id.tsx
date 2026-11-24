@@ -10,6 +10,7 @@ import { framerJson, webflowCsv, zipEntries, zipTextEntries, type ExportInput } 
 import { workspaceKey } from "@/lib/workspace";
 import { nextReminderDate } from "@/lib/reminders";
 import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
+import { Bell, Check, Send, User } from "lucide-react";
 
 export const Route = createFileRoute("/app/requests/$id")({
   staticData: { sitemap: false },
@@ -162,12 +163,19 @@ function RequestPage() {
         <Card>
           <p className="mb-2 text-sm font-medium">History</p>
           <ol className="space-y-2 text-xs">
-            {d.events.slice(0, 50).map((e) => (
-              <li key={e.id} className="border-l-2 border-primary pl-2">
-                <span className="font-medium">{e.actor === "client" ? "Client" : e.actor === "agency" ? "Agency" : "System"}</span> — {eventText(e.kind, e.detail)}
-                <span className="block text-muted-foreground">{new Date(e.created_at).toLocaleString("en-GB")}</span>
-              </li>
-            ))}
+            {d.events.slice(0, 50).map((e, i, arr) => {
+              const Icon = e.actor === "client" ? Send : e.actor === "agency" ? (/approv/i.test(e.kind) ? Check : User) : Bell;
+              return (
+                <li key={e.id} className="relative flex gap-2.5 pb-1">
+                  {i < arr.length - 1 && <span aria-hidden className="absolute left-[9px] top-5 h-[calc(100%-0.25rem)] w-px bg-border" />}
+                  <span className={`relative z-10 mt-0.5 flex h-[19px] w-[19px] shrink-0 items-center justify-center rounded-full border border-border ${e.actor === "client" ? "bg-accent text-accent-foreground" : "bg-card text-muted-foreground"}`}><Icon className="h-2.5 w-2.5" /></span>
+                  <span className="min-w-0">
+                    <span className="font-medium">{e.actor === "client" ? "Client" : e.actor === "agency" ? "Agency" : "System"}</span> — {eventText(e.kind, e.detail)}
+                    <span className="block font-mono text-[10.5px] text-muted-foreground">{new Date(e.created_at).toLocaleString("en-GB")}</span>
+                  </span>
+                </li>
+              );
+            })}
           </ol>
         </Card>
       </aside>
@@ -218,7 +226,7 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
 
   return (
     <div className="border-t border-border py-3">
-      <div className="flex items-center justify-between gap-2"><p className="text-sm font-medium">{field.label}</p><span className="flex items-center gap-2">{sub?.value_text && <button type="button" onClick={() => { void navigator.clipboard.writeText(sub.value_text ?? ""); setCopied(true); setTimeout(() => setCopied(false), 1500); }} className="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted">{copied ? "Copied" : "Copy"}</button>}<Badge s={status} /></span></div>
+      <div className="flex items-center justify-between gap-2"><p className="text-sm font-medium">{field.label}</p><span className="flex items-center gap-2">{sub?.value_text && <button type="button" onClick={() => { void navigator.clipboard.writeText(sub.value_text ?? ""); setCopied(true); setTimeout(() => setCopied(false), 1500); }} className="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted">{copied ? "Copied" : "Copy"}</button>}<span key={status} className="inline-flex animate-in fade-in zoom-in-95 duration-300">{status === "approved" && <Check aria-hidden className="mr-1 h-3.5 w-3.5 self-center text-accent-foreground animate-in zoom-in-50 duration-500" />}<Badge s={status} /></span></span></div>
       {sub?.value_text && <p className="mt-1 whitespace-pre-wrap text-sm">{sub.value_text}</p>}
       {isFileField(field.field_type) && files.length > 0 && (
         <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
