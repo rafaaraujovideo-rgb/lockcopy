@@ -827,8 +827,8 @@ begin;
 -- Catálogo público (limites e modelos)
 -- ---------------------------------------------------------------------
 create policy "limites visiveis"
-on public.plan_limits for select to anon, authenticated
-using (true);
+on public.plan_limits for select to authenticated
+using (auth.uid() is not null);
 
 create policy "modelos ativos visiveis"
 on public.templates for select to anon, authenticated
@@ -857,7 +857,7 @@ using (public.is_org_member(id));
 -- um trigger torna-o proprietário (0004).
 create policy "criar organizacao propria"
 on public.organizations for insert to authenticated
-with check (true);
+with check (auth.uid() is not null and storage_used_bytes = 0);
 
 create policy "proprietario altera a organizacao"
 on public.organizations for update to authenticated
