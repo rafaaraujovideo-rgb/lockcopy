@@ -799,6 +799,31 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      claim_portal_notifications: {
+        Args: { _batch?: number; _token: string }
+        Returns: {
+          attempts: number
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at: string
+          id: string
+          kind: string | null
+          last_error: string | null
+          org_id: string
+          recipient: string
+          request_id: string | null
+          scheduled_for: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["notification_status"]
+          subject: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notifications"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       create_request_from_template: {
         Args: {
           _client_email: string
