@@ -26,14 +26,14 @@ export const inviteMember = createServerFn({ method: "POST" })
     const link = `${origin}/join/${inv.token}`;
     const apiKey = (process.env["BREVO_API_KEY"] ?? "").trim();
     const fromRaw = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <notify@lockcopy.com>";
-    const m = /<([^>]+)>/.exec(fromRaw);
+    const m = /<([^>]+)>/.exec(fromRaw) ?? /([^\s<>()]+@[^\s<>()]+\.[^\s<>()]+)/.exec(fromRaw);
     let emailed = false;
     if (apiKey) {
       const res = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
         body: JSON.stringify({
-          sender: { name: "Lockcopy", email: m?.[1] ?? fromRaw },
+          sender: { name: "Lockcopy", email: m?.[1] ?? "notify@lockcopy.com" },
           to: [{ email: data.email }],
           subject: `You're invited to join ${org?.name ?? "an agency"} on Lockcopy`,
           textContent: `${org?.name ?? "An agency"} invited you to collaborate on Lockcopy.\n\nAccept the invite (valid for 14 days):\n${link}\n\nSign in or create an account with ${data.email}.`,

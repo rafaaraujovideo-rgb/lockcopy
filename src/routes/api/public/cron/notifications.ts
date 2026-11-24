@@ -14,6 +14,7 @@ import { createFileRoute } from "@tanstack/react-router";
  */
 
 const BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+const DEFAULT_SENDER = "notify@lockcopy.com";
 
 type Notification = {
   id: string;
@@ -36,7 +37,9 @@ function parseFrom(from: string): { name?: string; email: string } {
     const name = (m[1] ?? "").trim();
     return name ? { name, email: m[2].trim() } : { email: m[2].trim() };
   }
-  return { email: from.trim() };
+  const bare = /^\s*([^\s<>()]+@[^\s<>()]+\.[^\s<>()]+)\s*$/.exec(from);
+  if (bare) return { email: bare[1].trim() };
+  return { email: DEFAULT_SENDER };
 }
 
 async function sendEmail(from: string, apiKey: string, n: Notification): Promise<string | null> {
@@ -76,7 +79,7 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
         }
 
         const apiKey = (process.env["BREVO_API_KEY"] ?? "").trim();
-        const from = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <notify@lockcopy.com>";
+        const from = (process.env["EMAIL_FROM"] ?? "").trim() || `Lockcopy <${DEFAULT_SENDER}>`;
 
         const items = (batch ?? []) as unknown as Notification[];
         let sent = 0;
