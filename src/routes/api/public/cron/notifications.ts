@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { reminderEmail, reminderKind, reminderOffsetFor } from "@/lib/reminders";
+
 /**
  * Email and reminder worker.
  *
@@ -58,6 +60,39 @@ async function sendEmail(from: string, apiKey: string, n: Notification): Promise
   return `Brevo ${res.status}: ${detail}`;
 }
 
+type Admin = ReturnType<typeof import("@/integrations/supabase/client.server").createAdminSupabase>;
+
+/** Queues today's automatic deadline reminders once per request and step. */
+async function scheduleReminders(supabase: Admin) {
+  const today = new Date().toISOString().slice(0, 10);
+  const appUrl = (process.env["APP_URL"] ?? "https://lockcopy.com").trim().replace(/\/$/, "");
+  const { data: reqs } = await supabase
+    .from("requests")
+    .select("id, org_id, title, client_email, status, due_date, revoked_at, expires_at, token")
+    .not("due_date", "is", null)
+    .in("status", ["sent", "in_progress"])
+    .is("revoked_at", null);
+  for (const r of reqs ?? []) {
+    const offset = reminderOffsetFor(r, today);
+    if (offset === null) continue;
+    const kind = reminderKind(offset);
+    const { count } = await supabase
+      .from("notifications").select("id", { count: "exact", head: true })
+      .eq("request_id", r.id).eq("kind", kind);
+    if (count) continue;
+    const { count: missing } = await supabase
+      .from("submissions").select("id", { count: "exact", head: true })
+      .eq("request_id", r.id).in("status", ["pending", "rejected"]);
+    if (!missing) continue;
+    const { data: org } = await supabase.from("organizations").select("name").eq("id", r.org_id).maybeSingle();
+    const mail = reminderEmail(offset, r.title, org?.name ?? "Your agency", missing, `${appUrl}/c/${r.token}`);
+    await supabase.from("notifications").insert({
+      org_id: r.org_id, request_id: r.id, channel: "email", kind,
+      recipient: r.client_email, subject: mail.subject, body: mail.body,
+    });
+  }
+}
+
 export const Route = createFileRoute("/api/public/cron/notifications")({
   staticData: { sitemap: false },
   server: {
@@ -69,6 +104,8 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
 
         const { createAdminSupabase } = await import("@/integrations/supabase/client.server");
         const supabase = createAdminSupabase();
+
+        await scheduleReminders(supabase).catch((e) => console.error("auto reminders failed", e));
 
         const { data: batch, error } = await supabase.rpc("claim_notifications", { _batch: 10 });
         if (error) {
