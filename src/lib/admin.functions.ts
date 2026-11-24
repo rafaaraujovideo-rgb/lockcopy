@@ -13,13 +13,19 @@ export type AdminOrg = {
   trialEndsAt: string | null;
   periodEndsAt: string | null;
   createdAt: string;
+  requests: number;
+  delivered: number;
+  storageMb: number;
 };
+
+export type AdminWeek = { newAgencies: number; newRequests: number; clientDeliveries: number; filesUploaded: number; newFeedback: number };
 
 export type AdminFeedback = { id: string; kind: string; message: string; page: string | null; email: string | null; createdAt: string };
 
 export type AdminOverview = {
   orgs: AdminOrg[];
   feedback: AdminFeedback[];
+  week: AdminWeek;
   stripe: { live: boolean; mrrCents: number; trialing: number; active: number; pastDue: number; error: string | null };
 };
 
@@ -35,7 +41,7 @@ export const getAdminOverview = createServerFn({ method: "POST" })
 
     const { data: orgs, error } = await admin
       .from("organizations")
-      .select("id, name, plan, subscription_status, stripe_customer_id, trial_ends_at, current_period_ends_at, created_at")
+      .select("id, name, plan, subscription_status, stripe_customer_id, trial_ends_at, current_period_ends_at, storage_used_bytes, created_at")
       .order("created_at", { ascending: false })
       .limit(500);
     if (error) throw new Error(error.message);
@@ -50,6 +56,25 @@ export const getAdminOverview = createServerFn({ method: "POST" })
       .order("created_at", { ascending: false }).limit(100);
     const feedback: AdminFeedback[] = ((fb ?? []) as { id: string; kind: string; message: string; page: string | null; user_id: string; created_at: string }[])
       .map((f) => ({ id: f.id, kind: f.kind, message: f.message, page: f.page, email: emailById.get(f.user_id) ?? null, createdAt: f.created_at }));
+
+    const since = new Date(Date.now() - 7 * 86400000).toISOString();
+    const { data: reqs } = await admin.from("requests").select("id, org_id, created_at").limit(10000);
+    const { data: sent } = await admin.from("request_events").select("request_id").eq("kind", "client_sent").limit(10000);
+    const { data: recent } = await admin.from("request_events").select("kind").in("kind", ["client_sent", "file_added"]).gte("created_at", since).limit(10000);
+    const deliveredIds = new Set((sent ?? []).map((e) => e.request_id));
+    const reqCount = new Map<string, number>();
+    const delCount = new Map<string, number>();
+    for (const r of reqs ?? []) {
+      reqCount.set(r.org_id, (reqCount.get(r.org_id) ?? 0) + 1);
+      if (deliveredIds.has(r.id)) delCount.set(r.org_id, (delCount.get(r.org_id) ?? 0) + 1);
+    }
+    const week: AdminWeek = {
+      newAgencies: (orgs ?? []).filter((o) => o.created_at >= since).length,
+      newRequests: (reqs ?? []).filter((r) => r.created_at >= since).length,
+      clientDeliveries: (recent ?? []).filter((e) => e.kind === "client_sent").length,
+      filesUploaded: (recent ?? []).filter((e) => e.kind === "file_added").length,
+      newFeedback: feedback.filter((f) => f.createdAt >= since).length,
+    };
 
     const test = (process.env["STRIPE_MODE"] ?? "").trim() === "test";
     const secret = (process.env[test ? "STRIPE_TEST_SECRET_KEY" : "STRIPE_SECRET_KEY"] ?? "").trim();
@@ -85,6 +110,7 @@ export const getAdminOverview = createServerFn({ method: "POST" })
     return {
       stripe,
       feedback,
+      week,
       orgs: (orgs ?? []).map((o) => ({
         id: o.id,
         name: o.name,
@@ -95,6 +121,9 @@ export const getAdminOverview = createServerFn({ method: "POST" })
         trialEndsAt: o.trial_ends_at,
         periodEndsAt: o.current_period_ends_at,
         createdAt: o.created_at,
+        requests: reqCount.get(o.id) ?? 0,
+        delivered: delCount.get(o.id) ?? 0,
+        storageMb: Math.round((o.storage_used_bytes ?? 0) / 1048576),
       })),
     };
   });
