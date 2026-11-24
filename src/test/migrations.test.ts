@@ -41,6 +41,7 @@ describe("db/*.sql", () => {
       "0012_client_questions.sql",
     "0013_tighten_policies.sql",
     "0014_security_fixes.sql",
+    "0015_private_limit_helpers.sql",
     ]);
   });
 
