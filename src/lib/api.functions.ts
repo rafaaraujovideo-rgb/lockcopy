@@ -386,6 +386,14 @@ export const portalSendToAgency = createServerFn({ method: "POST" })
     const supabase = (await portalClient()) as unknown as { rpc: (f: string, a: unknown) => Promise<{ data: unknown; error: { message: string } | null }> };
     const { data: result, error } = await supabase.rpc("portal_send_to_agency", { _token: data.token });
     if (error) throw new Error(error.message);
+    // Email the agency now instead of waiting for the daily run.
+    try {
+      const { createAdminSupabase } = await import("@/integrations/supabase/client.server");
+      const { flushNotifications } = await import("@/lib/notify-flush.server");
+      await flushNotifications(createAdminSupabase());
+    } catch (e) {
+      console.error("instant agency email failed", e);
+    }
     return result as { ready: number; total: number };
   });
 
