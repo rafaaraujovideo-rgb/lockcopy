@@ -77,7 +77,7 @@ function Comparar() {
       <div className="mt-12 rounded-lg bg-primary px-8 py-10 text-primary-foreground shadow-float">
         <h2 className="text-2xl font-bold">Try it with no commitment</h2>
         <p className="mt-2 text-sm opacity-80">14-day trial. Nothing is charged during the trial.</p>
-        <Link to="/start" className="mt-5 inline-block rounded-md bg-background shadow-btn px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">
+        <Link to="/login" search={{ mode: "signup" }} className="mt-5 inline-block rounded-md bg-background shadow-btn px-6 py-3 text-sm font-semibold text-foreground hover:opacity-90">
           Start the trial
         </Link>
       </div>

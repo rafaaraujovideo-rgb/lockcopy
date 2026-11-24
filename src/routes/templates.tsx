@@ -49,7 +49,7 @@ function Modelos() {
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           In Lockcopy these templates become a portal with a link, a deadline and automatic reminders, and you can export every answer.
         </p>
-        <Link to="/start" className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
+        <Link to="/login" search={{ mode: "signup" }} className="mt-5 inline-block rounded-md bg-primary shadow-btn px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
           Try 14 days
         </Link>
       </div>

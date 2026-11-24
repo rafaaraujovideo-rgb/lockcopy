@@ -25,7 +25,7 @@ export function SiteHeader() {
         </nav>
         <div className="hidden items-center gap-2 text-sm md:flex">
           <Link to="/login" className="rounded-md px-4 py-2 text-muted-foreground hover:text-foreground">Sign in</Link>
-          <Link to="/start" className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Try for free</Link>
+          <Link to="/login" search={{ mode: "signup" }} className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Try for free</Link>
         </div>
         <button aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)} className="rounded-lg p-2 md:hidden">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -39,7 +39,7 @@ export function SiteHeader() {
             <Link to="/compare/content-snare" className="py-2">Compare</Link>
             <div className="mt-3 flex gap-2">
               <Link to="/login" className="flex-1 rounded-md border border-border py-2 text-center">Sign in</Link>
-              <Link to="/start" className="flex-1 rounded-md bg-primary py-2 text-center font-medium text-primary-foreground shadow-btn">Try for free</Link>
+              <Link to="/login" search={{ mode: "signup" }} className="flex-1 rounded-md bg-primary py-2 text-center font-medium text-primary-foreground shadow-btn">Try for free</Link>
             </div>
           </nav>
         </div>
@@ -57,7 +57,7 @@ export function SiteFooter() {
         <div className="md:col-span-2">
           <Logo className="text-lg" />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">Collect, approve and lock client content. Built for web freelancers and agencies.</p>
-          <Link to="/start" className="mt-5 inline-block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
+          <Link to="/login" search={{ mode: "signup" }} className="mt-5 inline-block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start 14-day trial</Link>
         </div>
         <FooterCol title="Product">
           {nav.map((n) => <li key={n.hash}><Link to="/" hash={n.hash} className={fl}>{n.label}</Link></li>)}
