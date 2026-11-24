@@ -1046,10 +1046,11 @@ from public, anon, authenticated;
 grant execute on function
   public.is_org_member(uuid),
   public.org_has_role(uuid, public.org_role),
-  public.request_in_org(uuid),
-  public.org_limit(uuid, text),
-  public.org_can_work(uuid)
+  public.request_in_org(uuid)
 to authenticated, service_role;
+
+grant execute on function public.org_limit(uuid, text), public.org_can_work(uuid)
+to service_role;
 
 -- Os dois extratores de caminho são usados nas políticas de storage
 -- por `anon` e `authenticated`, por isso precisam de execução pública.
