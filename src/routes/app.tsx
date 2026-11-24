@@ -11,6 +11,8 @@ import { isAdminUser } from "@/lib/admin";
 import { getSupabase } from "@/lib/supabase-browser";
 import { friendlyError, orgSlug } from "@/lib/lockcopy";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
+import { alertText, planAlert, type PlanAlert } from "@/lib/trial";
+import { X } from "lucide-react";
 
 export const Route = createFileRoute("/app")({
   staticData: { sitemap: "exclude-subtree" },
@@ -69,6 +71,7 @@ function AppLayout() {
               <Plus className="h-3.5 w-3.5" /> New request
             </Link>
           </header>
+          <PlanBanner alert={planAlert(org)} />
           <main className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 sm:py-10">{body}</main>
         </SidebarInset>
       </div>
@@ -99,6 +102,24 @@ function Crumb() {
   );
 }
 
+function PlanBanner({ alert }: { alert: PlanAlert }) {
+  const key = `lc-plan-banner-${alert.kind}-${new Date().toISOString().slice(0, 10)}`;
+  const [hidden, setHidden] = useState(true);
+  useEffect(() => { setHidden(localStorage.getItem(key) === "1"); }, [key]);
+  if (alert.kind === "ok" || (alert.kind === "ending" && hidden)) return null;
+  const urgent = alert.kind !== "ending";
+  return (
+    <div role="status" className={"flex min-h-9 items-center gap-3 border-b px-4 py-1.5 text-xs " + (urgent ? "border-destructive/20 bg-destructive/5 text-foreground" : "border-warn-foreground/15 bg-warn text-warn-foreground")}>
+      <span className={"h-1.5 w-1.5 shrink-0 rounded-full " + (urgent ? "bg-destructive" : "bg-warn-foreground")} />
+      <span className="min-w-0 flex-1">{alertText(alert)}</span>
+      <Link to="/app/billing" className="shrink-0 font-medium underline underline-offset-2">{alert.kind === "past_due" ? "Update card" : "Choose a plan"}</Link>
+      {alert.kind === "ending" && (
+        <button aria-label="Dismiss for today" onClick={() => { localStorage.setItem(key, "1"); setHidden(true); }} className="shrink-0 rounded p-0.5 opacity-70 hover:opacity-100"><X className="h-3.5 w-3.5" /></button>
+      )}
+    </div>
+  );
+}
+
 function AppSidebar() {
   const { session } = useSession();
   const ws = useWorkspace();
@@ -110,6 +131,9 @@ function AppSidebar() {
   const active = ws.data?.activeRequests ?? 0;
   const limit = ws.data?.limits?.requests_limit ?? 1;
   const email = session?.user?.email ?? "";
+  const alert = planAlert(org);
+  const tone = alert.kind === "ending" ? "border-warn-foreground/20 bg-warn" : alert.kind === "ok" ? "border-sidebar-border bg-sidebar-accent" : "border-destructive/25 bg-destructive/5";
+  const status = alert.kind === "expired" ? "Trial ended" : alert.kind === "past_due" ? "Payment failed" : alert.kind === "blocked" ? "Plan inactive" : daysLeft !== null && org?.subscription_status === "trialing" && !org.current_period_ends_at ? `Trial · ${daysLeft} ${daysLeft === 1 ? "day" : "days"} left` : `${planName} plan`;
 
   const work = [
     { to: "/app", label: "Requests", icon: Inbox, on: path === "/app" || path.startsWith("/app/requests/") },
@@ -156,15 +180,15 @@ function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="gap-2 p-3">
-        <div className="rounded-lg border border-sidebar-border bg-sidebar-accent p-3 shadow-card group-data-[collapsible=icon]:hidden">
+        <div className={"rounded-lg border p-3 shadow-card group-data-[collapsible=icon]:hidden " + tone}>
           <div className="flex items-center justify-between text-xs">
-            <span className="font-medium">{daysLeft !== null && org?.subscription_status === "trialing" ? `Trial · ${daysLeft} days left` : `${planName} plan`}</span>
+            <span className="font-medium">{status}</span>
           </div>
           <div className="mt-2 h-1 overflow-hidden rounded-full bg-muted">
             <div className="h-full rounded-full bg-seal" style={{ width: `${Math.min(100, (active / Math.max(1, limit)) * 100)}%` }} />
           </div>
           <p className="mt-1.5 font-mono text-[10.5px] text-muted-foreground">{active} of {limit} active requests</p>
-          <Link to="/app/billing" onClick={() => setOpenMobile(false)} className="mt-2 inline-block text-xs font-medium underline-offset-2 hover:underline">Manage plan</Link>
+          <Link to="/app/billing" onClick={() => setOpenMobile(false)} className={alert.kind === "ok" ? "mt-2 inline-block text-xs font-medium underline-offset-2 hover:underline" : "mt-2.5 flex h-7 items-center justify-center rounded-md bg-primary text-xs font-medium text-primary-foreground shadow-btn hover:opacity-90"}>{alert.kind === "ok" ? "Manage plan" : alert.kind === "past_due" ? "Update card" : "Upgrade"}</Link>
         </div>
         <div className="flex items-center gap-2 px-1 group-data-[collapsible=icon]:justify-center">
           <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-sidebar-border bg-sidebar-accent text-[11px] font-semibold uppercase">{email.slice(0, 1)}</span>

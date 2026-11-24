@@ -1,10 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { getSupabase } from "@/lib/supabase-browser";
 import { createRequest } from "@/lib/api.functions";
 import { friendlyError, isFileField } from "@/lib/lockcopy";
+import { canCreateRequests, planAlert } from "@/lib/trial";
 import { useWorkspace, workspaceKey } from "@/lib/workspace";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
@@ -84,6 +85,14 @@ function NewRequest() {
   };
 
   if (templates.isLoading) return <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded-md bg-muted" /><div className="grid grid-cols-2 gap-2">{[0,1,2,3].map((i) => <div key={i} className="h-16 animate-pulse rounded-md border border-border bg-muted/60" />)}</div></div>;
+  const alert = planAlert(org);
+  if (!canCreateRequests(alert)) return (
+    <Card className="mx-auto max-w-lg space-y-3 p-6">
+      <h1 className="font-display text-2xl font-semibold tracking-[-0.02em]">{alert.kind === "expired" ? "Your 14-day trial has ended" : "Your plan is inactive"}</h1>
+      <p className="text-sm text-muted-foreground">Choose a plan to start collecting content for new clients. Your open requests, answers and exports stay exactly where they are.</p>
+      <Link to="/app/billing" className="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-btn hover:opacity-90">Choose a plan</Link>
+    </Card>
+  );
   if (templates.error) return <Card><p className="text-sm text-destructive">{friendlyError(templates.error)}</p></Card>;
 
   return (
