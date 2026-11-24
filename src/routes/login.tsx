@@ -1,3 +1,4 @@
+import { isPasswordPwned, PWNED_MESSAGE } from "@/lib/pwned";
 import { Logo } from "@/components/logo";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -64,6 +65,7 @@ function SignIn() {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw new Error(err.message === "Invalid login credentials" ? "Incorrect email or password." : err.message === "Email not confirmed" ? "Please confirm the email we sent you first." : err.message);
       } else {
+        if (await isPasswordPwned(password)) throw new Error(PWNED_MESSAGE);
         const { data, error: err } = await supabase.auth.signUp({
           email,
           password,

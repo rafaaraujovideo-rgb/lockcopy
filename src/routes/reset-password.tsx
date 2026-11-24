@@ -1,3 +1,4 @@
+import { isPasswordPwned, PWNED_MESSAGE } from "@/lib/pwned";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -33,6 +34,7 @@ function NewPassword() {
     setBusy(true);
     setError("");
     try {
+      if (await isPasswordPwned(password)) throw new Error(PWNED_MESSAGE);
       const { error: err } = await getSupabase().auth.updateUser({ password });
       if (err) throw err;
       nav({ to: "/app" });
