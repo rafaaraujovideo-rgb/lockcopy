@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 import { getPortalSupabase } from "@/integrations/supabase/portal-client";
-import { portalAttachWebp, portalLoad, portalRegisterFile, portalRemoveFile, portalSave, portalSendToAgency, type PortalField, type PortalSubmission } from "@/lib/api.functions";
+import { portalAttachWebp, portalLoad, portalRegisterFile, portalRemoveFile, portalSave, portalSendToAgency, portalSetNote, portalNotes, type PortalField, type PortalSubmission } from "@/lib/api.functions";
 import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 
@@ -157,6 +157,23 @@ function Portal() {
 function FieldInput({ token, field, sub }: { token: string; field: PortalField; sub: PortalSubmission | undefined }) {
   const qc = useQueryClient();
   const [text, setText] = useState(sub?.value_text ?? "");
+  const notesQ = useQuery({ queryKey: ["portal-notes", token], queryFn: () => portalNotes({ data: { token } }), staleTime: Infinity, refetchOnWindowFocus: false });
+  const savedNote = notesQ.data?.[field.id] ?? "";
+  const [note, setNote] = useState<string | null>(null);
+  const [noteState, setNoteState] = useState<"" | "saving" | "sent">("");
+  const saveNote = async () => {
+    if (note === null || note.trim() === savedNote) { if (!note?.trim() && !savedNote) setNote(null); return; }
+    setNoteState("saving");
+    try {
+      await portalSetNote({ data: { token, fieldId: field.id, note: note.trim() } });
+      qc.setQueryData(["portal-notes", token], { ...(notesQ.data ?? {}), [field.id]: note.trim() });
+      setNoteState("sent");
+      if (!note.trim()) setNote(null);
+    } catch (e) {
+      setNoteState("");
+      setErrors([friendlyError(e)]);
+    }
+  };
   const [status, setStatus] = useState<SubmissionStatus>((sub?.status as SubmissionStatus) ?? "pending");
   const [saved, setSaved] = useState<"" | "saving…" | "saved" | "error saving">("");
   const [uploads, setUploads] = useState<string[]>([]);
@@ -268,6 +285,16 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
           <ul className="space-y-1 text-sm">{files.map((x) => <li key={x.id} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{x.file_name} <span className="text-xs text-muted-foreground">{fmtMb(x.size_bytes)}</span></span>{!locked && <button type="button" onClick={() => removeFile(x.id)} className="text-xs text-muted-foreground hover:text-destructive">Remove</button>}</li>)}</ul>
         </div>
       )}
+      {(field.field_type === "text" || field.field_type === "textarea" || field.field_type === "select") && field.char_limit && !locked && <p className={"mt-1 text-right font-mono text-[11px] " + (text.length > field.char_limit * 0.9 ? "text-destructive" : "text-muted-foreground")}>{text.length}/{field.char_limit}</p>}
+      {!locked && (note === null && !savedNote ? (
+        <button type="button" onClick={() => setNote("")} className="mt-2 text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline">Ask the agency a question about this</button>
+      ) : (
+        <div className="mt-2">
+          <label className="text-xs text-muted-foreground" htmlFor={`${field.id}-note`}>Question or note for the agency</label>
+          <textarea id={`${field.id}-note`} rows={2} maxLength={2000} className={inputClass + " mt-1 text-sm"} placeholder="e.g. What size should this photo be?" value={note ?? savedNote} onChange={(e) => { setNote(e.target.value); setNoteState(""); }} onBlur={saveNote} autoFocus={note === "" && !savedNote} />
+          {noteState && <p className="text-[11px] text-muted-foreground">{noteState === "saving" ? "Saving…" : "Sent to the agency."}</p>}
+        </div>
+      ))}
       {errors.map((e) => <p key={e} className="mt-1 text-xs text-destructive">{e}</p>)}
     </div>
   );

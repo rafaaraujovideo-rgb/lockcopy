@@ -32,3 +32,17 @@ export function reminderEmail(offset: number, title: string, agency: string, mis
     `\n${missing} item${missing === 1 ? "" : "s"} still missing. Your answers are saved, so you can pick up where you left off:\n\n${link}\n\nThanks!`;
   return { subject, body: body.replace("it was due in", "it's due in").replace("it was due today", "it's due today") };
 }
+
+/** Date (YYYY-MM-DD) of the next automatic reminder on or after `today`, or null if none is left. */
+export function nextReminderDate(r: ReminderRequest, today: string): string | null {
+  if (!r.due_date || r.revoked_at) return null;
+  if (r.status === "archived" || r.status === "completed" || r.status === "draft") return null;
+  const due = Date.parse(`${r.due_date}T00:00:00Z`);
+  const now = Date.parse(`${today}T00:00:00Z`);
+  const expires = new Date(r.expires_at).getTime();
+  for (const off of REMINDER_OFFSETS) {
+    const at = due - off * DAY;
+    if (at >= now && at < expires) return new Date(at).toISOString().slice(0, 10);
+  }
+  return null;
+}

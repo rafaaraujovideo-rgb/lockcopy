@@ -104,7 +104,7 @@ function Dashboard() {
                   <span className="hidden font-mono text-xs text-muted-foreground sm:block">{fmtDate(r.due_date)}</span>
                   <div className="col-span-2 flex items-center gap-2 sm:col-span-1">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${pct}%` }} /></div>
-                    <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{r.fieldsDone}/{r.fieldsTotal}</span>
+                    <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{pct}%</span>
                   </div>
                   <span className="row-start-1 col-start-2 flex items-center gap-2 justify-self-end sm:row-auto sm:col-auto">
                     <button onClick={(e) => toggleArchive(e, r.id, r.status !== "archived")} className="rounded px-1.5 py-0.5 text-[11px] text-muted-foreground opacity-100 hover:bg-muted hover:text-foreground sm:opacity-0 sm:group-hover:opacity-100">{r.status === "archived" ? "Restore" : "Archive"}</button>

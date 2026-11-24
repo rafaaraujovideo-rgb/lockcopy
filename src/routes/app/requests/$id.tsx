@@ -8,6 +8,7 @@ import { getRequestDetail, reviewField, sendReminder, setRequestLink } from "@/l
 import { answerLabel, eventText, fmtDate, fmtMb, friendlyError, isFileField, requestLinkState } from "@/lib/lockcopy";
 import { framerJson, webflowCsv, zipEntries, zipTextEntries, type ExportInput } from "@/lib/exports";
 import { workspaceKey } from "@/lib/workspace";
+import { nextReminderDate } from "@/lib/reminders";
 import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/requests/$id")({
@@ -102,6 +103,10 @@ function RequestPage() {
           <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Requests</Link>
           <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">{r.client_name}</h1>
           <p className="mt-1 font-mono text-xs text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${total ? Math.round((done / total) * 100) : 0}%` }} /></div>
+            <span className="font-mono text-xs tabular-nums text-muted-foreground">{total ? Math.round((done / total) * 100) : 0}% done</span>
+          </div>
         </div>
         {d.sections.map((s) => (
           <Card key={s.id}>
@@ -128,6 +133,10 @@ function RequestPage() {
           <div className="flex items-center justify-between"><p className="text-sm font-medium">Client link</p><Badge s={ls} /></div>
           <p className="break-all rounded bg-muted p-2 text-xs">{link}</p>
           <p className="text-xs text-muted-foreground">Expires on {fmtDate(r.expires_at)}</p>
+          {ls === "active" && done < total && (() => {
+            const next = nextReminderDate(r, new Date().toISOString().slice(0, 10));
+            return <p className="text-xs text-muted-foreground">{next ? <>Next automatic reminder: <span className="font-mono text-foreground">{fmtDate(next)}</span></> : r.due_date ? "No automatic reminders left." : "Set a deadline to turn on automatic reminders."}</p>;
+          })()}
           <div className="flex gap-2">
             <Btn variant="outline" className="flex-1" disabled={ls !== "active"} onClick={() => { navigator.clipboard.writeText(link); setCopied(true); }}>{copied ? "Copied" : "Copy"}</Btn>
             <a href={`/c/${r.token}`} target="_blank" rel="noreferrer" className="inline-flex flex-1 items-center justify-center rounded-md border border-border bg-card text-sm shadow-card hover:bg-muted">Open</a>
@@ -219,6 +228,7 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
           ))}
         </ul>
       )}
+      {(sub as { client_note?: string | null } | undefined)?.client_note && <p className="mt-2 rounded-md border border-border bg-muted/60 p-2 text-xs"><span className="font-medium">Client asks:</span> {(sub as { client_note?: string | null }).client_note}</p>}
       {sub?.rejection_note && status === "adjust" && <p className="mt-1 text-xs text-destructive">Note: {sub.rejection_note}</p>}
       {status === "sent" && !asking && (
         <div className="mt-2 flex gap-2">

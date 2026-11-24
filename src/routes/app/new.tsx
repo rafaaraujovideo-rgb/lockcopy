@@ -53,8 +53,9 @@ function NewRequest() {
   const [form, setForm] = useState({ client: "", clientEmail: "", title: "", deadline: new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10) });
   const [error, setError] = useState("");
   const [skip, setSkip] = useState<Set<string>>(new Set());
-  const [extra, setExtra] = useState<Array<{ label: string; help: string; type: "text" | "textarea" | "image" | "file" }>>([]);
-  const [draft, setDraft] = useState({ label: "", help: "", type: "text" as "text" | "textarea" | "image" | "file" });
+  const [extra, setExtra] = useState<Array<{ label: string; help: string; type: "text" | "textarea" | "image" | "file"; limit?: number }>>([]);
+  const [rename, setRename] = useState<Record<string, string>>({});
+  const [draft, setDraft] = useState({ label: "", help: "", limit: "", type: "text" as "text" | "textarea" | "image" | "file" });
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<"edit" | "preview">("edit");
   const org = useWorkspace().data?.org ?? undefined;
@@ -63,14 +64,16 @@ function NewRequest() {
   const k = (sec: string, label: string) => `${sec}\u0000${label}`;
   const kept = (t?.template_sections ?? []).reduce((n, s) => n + s.template_fields.filter((f) => !skip.has(k(s.title, f.label))).length, 0) + extra.length;
   const toggle = (sec: string, label: string) => setSkip((prev) => { const n = new Set(prev); const id = k(sec, label); if (n.has(id)) n.delete(id); else n.add(id); return n; });
-  const addExtra = () => { if (!draft.label.trim()) return; setExtra([...extra, { label: draft.label.trim(), help: draft.help.trim(), type: draft.type }]); setDraft({ ...draft, label: "", help: "" }); };
+  const addExtra = () => { if (!draft.label.trim()) return; const lim = Number(draft.limit); setExtra([...extra, { label: draft.label.trim(), help: draft.help.trim(), type: draft.type, ...(lim > 0 && (draft.type === "text" || draft.type === "textarea") ? { limit: Math.min(20000, Math.round(lim)) } : {}) }]); setDraft({ ...draft, label: "", help: "", limit: "" }); };
+  const move = (i: number, d: -1 | 1) => { const j = i + d; if (j < 0 || j >= extra.length) return; const n = [...extra]; [n[i], n[j]] = [n[j]!, n[i]!]; setExtra(n); };
+  const shown = (sec: string, label: string) => rename[k(sec, label)] ?? label;
 
   const submit = async () => {
     if (!t) return;
     setBusy(true);
     setError("");
     try {
-      const r = await createRequest({ data: { templateId: t.id, title: form.title, clientName: form.client, clientEmail: form.clientEmail, dueDate: form.deadline, skip: [...skip].map((x) => { const [section = "", label = ""] = x.split("\u0000"); return { section, label }; }), extra } });
+      const r = await createRequest({ data: { templateId: t.id, title: form.title, clientName: form.client, clientEmail: form.clientEmail, dueDate: form.deadline, skip: [...skip].map((x) => { const [section = "", label = ""] = x.split("\u0000"); return { section, label }; }), extra, rename: Object.entries(rename).filter(([id, v]) => v.trim() && v.trim() !== id.split("\u0000")[1]).map(([id, v]) => { const [section = "", label = ""] = id.split("\u0000"); return { section, label, to: v.trim() }; }) } });
       await Promise.all([qc.invalidateQueries({ queryKey: ["requests"] }), qc.invalidateQueries({ queryKey: workspaceKey })]);
       nav({ to: "/app/requests/$id", params: { id: r.id } });
     } catch (e) {
@@ -108,9 +111,9 @@ function NewRequest() {
             <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)} className={"rounded px-3 py-1 font-medium transition-colors " + (view === v ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}>{v === "edit" ? "Fields" : "Client preview"}</button>
           ))}
         </div>
-        {view === "preview" ? <ClientPreview org={org} client={form.client} title={form.title} deadline={form.deadline} sections={(t?.template_sections ?? []).map((s) => ({ title: s.title, fields: s.template_fields.filter((f) => !skip.has(k(s.title, f.label))).map((f) => ({ label: f.label, file: isFileField(f.field_type), help: "" })) })).concat(extra.length ? [{ title: "Extra questions", fields: extra.map((x) => ({ label: x.label, file: x.type === "image" || x.type === "file", help: x.help })) }] : []).filter((s) => s.fields.length)} /> : <>
+        {view === "preview" ? <ClientPreview org={org} client={form.client} title={form.title} deadline={form.deadline} sections={(t?.template_sections ?? []).map((s) => ({ title: s.title, fields: s.template_fields.filter((f) => !skip.has(k(s.title, f.label))).map((f) => ({ label: shown(s.title, f.label), file: isFileField(f.field_type), help: "" })) })).concat(extra.length ? [{ title: "Extra questions", fields: extra.map((x) => ({ label: x.label, file: x.type === "image" || x.type === "file", help: x.help })) }] : []).filter((s) => s.fields.length)} /> : <>
         <div className="mb-3 flex items-baseline justify-between"><p className="eyebrow">The client will fill in</p><span className="font-mono text-xs text-muted-foreground">{kept} fields</span></div>
-        <p className="mb-3 text-xs text-muted-foreground">Untick anything you don't need, or add your own questions below.</p>
+        <p className="mb-3 text-xs text-muted-foreground">Untick what you don't need, click a question to reword it, or add your own below.</p>
         {t?.template_sections.map((s) => (
           <div key={s.id} className="mb-4">
             <p className="font-display text-lg font-semibold">{s.title}</p>
@@ -121,7 +124,7 @@ function NewRequest() {
                   <li key={fl.id} className="border-b border-border">
                     <label className="flex cursor-pointer items-center gap-2 py-1.5">
                       <input type="checkbox" checked={!off} onChange={() => toggle(s.title, fl.label)} className="h-3.5 w-3.5 accent-primary" />
-                      <span className={off ? "flex-1 text-muted-foreground line-through" : "flex-1"}>{fl.label}</span>
+                      {off ? <span className="flex-1 text-muted-foreground line-through">{fl.label}</span> : <input aria-label={`Question text for ${fl.label}`} className="flex-1 rounded bg-transparent px-1 py-0.5 outline-none hover:bg-muted focus:bg-muted focus:ring-1 focus:ring-ring" value={shown(s.title, fl.label)} maxLength={200} onClick={(e) => e.preventDefault()} onChange={(e) => setRename({ ...rename, [k(s.title, fl.label)]: e.target.value })} />}
                       <span className="font-mono text-[10px] text-muted-foreground">{isFileField(fl.field_type) ? "files" : "text"}</span>
                     </label>
                   </li>
@@ -135,7 +138,8 @@ function NewRequest() {
           <ul className="mt-1 text-sm">
             {extra.map((x, i) => (
               <li key={i} className="flex items-center gap-2 border-b border-border py-1.5">
-                <span className="flex-1">{x.label}{x.help && <span className="block text-xs text-muted-foreground">{x.help}</span>}</span>
+                <span className="flex flex-col"><button type="button" onClick={() => move(i, -1)} disabled={i === 0} className="text-[10px] leading-none text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${x.label} up`}>▲</button><button type="button" onClick={() => move(i, 1)} disabled={i === extra.length - 1} className="text-[10px] leading-none text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${x.label} down`}>▼</button></span>
+                <span className="flex-1">{x.label}{x.limit && <span className="ml-1 font-mono text-[10px] text-muted-foreground">max {x.limit} chars</span>}{x.help && <span className="block text-xs text-muted-foreground">{x.help}</span>}</span>
                 <span className="font-mono text-[10px] text-muted-foreground">{x.type === "image" || x.type === "file" ? "files" : x.type === "textarea" ? "long text" : "text"}</span>
                 <button onClick={() => setExtra(extra.filter((_, j) => j !== i))} className="text-xs text-muted-foreground hover:text-destructive" aria-label={`Remove ${x.label}`}>Remove</button>
               </li>
@@ -149,6 +153,7 @@ function NewRequest() {
             <Btn onClick={addExtra} disabled={!draft.label.trim() || extra.length >= 30}>Add</Btn>
           </div>
           <input className={inputClass + " mt-2"} placeholder="Note for the client (optional), e.g. Weekdays and weekends" value={draft.help} maxLength={300} onChange={(e) => setDraft({ ...draft, help: e.target.value })} />
+          {(draft.type === "text" || draft.type === "textarea") && <input className={inputClass + " mt-2"} type="number" min={1} max={20000} placeholder="Character limit (optional), e.g. 60" value={draft.limit} onChange={(e) => setDraft({ ...draft, limit: e.target.value })} aria-label="Character limit" />}
         </div>
         </>}
       </Card>

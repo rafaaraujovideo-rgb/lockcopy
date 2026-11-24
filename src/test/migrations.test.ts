@@ -38,6 +38,7 @@ describe("db/*.sql", () => {
       "0009_trial_in_app.sql",
       "0010_team_invites.sql",
       "0011_logo_and_file_removal.sql",
+      "0012_client_questions.sql",
     ]);
   });
 

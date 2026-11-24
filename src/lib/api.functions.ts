@@ -193,7 +193,8 @@ export const createRequest = createServerFn({ method: "POST" })
         dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().or(z.literal("")),
         expiresAt: z.string().datetime().optional(),
         skip: z.array(z.object({ section: text(200), label: text(200) })).max(200).optional(),
-        extra: z.array(z.object({ label: text(200).min(1), type: z.enum(["text", "textarea", "image", "file"]), help: text(300).optional() })).max(30).optional(),
+        extra: z.array(z.object({ label: text(200).min(1), type: z.enum(["text", "textarea", "image", "file"]), help: text(300).optional(), limit: z.number().int().min(1).max(20000).optional() })).max(30).optional(),
+        rename: z.array(z.object({ section: text(200), label: text(200), to: text(200).min(1) })).max(200).optional(),
       })
       .parse(data),
   )
@@ -229,8 +230,8 @@ export const createRequest = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
     const created = result as { id: string; token: string; url: string };
-    if (data.skip?.length || data.extra?.length) {
-      await customizeFields(supabase, created.id, data.skip ?? [], data.extra ?? []);
+    if (data.skip?.length || data.extra?.length || data.rename?.length) {
+      await customizeFields(supabase, created.id, data.skip ?? [], data.extra ?? [], data.rename ?? []);
     }
     return created;
   });
@@ -379,6 +380,26 @@ export const portalLoad = createServerFn({ method: "POST" })
     return result as unknown as PortalPayload;
   });
 
+/** Client leaves a question or note on a field (empty clears it). */
+export const portalSetNote = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid, fieldId: uuid, note: z.string().max(2000) }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = (await portalClient()) as unknown as { rpc: (f: string, a: unknown) => Promise<{ data: unknown; error: { message: string } | null }> };
+    const { error } = await supabase.rpc("portal_set_note", { _token: data.token, _field: data.fieldId, _note: data.note });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+/** Client notes for every field of this link, keyed by field id. Empty if the notes feature isn't installed yet. */
+export const portalNotes = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = (await portalClient()) as unknown as { rpc: (f: string, a: unknown) => Promise<{ data: unknown; error: { message: string } | null }> };
+    const { data: result, error } = await supabase.rpc("portal_notes", { _token: data.token });
+    if (error) return {} as Record<string, string>;
+    return (result ?? {}) as Record<string, string>;
+  });
+
 /** Client hands the content over: logs it and emails the agency team. */
 export const portalSendToAgency = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ token: uuid }).parse(data))
@@ -490,7 +511,8 @@ async function customizeFields(
   supabase: { from: (t: string) => any },
   requestId: string,
   skip: Array<{ section: string; label: string }>,
-  extra: Array<{ label: string; type: "text" | "textarea" | "image" | "file"; help?: string | undefined }>,
+  extra: Array<{ label: string; type: "text" | "textarea" | "image" | "file"; help?: string | undefined; limit?: number | undefined }>,
+  rename: Array<{ section: string; label: string; to: string }> = [],
 ) {
   const { data: secs, error } = await supabase.from("sections").select("id, title, order_index, fields(id, label)").eq("request_id", requestId);
   if (error) throw new Error(error.message);
@@ -502,13 +524,20 @@ async function customizeFields(
     const del = await supabase.from("fields").delete().in("id", ids);
     if (del.error) throw new Error(del.error.message);
   }
+  for (const rn of rename) {
+    const sec = rows.find((x) => x.title === rn.section);
+    const f = sec?.fields.find((x) => x.label === rn.label);
+    if (!f || ids.includes(f.id)) continue;
+    const up = await supabase.from("fields").update({ label: rn.to }).eq("id", f.id);
+    if (up.error) throw new Error(up.error.message);
+  }
   const empty = rows.filter((sec) => sec.fields.length > 0 && sec.fields.every((f) => ids.includes(f.id))).map((sec) => sec.id);
   if (empty.length) await supabase.from("sections").delete().in("id", empty);
   if (extra.length) {
     const next = rows.reduce((m, r) => Math.max(m, r.order_index), 0) + 1;
     const ins = await supabase.from("sections").insert({ request_id: requestId, title: "Extra questions", order_index: next }).select("id").single();
     if (ins.error) throw new Error(ins.error.message);
-    const f = await supabase.from("fields").insert(extra.map((x, i) => ({ section_id: ins.data.id, label: x.label, help_text: x.help || null, field_type: x.type, is_required: false, order_index: i })));
+    const f = await supabase.from("fields").insert(extra.map((x, i) => ({ section_id: ins.data.id, label: x.label, help_text: x.help || null, field_type: x.type, is_required: false, char_limit: x.limit ?? null, order_index: i })));
     if (f.error) throw new Error(f.error.message);
   }
 }
