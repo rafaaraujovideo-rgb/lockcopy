@@ -65,6 +65,7 @@ export function SiteFooter() {
         </FooterCol>
         <FooterCol title="Resources">
           <li><Link to="/templates" className={fl}>Free templates</Link></li>
+          <li><Link to="/guides/collect-website-content" className={fl}>How to collect client content</Link></li>
           <li><Link to="/compare/content-snare" className={fl}>Lockcopy vs Content Snare</Link></li>
           <li><Link to="/compare/file-request-pro" className={fl}>Lockcopy vs File Request Pro</Link></li>
           <li><a href="mailto:rafaaraujo.video@gmail.com" className={fl}>Contact support</a></li>

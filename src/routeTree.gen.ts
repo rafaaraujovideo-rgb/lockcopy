@@ -28,6 +28,7 @@ import { Route as AppTeamRouteImport } from './routes/app/team'
 import { Route as CTokenRouteImport } from './routes/c/$token'
 import { Route as CompareContentSnareRouteImport } from './routes/compare/content-snare'
 import { Route as CompareFileRequestProRouteImport } from './routes/compare/file-request-pro'
+import { Route as GuidesCollectWebsiteContentRouteImport } from './routes/guides/collect-website-content'
 import { Route as JoinTokenRouteImport } from './routes/join/$token'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as AppRequestsIdRouteImport } from './routes/app/requests/$id'
@@ -128,6 +129,12 @@ const CompareFileRequestProRoute = CompareFileRequestProRouteImport.update({
   path: '/compare/file-request-pro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesCollectWebsiteContentRoute =
+  GuidesCollectWebsiteContentRouteImport.update({
+    id: '/guides/collect-website-content',
+    path: '/guides/collect-website-content',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const JoinTokenRoute = JoinTokenRouteImport.update({
   id: '/join/$token',
   path: '/join/$token',
@@ -169,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/join/$token': typeof JoinTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
@@ -193,6 +201,7 @@ export interface FileRoutesByTo {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/join/$token': typeof JoinTokenRoute
   '/app': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
@@ -219,6 +228,7 @@ export interface FileRoutesById {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/join/$token': typeof JoinTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/guides/collect-website-content'
     | '/join/$token'
     | '/app/'
     | '/api/public/stripe-webhook'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/guides/collect-website-content'
     | '/join/$token'
     | '/app'
     | '/api/public/stripe-webhook'
@@ -295,6 +307,7 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/guides/collect-website-content'
     | '/join/$token'
     | '/app/'
     | '/api/public/stripe-webhook'
@@ -316,6 +329,7 @@ export interface RootRouteChildren {
   CTokenRoute: typeof CTokenRoute
   CompareContentSnareRoute: typeof CompareContentSnareRoute
   CompareFileRequestProRoute: typeof CompareFileRequestProRoute
+  GuidesCollectWebsiteContentRoute: typeof GuidesCollectWebsiteContentRoute
   JoinTokenRoute: typeof JoinTokenRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicCronNotificationsRoute: typeof ApiPublicCronNotificationsRoute
@@ -456,6 +470,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareFileRequestProRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/collect-website-content': {
+      id: '/guides/collect-website-content'
+      path: '/guides/collect-website-content'
+      fullPath: '/guides/collect-website-content'
+      preLoaderRoute: typeof GuidesCollectWebsiteContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/join/$token': {
       id: '/join/$token'
       path: '/join/$token'
@@ -523,6 +544,7 @@ const rootRouteChildren: RootRouteChildren = {
   CTokenRoute: CTokenRoute,
   CompareContentSnareRoute: CompareContentSnareRoute,
   CompareFileRequestProRoute: CompareFileRequestProRoute,
+  GuidesCollectWebsiteContentRoute: GuidesCollectWebsiteContentRoute,
   JoinTokenRoute: JoinTokenRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicCronNotificationsRoute: ApiPublicCronNotificationsRoute,
