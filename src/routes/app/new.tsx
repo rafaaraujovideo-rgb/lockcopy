@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getSupabase } from "@/integrations/supabase/client";
 import { createRequest } from "@/lib/api.functions";
 import { friendlyError, isFileField } from "@/lib/lockcopy";
-import { workspaceKey } from "@/lib/workspace";
+import { useWorkspace, workspaceKey } from "@/lib/workspace";
 import { Btn, Card, inputClass } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/app/new")({
@@ -56,6 +56,8 @@ function NewRequest() {
   const [extra, setExtra] = useState<Array<{ label: string; help: string; type: "text" | "textarea" | "image" | "file" }>>([]);
   const [draft, setDraft] = useState({ label: "", help: "", type: "text" as "text" | "textarea" | "image" | "file" });
   const [busy, setBusy] = useState(false);
+  const [view, setView] = useState<"edit" | "preview">("edit");
+  const org = useWorkspace().data?.org ?? undefined;
   const list = templates.data ?? [];
   const t = list.find((x) => x.id === tplId) ?? list[0];
   const k = (sec: string, label: string) => `${sec}\u0000${label}`;
@@ -101,6 +103,12 @@ function NewRequest() {
         </Card>
       </div>
       <Card>
+        <div className="mb-3 inline-flex rounded-md border border-border p-0.5 text-xs" role="tablist">
+          {(["edit", "preview"] as const).map((v) => (
+            <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)} className={"rounded px-3 py-1 font-medium transition-colors " + (view === v ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}>{v === "edit" ? "Fields" : "Client preview"}</button>
+          ))}
+        </div>
+        {view === "preview" ? <ClientPreview org={org} client={form.client} title={form.title} deadline={form.deadline} sections={(t?.template_sections ?? []).map((s) => ({ title: s.title, fields: s.template_fields.filter((f) => !skip.has(k(s.title, f.label))).map((f) => ({ label: f.label, file: isFileField(f.field_type), help: "" })) })).concat(extra.length ? [{ title: "Extra questions", fields: extra.map((x) => ({ label: x.label, file: x.type === "image" || x.type === "file", help: x.help })) }] : []).filter((s) => s.fields.length)} /> : <>
         <div className="mb-3 flex items-baseline justify-between"><p className="eyebrow">The client will fill in</p><span className="font-mono text-xs text-muted-foreground">{kept} fields</span></div>
         <p className="mb-3 text-xs text-muted-foreground">Untick anything you don't need, or add your own questions below.</p>
         {t?.template_sections.map((s) => (
@@ -142,7 +150,44 @@ function NewRequest() {
           </div>
           <input className={inputClass + " mt-2"} placeholder="Note for the client (optional), e.g. Weekdays and weekends" value={draft.help} maxLength={300} onChange={(e) => setDraft({ ...draft, help: e.target.value })} />
         </div>
+        </>}
       </Card>
+    </div>
+  );
+}
+
+type PreviewSection = { title: string; fields: Array<{ label: string; file: boolean; help: string }> };
+
+function ClientPreview({ org, client, title, deadline, sections }: { org: { name: string; logo_url?: string | null; brand_color?: string | null } | undefined; client: string; title: string; deadline: string; sections: PreviewSection[] }) {
+  const color = org?.brand_color ?? undefined;
+  return (
+    <div className="overflow-hidden rounded-md border border-border bg-background">
+      <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+        {org?.logo_url ? <img src={org.logo_url} alt="" className="h-5 w-auto" /> : <span className="h-5 w-5 rounded" style={{ background: color }} />}
+        <span className="text-sm font-semibold">{org?.name ?? "Your agency"}</span>
+        <span className="ml-auto font-mono text-[10px] text-muted-foreground">lockcopy.com/c/…</span>
+      </div>
+      <div className="space-y-4 p-4">
+        <div>
+          <p className="text-xs text-muted-foreground">Hi {client.trim() || "client"}, please send us</p>
+          <p className="font-display text-lg font-semibold">{title.trim() || "Project title"}</p>
+          {deadline && <p className="font-mono text-[11px] text-muted-foreground">Due {deadline}</p>}
+        </div>
+        {sections.length === 0 && <p className="text-sm text-muted-foreground">No questions selected.</p>}
+        {sections.map((s) => (
+          <div key={s.title} className="space-y-2">
+            <p className="text-sm font-semibold">{s.title}</p>
+            {s.fields.map((f, i) => (
+              <div key={i}>
+                <p className="text-xs">{f.label}</p>
+                {f.help && <p className="text-[11px] text-muted-foreground">{f.help}</p>}
+                <div className={"mt-1 rounded border border-border bg-card " + (f.file ? "border-dashed py-3 text-center text-[11px] text-muted-foreground" : "h-7")}>{f.file ? "Drop files here" : null}</div>
+              </div>
+            ))}
+          </div>
+        ))}
+        <div className="rounded-md py-2 text-center text-sm font-medium text-primary-foreground" style={{ background: color ?? "var(--primary)" }}>Send to {org?.name ?? "agency"}</div>
+      </div>
     </div>
   );
 }
