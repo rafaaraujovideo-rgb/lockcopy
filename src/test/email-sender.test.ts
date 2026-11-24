@@ -6,7 +6,8 @@ const SENDER = "notify@lockcopy.com";
 describe("Transactional email sender", () => {
   it("sends reminders and notices from the verified Brevo sender", () => {
     const cron = readFileSync("src/routes/api/public/cron/notifications.ts", "utf8");
-    expect(cron).toContain(`Lockcopy <${SENDER}>`);
+    expect(cron).toContain(`const DEFAULT_SENDER = "${SENDER}";`);
+    expect(cron).toContain("Lockcopy <${DEFAULT_SENDER}>");
     expect(cron).not.toContain("hello@lockcopy.com");
     expect(cron).not.toContain("gmail.com");
   });

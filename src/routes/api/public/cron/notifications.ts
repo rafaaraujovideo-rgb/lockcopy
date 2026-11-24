@@ -38,7 +38,7 @@ function parseFrom(from: string): { name?: string; email: string } {
     return name ? { name, email: m[2].trim() } : { email: m[2].trim() };
   }
   const bare = /^\s*([^\s<>()]+@[^\s<>()]+\.[^\s<>()]+)\s*$/.exec(from);
-  if (bare) return { email: bare[1].trim() };
+  if (bare && bare[1]) return { email: bare[1].trim() };
   return { email: DEFAULT_SENDER };
 }
 
