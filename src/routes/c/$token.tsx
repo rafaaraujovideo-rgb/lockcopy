@@ -124,9 +124,9 @@ function Portal() {
           </Card>
         )}
         <div className="flex justify-between gap-3">
-          <button disabled={cur === 0} onClick={() => { setTab(cur - 1); window.scrollTo(0, 0); }} className="rounded-md border border-border bg-card px-4 py-2 text-sm shadow-card disabled:opacity-40">← Previous</button>
+          <button aria-label={cur > 0 ? `Previous page: ${p.sections[cur - 1]?.title ?? ""}` : "Previous page"} disabled={cur === 0} onClick={() => { setTab(cur - 1); window.scrollTo(0, 0); }} className="rounded-md border border-border bg-card px-4 py-2 text-sm shadow-card disabled:opacity-40">← Previous</button>
           {cur < p.sections.length - 1
-            ? <button onClick={() => { setTab(cur + 1); window.scrollTo(0, 0); }} className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn">Next page →</button>
+            ? <button aria-label={`Next page: ${p.sections[cur + 1]?.title ?? ""}`} onClick={() => { setTab(cur + 1); window.scrollTo(0, 0); }} className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-btn">Next page →</button>
             : <button
                 disabled={sent !== "idle" || done === 0}
                 onClick={async () => {
