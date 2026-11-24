@@ -92,9 +92,9 @@ function Client({ fields, st, set, onSend }: { fields: F[]; st: Record<string, S
           );
         })}
         <div className="flex justify-between gap-3 pt-1">
-          <button type="button" disabled={tab === 0} onClick={() => setTab(tab - 1)} className="rounded-md border border-border bg-card px-3 py-1.5 text-xs shadow-card disabled:opacity-40">← Previous</button>
+          <button type="button" aria-label={tab > 0 ? `Previous page: ${PAGES[tab - 1] ?? ""}` : "Previous page"} disabled={tab === 0} onClick={() => setTab(tab - 1)} className="rounded-md border border-border bg-card px-3 py-1.5 text-xs shadow-card disabled:opacity-40">← Previous</button>
           {tab < PAGES.length - 1
-            ? <button type="button" onClick={() => setTab(tab + 1)} className="press rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-btn">Next page →</button>
+            ? <button type="button" aria-label={`Next page: ${PAGES[tab + 1] ?? ""}`} onClick={() => setTab(tab + 1)} className="press rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-btn">Next page →</button>
             : <button type="button" onClick={onSend} className="press rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-btn">See it as the studio →</button>}
         </div>
       </div>
