@@ -71,7 +71,7 @@ function Landing() {
         <div className="mx-auto max-w-6xl px-6 py-24">
           <p className="eyebrow">What you get</p>
           <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Client onboarding for website content, built for Webflow and Framer</h2>
-          <Reveal><div className="mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
+          <Reveal><div className="stagger mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
             <Feature n="01" t="Per-page templates" d="Templates for a business site, landing page, online store and rebrand. Each page lists the text and files you need.">
               <div className="space-y-1.5 font-mono text-[11px]">{["Home · Hero headline", "Home · 3 service blurbs", "About · Team photos"].map((x) => <div key={x} className="flex justify-between rounded-md border border-border bg-background px-2.5 py-1.5"><span>{x}</span><span className="text-muted-foreground">required</span></div>)}</div>
             </Feature>
@@ -108,9 +108,10 @@ function Landing() {
       <section id="pricing" className="scroll-mt-16 mx-auto max-w-4xl px-6 py-24">
         <div className="text-center">
           <p className="eyebrow">Pricing</p><h2 className="mt-2 font-display text-4xl md:text-5xl">Pricing</h2>
-          <div className="mt-6 inline-flex rounded-md border border-border bg-muted p-1 text-sm">
+          <div className="relative mt-6 inline-grid grid-cols-2 rounded-md border border-border bg-muted p-1 text-sm">
+            <span aria-hidden className="pill absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded bg-card shadow-card" style={{ transform: billing === "year" ? "translateX(100%)" : "none" }} />
             {(["month", "year"] as const).map((b) => (
-              <button key={b} onClick={() => setBilling(b)} className={"rounded px-4 py-1.5 transition-colors " + (billing === b ? "bg-card text-foreground shadow-card font-medium" : "text-muted-foreground")}>{b === "month" ? "Monthly" : "Yearly"}</button>
+              <button key={b} onClick={() => setBilling(b)} className={"relative rounded px-4 py-1.5 font-medium transition-colors " + (billing === b ? "text-foreground" : "text-muted-foreground hover:text-foreground")}>{b === "month" ? "Monthly" : "Yearly"}</button>
             ))}
           </div>
         </div>

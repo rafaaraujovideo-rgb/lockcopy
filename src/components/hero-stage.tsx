@@ -26,9 +26,10 @@ export function HeroStage() {
   const review = (id: string, s: St) => setSt((x) => ({ ...x, [id]: s }));
   return (
     <div>
-      <div className="mx-auto mb-5 flex w-fit rounded-md border border-border bg-muted p-1 text-xs">
+      <div className="relative mx-auto mb-5 grid w-fit grid-cols-2 rounded-md border border-border bg-muted p-1 text-xs">
+        <span aria-hidden className="pill absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded bg-card shadow-card" style={{ transform: v === "studio" ? "translateX(100%)" : "none" }} />
         {(["client", "studio"] as const).map((k) => (
-          <button key={k} type="button" onClick={() => setV(k)} className={"rounded px-3.5 py-1.5 font-medium transition-all duration-300 " + (v === k ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground")}>{k === "client" ? "1 · Your client fills it in" : "2 · Your studio approves"}</button>
+          <button key={k} type="button" onClick={() => setV(k)} className={"relative rounded px-3.5 py-1.5 font-medium transition-colors duration-300 " + (v === k ? "text-foreground" : "text-muted-foreground hover:text-foreground")}>{k === "client" ? "1 · Your client fills it in" : "2 · Your studio approves"}</button>
         ))}
       </div>
       <div className="relative mx-auto max-w-3xl">
@@ -53,6 +54,7 @@ const done = (s: St | undefined) => s === "sent" || s === "approved";
 
 function Client({ fields, st, set, onSend }: { fields: F[]; st: Record<string, St>; set: (id: string, v: string) => void; onSend: () => void }) {
   const [tab, setTab] = useState(0);
+  const [busy, setBusy] = useState<string | null>(null);
   const pct = Math.round((fields.filter((f) => done(st[f.id])).length / fields.length) * 100);
   return (
     <div>
@@ -86,7 +88,7 @@ function Client({ fields, st, set, onSend }: { fields: F[]; st: Record<string, S
               ) : f.value ? (
                 <p className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs">{f.value}</p>
               ) : (
-                <button type="button" onClick={() => set(f.id, "storefront.jpg · 3.1 MB → 486 KB WebP")} className="w-full rounded-md border border-dashed border-border px-3 py-4 text-xs text-muted-foreground hover:border-primary hover:text-foreground">Click to upload a sample photo</button>
+                <button type="button" disabled={busy === f.id} onClick={() => { setBusy(f.id); window.setTimeout(() => { set(f.id, "storefront.jpg · 3.1 MB → 486 KB WebP"); setBusy(null); }, 650); }} className="relative w-full overflow-hidden rounded-md border border-dashed border-border px-3 py-4 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-foreground disabled:border-primary">{busy === f.id ? <><span className="text-foreground">Converting to WebP…</span><span aria-hidden className="absolute bottom-0 left-0 h-0.5 bg-primary" style={{ animation: "lc-bar .65s cubic-bezier(.2,.7,.2,1) forwards" }} /></> : "Click to upload a sample photo"}</button>
               )}
             </div>
           );
