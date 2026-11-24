@@ -1,4 +1,4 @@
-import { siWebflow, siFramer, siFigma, siWordpress, siNotion, siGoogledrive } from "simple-icons";
+import { siWebflow, siFramer } from "simple-icons";
 import { useEffect, useState } from "react";
 import { Download, Mail, Paperclip, Check, AlertTriangle, Lock } from "lucide-react";
 import { framerJson, webflowCsv, type ExportInput } from "@/lib/exports";
@@ -164,7 +164,7 @@ export function SavingsCalc() {
 }
 
 export function StackBar() {
-  const tools = [siWebflow, siFramer, siFigma, siWordpress, siNotion, siGoogledrive];
+  const tools = [siWebflow, siFramer];
   return (
     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
       <p className="eyebrow">Exports for</p>
@@ -172,9 +172,10 @@ export function StackBar() {
         {tools.map((t) => (
           <li key={t.slug} className="flex items-center gap-2 opacity-70 transition-opacity hover:opacity-100">
             <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden><path d={t.path} /></svg>
-            <span className="text-sm font-semibold tracking-tight">{t.title}</span>
+            <span className="text-sm font-semibold tracking-tight">{t.title}{t.slug === "webflow" ? " CSV" : " JSON"}</span>
           </li>
         ))}
+        <li className="text-sm font-semibold tracking-tight opacity-70">ZIP of every file</li>
       </ul>
     </div>
   );

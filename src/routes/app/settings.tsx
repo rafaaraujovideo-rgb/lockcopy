@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -57,7 +58,7 @@ function Settings() {
       const { error: upErr } = await sb.storage.from("brand-logos").upload(path, file, { contentType: file.type, upsert: true });
       if (upErr) throw new Error(upErr.message);
       setLogo(sb.storage.from("brand-logos").getPublicUrl(path).data.publicUrl);
-      setMsg("Logo uploaded. Press Save brand to use it.");
+      setMsg("Logo uploaded. Press Save brand to use it."); toast.success("Logo uploaded");
     } catch (e) {
       setError(friendlyError(e));
     } finally {
@@ -75,7 +76,7 @@ function Settings() {
       const { error: err } = await getSupabase().from("organizations").update({ name: name.trim(), logo_url: url || null, brand_color: color }).eq("id", org.id);
       if (err) throw new Error(err.message);
       await qc.invalidateQueries({ queryKey: workspaceKey });
-      setMsg("Saved. Your clients see the new brand on their next visit.");
+      setMsg("Saved. Your clients see the new brand on their next visit."); toast.success("Brand saved");
     } catch (e) {
       setError(friendlyError(e));
     } finally {

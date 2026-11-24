@@ -5,7 +5,7 @@ import { useState } from "react";
 import { listRequests, setArchived } from "@/lib/api.functions";
 import { useWorkspace } from "@/lib/workspace";
 import { fmtDate, friendlyError, requestLinkState } from "@/lib/lockcopy";
-import { Badge, btnClass, Card, inputClass } from "@/components/ui-bits";
+import { Badge, Card, inputClass } from "@/components/ui-bits";
 import { Onboarding } from "@/components/onboarding";
 import { useSession } from "@/lib/session";
 
@@ -56,7 +56,6 @@ function Dashboard() {
           <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Requests</h1>
           <p className="mt-1 font-mono text-xs text-muted-foreground">{active} / {limit} active requests on your plan</p>
         </div>
-        <Link to="/app/new" className={btnClass}>New request</Link>
       </div>
       {q.isLoading ? (
         <div className="space-y-2">{[0,1,2].map((i) => <div key={i} className="h-14 animate-pulse rounded-lg border border-border bg-muted/60" />)}</div>

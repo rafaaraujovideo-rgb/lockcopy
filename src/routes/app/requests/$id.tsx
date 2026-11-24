@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -63,10 +64,10 @@ function RequestPage() {
     setMsg("");
     try {
       await fn();
-      if (ok) setMsg(ok);
+      if (ok) { setMsg(ok); toast.success(ok); }
       await refresh();
     } catch (e) {
-      setMsg(friendlyError(e));
+      setMsg(friendlyError(e)); toast.error(friendlyError(e));
     } finally {
       setBusy("");
     }

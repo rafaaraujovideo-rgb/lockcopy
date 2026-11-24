@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -61,7 +62,7 @@ function Team() {
     try {
       const r = await inviteMember({ data: { orgId: org.id, email } });
       setEmail("");
-      setMsg(r.emailed ? `Invite sent to ${email}.` : `Invite created. Send this link: ${r.link}`);
+      setMsg(r.emailed ? `Invite sent to ${email}.` : `Invite created. Send this link: ${r.link}`); toast.success(r.emailed ? "Invite sent" : "Invite created");
       await qc.invalidateQueries({ queryKey: ["team", org.id] });
     } catch (err) {
       setError(friendlyError(err));
