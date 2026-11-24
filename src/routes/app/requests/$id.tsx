@@ -32,7 +32,7 @@ type Detail = Awaited<ReturnType<typeof getRequestDetail>>;
 const BUCKET = "client-uploads";
 
 async function signedUrl(path: string) {
-  const { data, error } = await getSupabase().storage.from(BUCKET).createSignedUrl(path, 600);
+  const { data, error } = await getSupabase().storage.from(BUCKET).createSignedUrl(path, 60);
   if (error || !data) throw new Error(error?.message ?? "File unavailable.");
   return data.signedUrl;
 }
