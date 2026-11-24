@@ -19,6 +19,7 @@ export const Route = createFileRoute("/app/billing")({
       { property: "og:description", content: "Plan, trial, next charge and cancellation." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: Billing,

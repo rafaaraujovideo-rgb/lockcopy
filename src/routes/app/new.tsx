@@ -18,6 +18,7 @@ export const Route = createFileRoute("/app/new")({
       { property: "og:description", content: "Create a content request from a template." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: NewRequest,

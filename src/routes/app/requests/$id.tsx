@@ -21,6 +21,7 @@ export const Route = createFileRoute("/app/requests/$id")({
       { property: "og:description", content: "Review, approve and export the client's content." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: RequestPage,

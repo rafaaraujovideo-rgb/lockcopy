@@ -21,6 +21,7 @@ export const Route = createFileRoute("/app/")({
       { property: "og:description", content: "Track the progress of content requests." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: Dashboard,

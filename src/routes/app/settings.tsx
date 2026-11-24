@@ -18,6 +18,7 @@ export const Route = createFileRoute("/app/settings")({
       { property: "og:description", content: "Set the logo and color your clients see." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: Settings,

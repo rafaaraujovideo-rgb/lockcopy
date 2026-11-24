@@ -19,6 +19,7 @@ export const Route = createFileRoute("/app/team")({
       { property: "og:description", content: "Invite colleagues to your Lockcopy agency." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: Team,
