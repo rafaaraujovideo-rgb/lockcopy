@@ -6,7 +6,6 @@ import { Logo } from "@/components/logo";
 
 const nav = [
   { label: "Features", hash: "features" },
-  { label: "Features", hash: "features" },
   { label: "Pricing", hash: "pricing" },
 ] as const;
 
