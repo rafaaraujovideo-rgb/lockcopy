@@ -53,7 +53,7 @@ function NewPassword() {
         <form onSubmit={submit} className="space-y-3">
           <div className="relative">
             <input className={inputClass + " pr-16"} type={show ? "text" : "password"} autoComplete="new-password" placeholder="New password (min. 8 characters)" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required autoFocus />
-            <button type="button" onClick={() => setShow((v) => !v)} className="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs text-muted-foreground hover:bg-muted">{show ? "Hide" : "Show"}</button>
+            <button type="button" onClick={() => setShow((v) => !v)} className="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs text-muted-foreground hover:bg-muted" aria-label={show ? "Hide password" : "Show password"}>{show ? "Hide" : "Show"}</button>
           </div>
           {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
           <Btn className="w-full" disabled={busy} type="submit">{busy ? "Saving…" : "Save and continue"}</Btn>

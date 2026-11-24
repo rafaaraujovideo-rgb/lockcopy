@@ -112,6 +112,7 @@ function SignIn() {
         <Link to="/" className="flex items-center justify-center gap-2 lg:hidden text-lg font-semibold tracking-tight">
           <Logo className="text-base" markClassName="h-6 w-6" />
         </Link>
+        <h1 className="text-center text-xl font-bold tracking-tight">{forgot ? "Reset your Lockcopy password" : mode === "signin" ? "Sign in to Lockcopy" : "Create your Lockcopy account"}</h1>
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
             {(["signin", "signup"] as const).map((m) => (
