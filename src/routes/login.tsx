@@ -1,6 +1,6 @@
+import { SiteShell } from "@/components/site-chrome";
 import { isPasswordPwned, PWNED_MESSAGE } from "@/lib/pwned";
-import { Logo } from "@/components/logo";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { getSupabase, hasSupabase } from "@/lib/supabase-browser";
@@ -96,9 +96,9 @@ function SignIn() {
   };
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <aside className="relative hidden flex-col justify-between border-r border-border bg-muted/50 p-10 lg:flex">
-        <Link to="/" ><Logo className="text-[15px]" markClassName="h-6 w-6" /></Link>
+    <SiteShell>
+    <div className="grid lg:grid-cols-2 lg:min-h-[calc(100vh-4rem)]">
+      <aside className="relative hidden flex-col justify-center gap-10 border-r border-border bg-muted/50 p-10 lg:flex">
         <div className="max-w-md">
           <p className="eyebrow">For web agencies</p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">Every page's content, approved, before you start building.</h2>
@@ -112,9 +112,6 @@ function SignIn() {
       </aside>
       <div className="flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-sm space-y-5">
-        <Link to="/" className="flex items-center justify-center gap-2 lg:hidden text-lg font-semibold tracking-tight">
-          <Logo className="text-base" markClassName="h-6 w-6" />
-        </Link>
         <h1 className="text-center text-xl font-bold tracking-tight">{forgot ? "Reset your Lockcopy password" : mode === "signin" ? "Sign in to Lockcopy" : "Create your Lockcopy account"}</h1>
         <Card className="space-y-4">
           <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
@@ -164,5 +161,6 @@ function SignIn() {
       </div>
       </div>
     </div>
+    </SiteShell>
   );
 }

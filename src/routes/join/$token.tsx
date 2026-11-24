@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -51,7 +52,8 @@ function Join() {
 
   const next = `/join/${token}`;
   return (
-    <div className="grid min-h-screen place-items-center px-5">
+    <SiteShell>
+    <div className="grid min-h-[60vh] place-items-center px-5 py-16">
       <Card className="w-full max-w-sm space-y-4">
         {info === undefined && <div className="h-16 animate-pulse rounded-md bg-muted" />}
         {info === null && <p className="text-sm">This invite link doesn't exist.</p>}
@@ -75,5 +77,6 @@ function Join() {
         )}
       </Card>
     </div>
+    </SiteShell>
   );
 }

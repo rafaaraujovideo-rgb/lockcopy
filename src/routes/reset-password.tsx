@@ -1,3 +1,4 @@
+import { SiteShell } from "@/components/site-chrome";
 import { isPasswordPwned, PWNED_MESSAGE } from "@/lib/pwned";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -46,7 +47,8 @@ function NewPassword() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-5">
+    <SiteShell>
+    <div className="flex min-h-[60vh] items-center justify-center px-5 py-16">
       <Card className="w-full max-w-sm space-y-4">
         <div>
           <h1 className="text-xl font-bold tracking-tight">Set a new password</h1>
@@ -62,5 +64,6 @@ function NewPassword() {
         </form>
       </Card>
     </div>
+    </SiteShell>
   );
 }
