@@ -27,6 +27,7 @@ import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as AppTeamRouteImport } from './routes/app/team'
 import { Route as CTokenRouteImport } from './routes/c/$token'
 import { Route as CompareContentSnareRouteImport } from './routes/compare/content-snare'
+import { Route as CompareFileRequestProRouteImport } from './routes/compare/file-request-pro'
 import { Route as JoinTokenRouteImport } from './routes/join/$token'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as AppRequestsIdRouteImport } from './routes/app/requests/$id'
@@ -122,6 +123,11 @@ const CompareContentSnareRoute = CompareContentSnareRouteImport.update({
   path: '/compare/content-snare',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareFileRequestProRoute = CompareFileRequestProRouteImport.update({
+  id: '/compare/file-request-pro',
+  path: '/compare/file-request-pro',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JoinTokenRoute = JoinTokenRouteImport.update({
   id: '/join/$token',
   path: '/join/$token',
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/app/team': typeof AppTeamRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
+  '/compare/file-request-pro': typeof CompareFileRequestProRoute
   '/join/$token': typeof JoinTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/app/team': typeof AppTeamRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
+  '/compare/file-request-pro': typeof CompareFileRequestProRoute
   '/join/$token': typeof JoinTokenRoute
   '/app': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
@@ -210,6 +218,7 @@ export interface FileRoutesById {
   '/app/team': typeof AppTeamRoute
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
+  '/compare/file-request-pro': typeof CompareFileRequestProRoute
   '/join/$token': typeof JoinTokenRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
@@ -236,6 +245,7 @@ export interface FileRouteTypes {
     | '/app/team'
     | '/c/$token'
     | '/compare/content-snare'
+    | '/compare/file-request-pro'
     | '/join/$token'
     | '/app/'
     | '/api/public/stripe-webhook'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/app/team'
     | '/c/$token'
     | '/compare/content-snare'
+    | '/compare/file-request-pro'
     | '/join/$token'
     | '/app'
     | '/api/public/stripe-webhook'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/app/team'
     | '/c/$token'
     | '/compare/content-snare'
+    | '/compare/file-request-pro'
     | '/join/$token'
     | '/app/'
     | '/api/public/stripe-webhook'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   CTokenRoute: typeof CTokenRoute
   CompareContentSnareRoute: typeof CompareContentSnareRoute
+  CompareFileRequestProRoute: typeof CompareFileRequestProRoute
   JoinTokenRoute: typeof JoinTokenRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicCronNotificationsRoute: typeof ApiPublicCronNotificationsRoute
@@ -436,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareContentSnareRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare/file-request-pro': {
+      id: '/compare/file-request-pro'
+      path: '/compare/file-request-pro'
+      fullPath: '/compare/file-request-pro'
+      preLoaderRoute: typeof CompareFileRequestProRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/join/$token': {
       id: '/join/$token'
       path: '/join/$token'
@@ -502,6 +522,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   CTokenRoute: CTokenRoute,
   CompareContentSnareRoute: CompareContentSnareRoute,
+  CompareFileRequestProRoute: CompareFileRequestProRoute,
   JoinTokenRoute: JoinTokenRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicCronNotificationsRoute: ApiPublicCronNotificationsRoute,

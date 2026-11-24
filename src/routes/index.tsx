@@ -43,7 +43,7 @@ function Landing() {
               Get every text and photo for a client's website<br /><span className="text-muted-foreground">through one link.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-              For web designers and agencies. You send a checklist for each page of the site, your client fills it in without an account, and you approve each answer before exporting it to Webflow, Framer or a ZIP.
+              A client content collection tool for Webflow and Framer agencies. You send a checklist for each page of the site, your client fills it in without an account, and you approve each answer before exporting it to Webflow, Framer or a ZIP.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link to="/login" search={{ mode: "signup" }} className="press rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start your free trial</Link>
@@ -62,7 +62,7 @@ function Landing() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className="eyebrow">The problem</p>
-          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">If your client sends content by email, you're probably still waiting for some of it.</h2>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Still chasing clients for website copy and photos by email? You're probably still waiting for some of it.</h2>
           <Reveal><div className="mt-10"><BeforeAfter /></div></Reveal>
         </div>
       </section>
@@ -70,7 +70,7 @@ function Landing() {
       <section id="features" className="scroll-mt-16 border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <p className="eyebrow">What you get</p>
-          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">What you can do with Lockcopy</h2>
+          <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Client onboarding for website content, built for Webflow and Framer</h2>
           <Reveal><div className="mt-12 grid overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2" style={{ gap: 1 }}>
             <Feature n="01" t="Per-page templates" d="Templates for a business site, landing page, online store and rebrand. Each page lists the text and files you need.">
               <div className="space-y-1.5 font-mono text-[11px]">{["Home · Hero headline", "Home · 3 service blurbs", "About · Team photos"].map((x) => <div key={x} className="flex justify-between rounded-md border border-border bg-background px-2.5 py-1.5"><span>{x}</span><span className="text-muted-foreground">required</span></div>)}</div>
@@ -99,7 +99,7 @@ function Landing() {
           <Reveal><SampleExport /></Reveal>
           <div>
             <p className="eyebrow">Time</p>
-            <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Work out how many hours you spend asking for content.</h2>
+            <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">Work out how many hours you spend chasing client content.</h2>
             <Reveal><div className="mt-8"><SavingsCalc /></div></Reveal>
           </div>
         </div>
