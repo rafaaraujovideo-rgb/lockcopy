@@ -5,7 +5,6 @@ import { PLANS } from "@/lib/store";
 import { Lock } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { HeroStage } from "@/components/hero-stage";
-import { LandingDemo } from "@/components/landing-demo";
 import { BeforeAfter, SampleExport, SavingsCalc, StackBar, WebpTry, Faq, LockToggle, ExportPeek } from "@/components/landing-sections";
 
 export const Route = createFileRoute("/")({
@@ -42,7 +41,7 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link to="/start" className="press rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-btn hover:bg-ink-soft">Start your free trial</Link>
-              <a href="#demo" className="press rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">See how it works ↓</a>
+              <a href="#features" className="press rounded-md border border-border bg-card px-5 py-3 text-sm font-medium shadow-card hover:bg-muted">See how it works ↓</a>
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">14 days free · no credit card</p>
           </div>
@@ -59,16 +58,6 @@ function Landing() {
           <p className="eyebrow">The problem</p>
           <h2 className="mt-2 max-w-xl font-display text-3xl md:text-4xl">If your client sends content by email, you're probably still waiting for some of it.</h2>
           <div className="mt-10"><BeforeAfter /></div>
-        </div>
-      </section>
-
-      <section id="demo" className="scroll-mt-20 border-b border-border bg-muted/50">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div><p className="eyebrow">Live demo</p><h2 className="mt-2 font-display text-3xl md:text-4xl">Try a request from both sides.</h2></div>
-            <p className="max-w-xs text-sm text-muted-foreground">Four steps, using the same screens as the app.</p>
-          </div>
-          <div className="rounded-xl border border-border bg-card p-2 shadow-float"><LandingDemo /></div>
         </div>
       </section>
 
