@@ -12,13 +12,18 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Lockcopy · Collect website content from clients through one link" },
-      { name: "description", content: "Per-page checklists, organized uploads and export to Webflow and Framer. For web freelancers and agencies." },
-      { property: "og:title", content: "Lockcopy · Collect website content from clients through one link" },
-      { property: "og:description", content: "Per-page checklists, organized uploads and export to Webflow and Framer." },
+      { title: "Lockcopy · Client content collection for Webflow & Framer agencies" },
+      { name: "description", content: "Send clients one link to fill in texts and photos page by page. Approve field by field and export to Webflow CSV, Framer JSON or ZIP. 14 days free, no card." },
+      { property: "og:title", content: "Lockcopy · Client content collection for Webflow & Framer agencies" },
+      { property: "og:description", content: "Send clients one link to fill in texts and photos page by page. Approve field by field and export to Webflow CSV, Framer JSON or ZIP. 14 days free, no card." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://lockcopy.com" },
+      { property: "og:image", content: "https://lockcopy.com/__l5e/assets-v1/f34de8e1-53db-4fe4-b79f-315644e44562/lockcopy-share.png" },
+      { name: "twitter:image", content: "https://lockcopy.com/__l5e/assets-v1/f34de8e1-53db-4fe4-b79f-315644e44562/lockcopy-share.png" },
     ],
+    links: [{ rel: "canonical", href: "https://lockcopy.com" }],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "Lockcopy", url: "https://lockcopy.com", applicationCategory: "BusinessApplication", operatingSystem: "Web", description: "Client content collection for web designers and agencies, with Webflow and Framer exports.", offers: [{ "@type": "Offer", name: "Solo", price: "19", priceCurrency: "USD" }, { "@type": "Offer", name: "Agency", price: "39", priceCurrency: "USD" }] }) }],
   }),
   component: Landing,
 });

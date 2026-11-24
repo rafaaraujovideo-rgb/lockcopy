@@ -7,13 +7,17 @@ export const Route = createFileRoute("/compare/content-snare")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Lockcopy vs Content Snare — an honest comparison" },
-      { name: "description", content: "Comparison between Lockcopy and Content Snare for client content collection: price, Webflow/Framer exports and account-free portals." },
-      { property: "og:title", content: "Lockcopy vs Content Snare — an honest comparison" },
-      { property: "og:description", content: "Comparison between Lockcopy and Content Snare for client content collection: price, Webflow/Framer exports and account-free portals." },
+      { title: "Content Snare alternative for Webflow & Framer agencies — Lockcopy" },
+      { name: "description", content: "Looking for a Content Snare alternative? Compare price, Webflow CSV and Framer JSON exports, and account-free client portals side by side." },
+      { property: "og:title", content: "Content Snare alternative for Webflow & Framer agencies — Lockcopy" },
+      { property: "og:description", content: "Looking for a Content Snare alternative? Compare price, Webflow CSV and Framer JSON exports, and account-free client portals side by side." },
       { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://lockcopy.com/compare/content-snare" },
+      { property: "og:image", content: "https://lockcopy.com/__l5e/assets-v1/f34de8e1-53db-4fe4-b79f-315644e44562/lockcopy-share.png" },
+      { name: "twitter:image", content: "https://lockcopy.com/__l5e/assets-v1/f34de8e1-53db-4fe4-b79f-315644e44562/lockcopy-share.png" },
     ],
+    links: [{ rel: "canonical", href: "https://lockcopy.com/compare/content-snare" }],
   }),
   component: Comparar,
 });

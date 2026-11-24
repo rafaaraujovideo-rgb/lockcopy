@@ -12,6 +12,7 @@ export const Route = createFileRoute("/privacy")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://lockcopy.com/privacy" }],
   }),
   component: Privacidade,
 });

@@ -8,13 +8,17 @@ export const Route = createFileRoute("/templates")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "Free content checklist templates — Lockcopy" },
-      { name: "description", content: "Ready-made CSV checklists to request texts and images from clients: business website, online store and landing page." },
-      { property: "og:title", content: "Free content checklist templates — Lockcopy" },
-      { property: "og:description", content: "Ready-made CSV checklists to request texts and images from clients: business website, online store and landing page." },
+      { title: "Free website content checklist templates (CSV) — Lockcopy" },
+      { name: "description", content: "Free CSV checklists to request website copy and images from clients: business website, online store and landing page. No signup." },
+      { property: "og:title", content: "Free website content checklist templates (CSV) — Lockcopy" },
+      { property: "og:description", content: "Free CSV checklists to request website copy and images from clients: business website, online store and landing page. No signup." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://lockcopy.com/templates" },
+      { property: "og:image", content: "https://lockcopy.com/__l5e/assets-v1/f34de8e1-53db-4fe4-b79f-315644e44562/lockcopy-share.png" },
+      { name: "twitter:image", content: "https://lockcopy.com/__l5e/assets-v1/f34de8e1-53db-4fe4-b79f-315644e44562/lockcopy-share.png" },
     ],
+    links: [{ rel: "canonical", href: "https://lockcopy.com/templates" }],
   }),
   component: Modelos,
 });

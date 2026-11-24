@@ -88,6 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Lockcopy — client content collection" },
       { property: "og:description", content: "Per-page checklists for web agencies to collect texts and files from clients." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Lockcopy" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "google-site-verification", content: "LHvunAwNgiLoPaNOn0KwEn73uwMs6u7bjj3j2HLDhSk" },
     ],
