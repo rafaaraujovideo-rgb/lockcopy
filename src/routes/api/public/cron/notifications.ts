@@ -76,7 +76,7 @@ export const Route = createFileRoute("/api/public/cron/notifications")({
         }
 
         const apiKey = (process.env["BREVO_API_KEY"] ?? "").trim();
-        const from = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <notificacoes@lockcopy.com>";
+        const from = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <hello@lockcopy.com>";
 
         const items = (batch ?? []) as unknown as Notification[];
         let sent = 0;

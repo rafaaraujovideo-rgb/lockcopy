@@ -25,7 +25,7 @@ export const inviteMember = createServerFn({ method: "POST" })
     const origin = (process.env["APP_URL"] ?? "").trim() || "https://lockcopy.com";
     const link = `${origin}/join/${inv.token}`;
     const apiKey = (process.env["BREVO_API_KEY"] ?? "").trim();
-    const fromRaw = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <rafaaraujo.video@gmail.com>";
+    const fromRaw = (process.env["EMAIL_FROM"] ?? "").trim() || "Lockcopy <hello@lockcopy.com>";
     const m = /<([^>]+)>/.exec(fromRaw);
     let emailed = false;
     if (apiKey) {
