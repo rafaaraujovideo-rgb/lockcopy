@@ -48,6 +48,7 @@ describe("db/*.sql", () => {
       "0019_saved_templates.sql",
       "0020_auto_reminders_cron.sql",
       "0021_reminders_unopened.sql",
+      "0022_repeatable_sections.sql",
     ]);
   });
 

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 import { getPortalSupabase } from "@/integrations/supabase/portal-client";
-import { portalAttachWebp, portalLoad, portalRegisterFile, portalRemoveFile, portalSave, portalSendToAgency, portalSetNote, portalNotes, type PortalField, type PortalSubmission } from "@/lib/api.functions";
+import { portalAddRepeat, portalAttachWebp, portalLoad, portalRemoveRepeat, portalSectionsMeta, portalRegisterFile, portalRemoveFile, portalSave, portalSendToAgency, portalSetNote, portalNotes, type PortalField, type PortalSubmission } from "@/lib/api.functions";
 import { answerLabel, fmtDate, fmtMb, friendlyError, isFileField, uploadProblem, type SubmissionStatus } from "@/lib/lockcopy";
 import { Badge, Card, inputClass } from "@/components/ui-bits";
 import { HScroll } from "@/components/h-scroll";
@@ -68,6 +68,16 @@ function Portal() {
     refetchOnWindowFocus: false,
   });
 
+  const meta = useQuery({
+    queryKey: ["portal-meta", token],
+    queryFn: () => portalSectionsMeta({ data: { token } }).catch(() => []),
+    enabled: valid,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const qc = useQueryClient();
+  const [repBusy, setRepBusy] = useState(false);
+  const [repError, setRepError] = useState("");
   const [sent, setSent] = useState<"idle" | "sending" | "sent">("idle");
   const [sendError, setSendError] = useState("");
 
@@ -89,6 +99,20 @@ function Portal() {
   const pct = allFields.length ? Math.round((done / allFields.length) * 100) : 0;
   const brand = /^#[0-9a-f]{6}$/i.test(p.request.brand_color ?? "") ? p.request.brand_color! : null;
   const logo = /^https:\/\//.test(p.request.logo_url ?? "") ? p.request.logo_url : null;
+  const metaById = new Map((meta.data ?? []).map((m) => [m.id, m]));
+  const baseId = sec ? (metaById.get(sec.id)?.repeat_of ?? (metaById.get(sec.id)?.repeatable ? sec.id : null)) : null;
+  const isCopy = !!(sec && metaById.get(sec.id)?.repeat_of);
+  const baseTitle = baseId ? (p.sections.find((x) => x.id === baseId)?.title ?? "page") : "";
+  const repeatAction = async (fn: () => Promise<unknown>, after: (ids: string[]) => void) => {
+    setRepBusy(true); setRepError("");
+    try {
+      const before = new Set(p.sections.map((x) => x.id));
+      await fn();
+      await Promise.all([qc.invalidateQueries({ queryKey: ["portal", token] }), qc.invalidateQueries({ queryKey: ["portal-meta", token] })]);
+      const fresh = qc.getQueryData<typeof p>(["portal", token]);
+      after((fresh?.sections ?? []).map((x) => x.id).filter((id) => !before.has(id)));
+    } catch (e) { setRepError(friendlyError(e)); } finally { setRepBusy(false); }
+  };
   const brandStyle = brand ? ({ "--primary": brand, "--ring": brand } as React.CSSProperties) : undefined;
 
   return (
@@ -124,6 +148,13 @@ function Portal() {
             <h2 className="font-display text-2xl font-semibold">{sec.title}</h2>
             {sec.description && <p className="text-sm text-muted-foreground">{sec.description}</p>}
             {(sec.fields ?? []).map((f) => <FieldInput key={f.id} token={token} field={f} sub={subs.get(f.id)} />)}
+            {baseId && (
+              <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
+                <button disabled={repBusy} onClick={() => repeatAction(() => portalAddRepeat({ data: { token, sectionId: baseId } }), (ids) => { const fresh = qc.getQueryData<typeof p>(["portal", token]); const i = (fresh?.sections ?? []).findIndex((x) => x.id === ids[0]); if (i >= 0) { setTab(i); window.scrollTo(0, 0); } })} className="rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium shadow-card hover:bg-muted disabled:opacity-50">{repBusy ? "Working…" : `+ Add another ${baseTitle}`}</button>
+                {isCopy && <button disabled={repBusy} onClick={() => repeatAction(() => portalRemoveRepeat({ data: { token, sectionId: sec.id } }), () => setTab(Math.max(0, cur - 1)))} className="text-sm text-muted-foreground hover:underline disabled:opacity-50">Remove this page</button>}
+                {repError && <p className="w-full text-sm text-destructive">{repError}</p>}
+              </div>
+            )}
           </Card>
         )}
         <div className="flex justify-between gap-3">

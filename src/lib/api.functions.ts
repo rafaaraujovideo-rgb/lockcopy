@@ -212,6 +212,7 @@ export const createRequest = createServerFn({ method: "POST" })
         skip: z.array(z.object({ section: text(200), label: text(200) })).max(200).optional(),
         extra: z.array(z.object({ label: text(200).min(1), type: z.enum(["text", "textarea", "image", "file"]), help: text(300).optional(), limit: z.number().int().min(1).max(20000).optional() })).max(30).optional(),
         rename: z.array(z.object({ section: text(200), label: text(200), to: text(200).min(1) })).max(200).optional(),
+        repeatable: z.array(text(200)).max(30).optional(),
       })
       .parse(data),
   )
@@ -249,6 +250,10 @@ export const createRequest = createServerFn({ method: "POST" })
     const created = result as { id: string; token: string; url: string };
     if (data.skip?.length || data.extra?.length || data.rename?.length) {
       await customizeFields(supabase, created.id, data.skip ?? [], data.extra ?? [], data.rename ?? []);
+    }
+    if (data.repeatable?.length) {
+      const up = await supabase.from("sections").update({ is_repeatable: true } as never).eq("request_id", created.id).in("title", data.repeatable);
+      if (up.error) throw new Error(up.error.message === "column sections.is_repeatable does not exist" ? "Repeatable pages need db/0022 run in Supabase." : up.error.message);
     }
     return created;
   });
@@ -399,6 +404,36 @@ export const portalLoad = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
     return result as unknown as PortalPayload;
+  });
+
+/** Which portal pages the client can repeat, and which are copies. */
+export const portalSectionsMeta = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = await portalClient();
+    const { data: result, error } = await supabase.rpc("portal_sections_meta" as never, { _token: data.token } as never);
+    if (error) throw new Error((error as { message: string }).message);
+    return (result ?? []) as unknown as Array<{ id: string; repeatable: boolean; repeat_of: string | null }>;
+  });
+
+/** Client adds another copy of a repeatable page. */
+export const portalAddRepeat = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid, sectionId: uuid }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = await portalClient();
+    const { data: result, error } = await supabase.rpc("portal_add_repeat" as never, { _token: data.token, _section: data.sectionId } as never);
+    if (error) throw new Error((error as { message: string }).message);
+    return result as unknown as string;
+  });
+
+/** Client removes an empty copy of a repeatable page. */
+export const portalRemoveRepeat = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: uuid, sectionId: uuid }).parse(data))
+  .handler(async ({ data }) => {
+    const supabase = await portalClient();
+    const { error } = await supabase.rpc("portal_remove_repeat" as never, { _token: data.token, _section: data.sectionId } as never);
+    if (error) throw new Error((error as { message: string }).message);
+    return { ok: true };
   });
 
 /** Client leaves a question or note on a field (empty clears it). */

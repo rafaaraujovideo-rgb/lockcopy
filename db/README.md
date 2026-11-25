@@ -126,3 +126,7 @@ Falta:
 ## 0021 — Lembretes também para clientes que ainda não abriram o link
 
 Corre `db/0021_reminders_unopened.sql` no SQL Editor. O agendamento diário de 0020 mantém-se.
+
+## 0022 — Páginas repetíveis
+
+Corre `db/0022_repeatable_sections.sql` no SQL Editor. Permite à agência marcar uma página como repetível e ao cliente carregar em "+ Add another".

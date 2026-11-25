@@ -58,6 +58,7 @@ function NewRequest() {
   const [skip, setSkip] = useState<Set<string>>(new Set());
   const [extra, setExtra] = useState<Array<{ label: string; help: string; type: "text" | "textarea" | "image" | "file"; limit?: number }>>([]);
   const [rename, setRename] = useState<Record<string, string>>({});
+  const [repeat, setRepeat] = useState<Set<string>>(new Set());
   const [draft, setDraft] = useState({ label: "", help: "", limit: "", type: "text" as "text" | "textarea" | "image" | "file" });
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<"edit" | "preview">("edit");
@@ -92,7 +93,7 @@ function NewRequest() {
     try {
       await deleteTemplate({ data: { templateId: id } });
       await qc.invalidateQueries({ queryKey: ["templates"] });
-      setTplId(null); setSkip(new Set());
+      setTplId(null); setSkip(new Set()); setRepeat(new Set());
     } catch (e) { setTplMsg(friendlyError(e)); }
   };
 
@@ -101,7 +102,7 @@ function NewRequest() {
     setBusy(true);
     setError("");
     try {
-      const r = await createRequest({ data: { templateId: t.id, title: form.title, clientName: form.client, clientEmail: form.clientEmail, dueDate: form.deadline, skip: [...skip].map((x) => { const [section = "", label = ""] = x.split("\u0000"); return { section, label }; }), extra, rename: Object.entries(rename).filter(([id, v]) => v.trim() && v.trim() !== id.split("\u0000")[1]).map(([id, v]) => { const [section = "", label = ""] = id.split("\u0000"); return { section, label, to: v.trim() }; }) } });
+      const r = await createRequest({ data: { templateId: t.id, title: form.title, clientName: form.client, clientEmail: form.clientEmail, dueDate: form.deadline, skip: [...skip].map((x) => { const [section = "", label = ""] = x.split("\u0000"); return { section, label }; }), extra, rename: Object.entries(rename).filter(([id, v]) => v.trim() && v.trim() !== id.split("\u0000")[1]).map(([id, v]) => { const [section = "", label = ""] = id.split("\u0000"); return { section, label, to: v.trim() }; }), ...(repeat.size ? { repeatable: [...repeat] } : {}) } });
       await Promise.all([qc.invalidateQueries({ queryKey: ["requests"] }), qc.invalidateQueries({ queryKey: workspaceKey })]);
       nav({ to: "/app/requests/$id", params: { id: r.id } });
     } catch (e) {
@@ -155,7 +156,13 @@ function NewRequest() {
         <p className="mb-3 text-xs text-muted-foreground">Untick what you don't need, click a question to reword it, or add your own below.</p>
         {t?.template_sections.map((s) => (
           <div key={s.id} className="mb-4">
-            <p className="font-display text-lg font-semibold">{s.title}</p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-display text-lg font-semibold">{s.title}</p>
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <input type="checkbox" checked={repeat.has(s.title)} onChange={() => setRepeat((prev) => { const n = new Set(prev); if (n.has(s.title)) n.delete(s.title); else n.add(s.title); return n; })} className="h-3.5 w-3.5 accent-primary" />
+                Client can add more of this page
+              </label>
+            </div>
             <ul className="mt-1 text-sm">
               {s.template_fields.map((fl) => {
                 const off = skip.has(k(s.title, fl.label));
