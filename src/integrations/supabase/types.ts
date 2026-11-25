@@ -487,25 +487,38 @@ export type Database = {
         Row: {
           description: string | null
           id: string
+          is_repeatable: boolean
           order_index: number
+          repeat_of: string | null
           request_id: string
           title: string
         }
         Insert: {
           description?: string | null
           id?: string
+          is_repeatable?: boolean
           order_index?: number
+          repeat_of?: string | null
           request_id: string
           title: string
         }
         Update: {
           description?: string | null
           id?: string
+          is_repeatable?: boolean
           order_index?: number
+          repeat_of?: string | null
           request_id?: string
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sections_repeat_of_fkey"
+            columns: ["repeat_of"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sections_request_id_fkey"
             columns: ["request_id"]
@@ -988,6 +1001,10 @@ export type Database = {
       }
       org_limit: { Args: { _kind: string; _org: string }; Returns: number }
       path_matches_token: { Args: { _path: string }; Returns: boolean }
+      portal_add_repeat: {
+        Args: { _section: string; _token: string }
+        Returns: string
+      }
       portal_attach_webp: {
         Args: { _file: string; _token: string; _webp_path: string }
         Returns: undefined
@@ -1009,10 +1026,15 @@ export type Database = {
         Args: { _file: string; _token: string }
         Returns: Json
       }
+      portal_remove_repeat: {
+        Args: { _section: string; _token: string }
+        Returns: undefined
+      }
       portal_save: {
         Args: { _field: string; _text: string; _token: string }
         Returns: Json
       }
+      portal_sections_meta: { Args: { _token: string }; Returns: Json }
       portal_send_to_agency: { Args: { _token: string }; Returns: Json }
       portal_set_note: {
         Args: { _field: string; _note: string; _token: string }
