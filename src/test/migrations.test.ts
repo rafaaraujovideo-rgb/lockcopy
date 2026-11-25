@@ -45,6 +45,7 @@ describe("db/*.sql", () => {
     "0016_private_enqueue_notification.sql",
     "0017_feedback.sql",
     "0018_natural_email_copy.sql",
+      "0019_saved_templates.sql",
     ]);
   });
 
@@ -91,8 +92,9 @@ describe("db/*.sql", () => {
     expect(sql).toContain("'landing'");
     expect(sql).toContain("'ecommerce'");
     expect(sql).toContain("'rebranding'");
-    const sections = (sql.match(/insert into public\.template_sections/gi) ?? []).length;
-    const fields = (sql.match(/insert into public\.template_fields/gi) ?? []).length;
+    const seed = readFileSync(resolve(DB_DIR, "0006_seed_templates.sql"), "utf8");
+    const sections = (seed.match(/insert into public\.template_sections/gi) ?? []).length;
+    const fields = (seed.match(/insert into public\.template_fields/gi) ?? []).length;
     expect(sections).toBe(1);
     expect(fields).toBe(1);
     expect((sql.match(/0000000001\d\d/g) ?? []).length).toBeGreaterThanOrEqual(9);

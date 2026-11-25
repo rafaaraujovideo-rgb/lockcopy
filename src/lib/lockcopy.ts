@@ -59,13 +59,17 @@ const DB_ERRORS: Record<string, string> = {
   tipo_negado: "This file type isn't accepted in this field.",
   caminho_invalido: "The storage path doesn't match this request.",
   modelo_inexistente: "Template not found.",
+  no_access: "You don't have access to this.",
+  template_name_required: "Give the template a name.",
+  template_limit: "You can keep up to 50 saved templates. Delete one first.",
+  template_empty: "The template needs at least one question.",
 };
 
 /** Database errors arrive as "code — message"; show readable English text. */
 export function friendlyError(e: unknown) {
   const msg = e instanceof Error ? e.message : String(e);
   const parts = msg.split(" — ");
-  if (parts.length < 2) return msg;
+  if (parts.length < 2) return DB_ERRORS[msg.trim()] ?? msg;
   const code = (parts[0] ?? "").trim().split(/\s+/).pop() ?? "";
   return DB_ERRORS[code] ?? parts.slice(1).join(" — ");
 }

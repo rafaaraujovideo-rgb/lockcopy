@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { getSupabase } from "@/lib/supabase-browser";
-import { createRequest } from "@/lib/api.functions";
+import { createRequest, deleteTemplate, saveTemplate } from "@/lib/api.functions";
 import { friendlyError, isFileField } from "@/lib/lockcopy";
 import { canCreateRequests, planAlert } from "@/lib/trial";
 import { useWorkspace, workspaceKey } from "@/lib/workspace";
@@ -29,17 +29,18 @@ type TemplateRow = {
   id: string;
   name: string;
   description: string | null;
-  template_sections: Array<{ id: string; title: string; order_index: number; template_fields: Array<{ id: string; label: string; field_type: string; order_index: number }> }>;
+  org_id: string | null;
+  template_sections: Array<{ id: string; title: string; order_index: number; template_fields: Array<{ id: string; label: string; field_type: string; order_index: number; help_text: string | null; char_limit: number | null }> }>;
 };
 
 async function loadTemplates(): Promise<TemplateRow[]> {
   const { data, error } = await getSupabase()
     .from("templates")
-    .select("id, name, description, template_sections(id, title, order_index, template_fields(id, label, field_type, order_index))")
+    .select("id, name, description, org_id, template_sections(id, title, order_index, template_fields(id, label, field_type, order_index, help_text, char_limit))")
     .eq("is_active", true)
     .order("created_at", { ascending: true });
   if (error) throw new Error(error.message);
-  const rows = (data ?? []) as unknown as TemplateRow[];
+  const rows = ((data ?? []) as unknown as TemplateRow[]).sort((a, b) => Number(!!b.org_id) - Number(!!a.org_id));
   for (const t of rows) {
     t.template_sections.sort((a, b) => a.order_index - b.order_index);
     for (const s of t.template_sections) s.template_fields.sort((a, b) => a.order_index - b.order_index);
@@ -69,6 +70,31 @@ function NewRequest() {
   const addExtra = () => { if (!draft.label.trim()) return; const lim = Number(draft.limit); setExtra([...extra, { label: draft.label.trim(), help: draft.help.trim(), type: draft.type, ...(lim > 0 && (draft.type === "text" || draft.type === "textarea") ? { limit: Math.min(20000, Math.round(lim)) } : {}) }]); setDraft({ ...draft, label: "", help: "", limit: "" }); };
   const move = (i: number, d: -1 | 1) => { const j = i + d; if (j < 0 || j >= extra.length) return; const n = [...extra]; [n[i], n[j]] = [n[j]!, n[i]!]; setExtra(n); };
   const shown = (sec: string, label: string) => rename[k(sec, label)] ?? label;
+  const [tplName, setTplName] = useState("");
+  const [tplMsg, setTplMsg] = useState("");
+  const asType = (x: string): "text" | "textarea" | "image" | "file" => (x === "textarea" || x === "image" || x === "file" ? x : "text");
+  const currentSections = () =>
+    (t?.template_sections ?? [])
+      .map((s) => ({ title: s.title, fields: s.template_fields.filter((f) => !skip.has(k(s.title, f.label))).map((f) => ({ label: (shown(s.title, f.label).trim() || f.label), type: asType(f.field_type), ...(f.help_text ? { help: f.help_text } : {}), ...(f.char_limit ? { limit: f.char_limit } : {}) })) }))
+      .concat(extra.length ? [{ title: "Extra questions", fields: extra.map((x) => ({ label: x.label, type: x.type, ...(x.help ? { help: x.help } : {}), ...(x.limit ? { limit: x.limit } : {}) })) }] : [])
+      .filter((s) => s.fields.length);
+  const saveTpl = async () => {
+    if (!org || !tplName.trim()) return;
+    setTplMsg("");
+    try {
+      const r = await saveTemplate({ data: { orgId: org.id, name: tplName.trim(), sections: currentSections() } });
+      await qc.invalidateQueries({ queryKey: ["templates"] });
+      setTplId(r.id); setSkip(new Set()); setExtra([]); setRename({}); setTplName("");
+      setTplMsg("Saved. It's now in your templates.");
+    } catch (e) { setTplMsg(friendlyError(e)); }
+  };
+  const removeTpl = async (id: string) => {
+    try {
+      await deleteTemplate({ data: { templateId: id } });
+      await qc.invalidateQueries({ queryKey: ["templates"] });
+      setTplId(null); setSkip(new Set());
+    } catch (e) { setTplMsg(friendlyError(e)); }
+  };
 
   const submit = async () => {
     if (!t) return;
@@ -101,9 +127,12 @@ function NewRequest() {
         <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">New request</h1>
         <div className="grid grid-cols-2 gap-2">
           {list.map((x) => (
-            <button key={x.id} onClick={() => { setTplId(x.id); setSkip(new Set()); }} className={"rounded-md border p-3 text-left text-sm shadow-card transition-colors " + (t?.id === x.id ? "border-primary bg-primary/5" : "border-border bg-card hover:bg-muted")}>
-              <span className="font-semibold">{x.name}</span><br /><span className="text-muted-foreground">{x.description}</span>
-            </button>
+            <div key={x.id} className="relative">
+              <button onClick={() => { setTplId(x.id); setSkip(new Set()); setExtra([]); setRename({}); }} className={"h-full w-full rounded-md border p-3 text-left text-sm shadow-card transition-colors " + (t?.id === x.id ? "border-primary bg-primary/5" : "border-border bg-card hover:bg-muted")}>
+                <span className="font-semibold">{x.name}</span><br /><span className="text-muted-foreground">{x.org_id ? "Your template" : x.description}</span>
+              </button>
+              {x.org_id && <button onClick={() => { if (window.confirm(`Delete the template "${x.name}"? Requests already created keep their questions.`)) void removeTpl(x.id); }} className="absolute right-2 top-2 text-[11px] text-muted-foreground hover:text-destructive" aria-label={`Delete template ${x.name}`}>Delete</button>}
+            </div>
           ))}
         </div>
         <Card className="space-y-3">
@@ -164,6 +193,15 @@ function NewRequest() {
           </div>
           <input className={inputClass + " mt-2"} placeholder="Note for the client (optional), e.g. Weekdays and weekends" value={draft.help} maxLength={300} onChange={(e) => setDraft({ ...draft, help: e.target.value })} />
           {(draft.type === "text" || draft.type === "textarea") && <input className={inputClass + " mt-2"} type="number" min={1} max={20000} placeholder="Character limit (optional), e.g. 60" value={draft.limit} onChange={(e) => setDraft({ ...draft, limit: e.target.value })} aria-label="Character limit" />}
+        </div>
+        <div className="mt-5 border-t border-border pt-4">
+          <p className="font-display text-lg font-semibold">Save as your template</p>
+          <p className="mb-2 text-xs text-muted-foreground">Keep these questions to reuse with your next client.</p>
+          <div className="flex gap-2">
+            <input className={inputClass + " flex-1"} placeholder="e.g. Restaurant site" value={tplName} maxLength={80} onChange={(e) => setTplName(e.target.value)} aria-label="Template name" />
+            <Btn variant="outline" onClick={saveTpl} disabled={!org || !tplName.trim() || kept === 0}>Save</Btn>
+          </div>
+          {tplMsg && <p className="mt-2 text-xs text-muted-foreground" role="status">{tplMsg}</p>}
         </div>
         </>}
       </Card>

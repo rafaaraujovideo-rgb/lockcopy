@@ -7,6 +7,8 @@ Não são migrações do Lovable Cloud: o Cloud continua desligado neste projeto
 
 ### Atualização dos emails numa instalação existente
 
+Executar `0019_saved_templates.sql` no SQL Editor depois do 0018. Permite a cada agência guardar os seus próprios modelos de pedido; só os membros da agência os veem.
+
 Executar `0018_natural_email_copy.sql` no SQL Editor depois das atualizações anteriores. Atualiza apenas o texto dos novos emails de ajustes, lembretes manuais e envio de conteúdo. Não altera permissões, destinatários, prazos ou emails já em fila. Os lembretes automáticos, convites e avisos de feedback são atualizados no código da aplicação.
 
 **Recomendado:** no SQL Editor do projeto, criar uma query nova, colar TODO o

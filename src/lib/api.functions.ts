@@ -541,3 +541,31 @@ async function customizeFields(
     if (f.error) throw new Error(f.error.message);
   }
 }
+
+const templateField = z.object({ label: text(200).min(1), help: text(300).optional(), type: z.enum(["text", "textarea", "image", "file"]), limit: z.number().int().min(1).max(20000).optional() });
+
+/** Saves the current set of questions as the agency's own reusable template. */
+export const saveTemplate = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) =>
+    z.object({
+      orgId: uuid,
+      name: text(80).min(1),
+      sections: z.array(z.object({ title: text(200).min(1), fields: z.array(templateField).min(1).max(100) })).min(1).max(30),
+    }).parse(data),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: id, error } = await context.supabase.rpc("save_org_template" as never, { _org: data.orgId, _name: data.name, _sections: data.sections } as never);
+    if (error) throw new Error(error.message);
+    return { id: id as unknown as string };
+  });
+
+/** Removes one of the agency's saved templates (requests already created keep their questions). */
+export const deleteTemplate = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ templateId: uuid }).parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.rpc("delete_org_template" as never, { _template: data.templateId } as never);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
