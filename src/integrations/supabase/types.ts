@@ -773,6 +773,7 @@ export type Database = {
           id: string
           is_active: boolean
           name: string
+          org_id: string | null
           slug: string
         }
         Insert: {
@@ -781,6 +782,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           name: string
+          org_id?: string | null
           slug: string
         }
         Update: {
@@ -789,9 +791,18 @@ export type Database = {
           id?: string
           is_active?: boolean
           name?: string
+          org_id?: string | null
           slug?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "templates_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -875,6 +886,7 @@ export type Database = {
         }
         Returns: Json
       }
+      delete_org_template: { Args: { _template: string }; Returns: undefined }
       due_images: {
         Args: { _batch?: number }
         Returns: {
@@ -1015,6 +1027,10 @@ export type Database = {
       review_field: {
         Args: { _decision: string; _field: string; _note?: string }
         Returns: Json
+      }
+      save_org_template: {
+        Args: { _name: string; _org: string; _sections: Json }
+        Returns: string
       }
       schedule_purge: {
         Args: { _org: string; _reason: string; _when: string }
