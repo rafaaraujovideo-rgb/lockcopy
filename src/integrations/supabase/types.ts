@@ -1023,6 +1023,7 @@ export type Database = {
         Args: { _field: string; _token: string }
         Returns: string
       }
+      queue_auto_reminders: { Args: never; Returns: number }
       request_in_org: { Args: { _request: string }; Returns: boolean }
       review_field: {
         Args: { _decision: string; _field: string; _note?: string }
