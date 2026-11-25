@@ -44,6 +44,7 @@ describe("db/*.sql", () => {
     "0015_private_limit_helpers.sql",
     "0016_private_enqueue_notification.sql",
     "0017_feedback.sql",
+    "0018_natural_email_copy.sql",
     ]);
   });
 

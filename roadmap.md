@@ -10,6 +10,8 @@
 - Ecrã de início do teste abre o checkout do Stripe; faturação abre o portal do Stripe.
 
 ## Por fazer
+- [x] Simplificar emails de lembrete, convite e feedback sem alterar prazos nem envio.
+- [ ] Aplicar `db/0018_natural_email_copy.sql` no Supabase externo para atualizar emails de ajustes, lembretes manuais e conteúdo enviado (depende do utilizador).
 - [x] Interface 100% em inglês (língua global); chat com o utilizador fica em português.
 - [ ] Correr `db/0008_english.sql` no Supabase para passar modelos, emails e erros da base de dados para inglês.
 - [x] Fluxo completo testado com sessão real (agência, pedido, portal, upload+WebP, aprovar, ajuste, link, exportações).

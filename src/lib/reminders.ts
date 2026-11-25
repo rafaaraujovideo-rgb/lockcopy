@@ -25,12 +25,15 @@ export function reminderKind(offset: number) {
 }
 
 export function reminderEmail(offset: number, title: string, agency: string, missing: number, link: string) {
-  const when = offset > 0 ? `in ${offset} days` : offset === 0 ? "today" : `${-offset} days ago`;
+  const days = Math.abs(offset);
+  const duration = `${days} day${days === 1 ? "" : "s"}`;
+  const when = offset > 0 ? `in ${duration}` : offset === 0 ? "today" : `${duration} ago`;
   const subject = offset < 0 ? `Still waiting on content for ${title}` : `Content for ${title} is due ${when}`;
+  const deadline = offset < 0 ? `was due ${when}` : `is due ${when}`;
   const body =
-    `Hi,\n\n${agency} needs the content for "${title}" — it was due ${when === "today" ? "today" : when}.` +
-    `\n${missing} item${missing === 1 ? "" : "s"} still missing. Your answers are saved, so you can pick up where you left off:\n\n${link}\n\nThanks!`;
-  return { subject, body: body.replace("it was due in", "it's due in").replace("it was due today", "it's due today") };
+    `Hi,\n\nThe content for "${title}" ${deadline}. ${agency} is still waiting on ${missing} item${missing === 1 ? "" : "s"}. ` +
+    `Your saved answers are still there. You can finish here:\n\n${link}\n\nThanks!`;
+  return { subject, body };
 }
 
 /** Date (YYYY-MM-DD) of the next automatic reminder on or after `today`, or null if none is left. */

@@ -5,6 +5,10 @@ Não são migrações do Lovable Cloud: o Cloud continua desligado neste projeto
 
 ## Como correr
 
+### Atualização dos emails numa instalação existente
+
+Executar `0018_natural_email_copy.sql` no SQL Editor depois das atualizações anteriores. Atualiza apenas o texto dos novos emails de ajustes, lembretes manuais e envio de conteúdo. Não altera permissões, destinatários, prazos ou emails já em fila. Os lembretes automáticos, convites e avisos de feedback são atualizados no código da aplicação.
+
 **Recomendado:** no SQL Editor do projeto, criar uma query nova, colar TODO o
 conteúdo de `ALL_IN_ONE.sql` e carregar em **Run**. É a junção exata dos seis
 ficheiros, pela mesma ordem, cada um na sua transação.

@@ -35,8 +35,8 @@ export const inviteMember = createServerFn({ method: "POST" })
         body: JSON.stringify({
           sender: { name: "Lockcopy", email: m?.[1] ?? "notify@lockcopy.com" },
           to: [{ email: data.email }],
-          subject: `You're invited to join ${org?.name ?? "an agency"} on Lockcopy`,
-          textContent: `${org?.name ?? "An agency"} invited you to collaborate on Lockcopy.\n\nAccept the invite (valid for 14 days):\n${link}\n\nSign in or create an account with ${data.email}.`,
+          subject: `Join ${org?.name ?? "an agency"} on Lockcopy`,
+          textContent: `Hi,\n\n${org?.name ?? "An agency"} invited you to join their team on Lockcopy. Use ${data.email} to sign in or create an account, then accept the invite here:\n\n${link}\n\nThis invite expires in 14 days.`,
         }),
       });
       emailed = res.ok;

@@ -36,7 +36,7 @@ export const sendFeedback = createServerFn({ method: "POST" })
           to: [{ email: ADMIN_EMAIL }],
           ...(me.user?.email ? { replyTo: { email: me.user.email } } : {}),
           subject: `${KIND[data.kind]} from ${from}`,
-          textContent: `${data.message}\n\n—\nFrom: ${from}\nPage: ${data.page ?? "-"}\n\nReply to this email to answer them directly.`,
+          textContent: `${data.message}\n\nFrom: ${from}\nPage: ${data.page ?? "-"}\n\n${me.user?.email ? "You can reply to this email to get back to them." : "No reply email was available."}`,
         }),
       }).catch(() => null);
     }
