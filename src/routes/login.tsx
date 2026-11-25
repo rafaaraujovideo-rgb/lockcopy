@@ -80,7 +80,7 @@ function SignIn() {
             try { localStorage.setItem("lc_pending_agency", name); } catch { /* ignore */ }
           }
         }
-        if (!data.session) setInfo("We sent you a confirmation email. Open the link and sign in here again.");
+        if (!data.session) setInfo("We sent you a confirmation email. Open the link and your account is ready — it signs you in and takes you straight to your dashboard.");
       }
     } catch (err) {
       setError(friendlyError(err));
