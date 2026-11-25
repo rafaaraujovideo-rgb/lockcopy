@@ -2,6 +2,7 @@ import { SiteShell } from "@/components/site-chrome";
 import { isPasswordPwned, PWNED_MESSAGE } from "@/lib/pwned";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Check, Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { getSupabase, hasSupabase } from "@/lib/supabase-browser";
 import { useSession } from "@/lib/session";
@@ -102,11 +103,27 @@ function SignIn() {
         <div className="max-w-md">
           <p className="eyebrow">For web agencies</p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">Every page's content, approved, before you start building.</h2>
-          <ul className="mt-6 space-y-2.5 text-sm text-muted-foreground">
-            {["One link per client, no sign-up for them", "Autosave, uploads per field, WebP conversion", "Approve or request changes field by field", "Export to Webflow CSV, Framer JSON or ZIP"].map((x) => (
-              <li key={x} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-seal" />{x}</li>
+          <p className="mt-4 text-sm text-muted-foreground">One link per client. Autosave, uploads per field, review field by field, export to Webflow or Framer.</p>
+        </div>
+        <div className="max-w-md rounded-xl border border-border bg-card p-5 shadow-card" aria-hidden="true">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold">Norte Studio · Website content</p>
+              <p className="font-mono text-[11px] text-muted-foreground">client: hello@alvaro-cafe.pt</p>
+            </div>
+            <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-foreground">Ready to export</span>
+          </div>
+          <div className="mt-4 space-y-2.5">
+            {[["Homepage", "4/4"], ["About", "3/3"], ["Menu", "6/6"]].map(([page, n], i) => (
+              <div key={page} className="flex items-center gap-3 text-sm" style={{ animation: `lc-in .5s ${0.15 + i * 0.12}s both` }}>
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-seal/15 text-seal"><Check className="h-3 w-3" /></span>
+                <span className="flex-1">{page}</span>
+                <span className="font-mono text-[11px] text-muted-foreground">{n} approved</span>
+              </div>
             ))}
-          </ul>
+          </div>
+          <div className="mt-4 h-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-seal" style={{ animation: "lc-bar 1.2s .3s both" }} /></div>
+          <div className="mt-3 flex gap-2 font-mono text-[11px] text-muted-foreground"><span className="rounded border border-border px-1.5 py-0.5">webflow.csv</span><span className="rounded border border-border px-1.5 py-0.5">framer.json</span><span className="rounded border border-border px-1.5 py-0.5">assets.zip</span></div>
         </div>
         <p className="font-mono text-[11px] text-muted-foreground">14-day trial · no credit card required · cancel anytime</p>
       </aside>
@@ -114,9 +131,10 @@ function SignIn() {
       <div className="w-full max-w-sm space-y-5">
         <h1 className="text-center text-xl font-bold tracking-tight">{forgot ? "Reset your Lockcopy password" : mode === "signin" ? "Sign in to Lockcopy" : "Create your Lockcopy account"}</h1>
         <Card className="space-y-4">
-          <div className="grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
+          <div className="relative grid grid-cols-2 gap-1 rounded-md border border-border bg-muted p-1 text-sm">
+            <span aria-hidden="true" className="absolute inset-y-1 left-1 w-[calc(50%-6px)] rounded bg-card shadow-card transition-transform duration-300 ease-[cubic-bezier(.3,1.3,.5,1)]" style={{ transform: mode === "signup" ? "translateX(calc(100% + 4px))" : "none" }} />
             {(["signin", "signup"] as const).map((m) => (
-              <button key={m} type="button" onClick={() => { setMode(m); setForgot(false); setError(""); setInfo(""); }} className={"rounded py-1.5 " + (mode === m ? "bg-card font-medium shadow-card" : "text-muted-foreground")}>
+              <button key={m} type="button" onClick={() => { setMode(m); setForgot(false); setError(""); setInfo(""); }} aria-pressed={mode === m} className={"relative z-10 rounded py-1.5 transition-colors " + (mode === m ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground")}>
                 {m === "signin" ? "Sign in" : "Create account"}
               </button>
             ))}
@@ -127,22 +145,22 @@ function SignIn() {
             <div className="space-y-3">
               {!forgot && (
                 <>
-                  <button type="button" onClick={google} className="flex h-10 w-full items-center justify-center gap-2.5 rounded-md border border-[#747775] bg-[#FFFFFF] px-3 text-sm font-medium text-[#1F1F1F]">
+                  <button type="button" onClick={google} className="press flex h-10 w-full items-center justify-center gap-2.5 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground shadow-card hover:bg-muted">
                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
                     Continue with Google
                   </button>
                   <div className="flex items-center gap-3 text-[11px] uppercase tracking-wide text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
                 </>
               )}
-              <form onSubmit={submit} className="space-y-3">
+              <form key={forgot ? "forgot" : mode} onSubmit={submit} className="space-y-3" style={{ animation: "lc-in .28s both" }}>
                 {mode === "signup" && !forgot && !joining && (
                   <input className={inputClass} placeholder="Agency name (e.g. Norte Studio)" value={agency} maxLength={120} onChange={(e) => setAgency(e.target.value)} required minLength={2} />
                 )}
                 <input className={inputClass} type="email" autoComplete="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 {!forgot && (
                   <div className="relative">
-                    <input className={inputClass + " pr-16"} type={show ? "text" : "password"} autoComplete={mode === "signin" ? "current-password" : "new-password"} placeholder={mode === "signup" ? "Password (min. 8 characters)" : "Password"} minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    <button type="button" onClick={() => setShow((v) => !v)} className="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs text-muted-foreground hover:bg-muted" aria-label={show ? "Hide password" : "Show password"}>{show ? "Hide" : "Show"}</button>
+                    <input className={inputClass + " pr-10"} type={show ? "text" : "password"} autoComplete={mode === "signin" ? "current-password" : "new-password"} placeholder={mode === "signup" ? "Password (min. 8 characters)" : "Password"} minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <button type="button" onClick={() => setShow((v) => !v)} className="absolute inset-y-0 right-1.5 my-auto grid h-7 w-7 place-items-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" aria-label={show ? "Hide password" : "Show password"}>{show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                   </div>
                 )}
                 {mode === "signin" && (
@@ -150,9 +168,9 @@ function SignIn() {
                     {forgot ? "← Back to sign in" : "Forgot password?"}
                   </button>
                 )}
-                {error && <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
-                {info && <p className="rounded-md bg-accent p-2 text-sm text-accent-foreground">{info}</p>}
-                <Btn className="w-full" disabled={busy} type="submit">{busy ? "One moment…" : forgot ? "Send reset link" : mode === "signin" ? "Sign in" : "Create account"}</Btn>
+                {error && <p role="alert" style={{ animation: "lc-in .2s both" }} className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">{error}</p>}
+                {info && <p role="status" style={{ animation: "lc-in .2s both" }} className="rounded-md bg-accent p-2 text-sm text-accent-foreground">{info}</p>}
+                <Btn className="press h-10 w-full" disabled={busy} type="submit">{busy ? <><Loader2 className="h-4 w-4 animate-spin" />One moment…</> : forgot ? "Send reset link" : mode === "signin" ? "Sign in" : "Create account"}</Btn>
               </form>
             </div>
           )}
