@@ -115,3 +115,10 @@ Falta:
 5. Trabalhador de imagens a usar `due_images` + `mark_image`.
 6. Purga a usar `due_purges` + `finish_purge`.
 7. Política de privacidade, termos e DPA antes de cobrar.
+
+## 0020 — Lembretes automáticos sem agendador externo
+
+1. Corre `db/0020_auto_reminders_cron.sql` no SQL Editor (ativa pg_cron e agenda todos os dias às 08:00 UTC).
+2. Em Database → Webhooks cria um webhook: tabela `notifications`, evento INSERT, método POST,
+   URL `https://lockcopy.com/api/public/cron/notifications`, header `Authorization: Bearer <CRON_SECRET>`.
+   Assim cada email (lembrete, convite, aviso) sai assim que é criado.

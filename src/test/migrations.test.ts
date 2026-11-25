@@ -46,6 +46,7 @@ describe("db/*.sql", () => {
     "0017_feedback.sql",
     "0018_natural_email_copy.sql",
       "0019_saved_templates.sql",
+      "0020_auto_reminders_cron.sql",
     ]);
   });
 
