@@ -11,6 +11,7 @@ import { workspaceKey } from "@/lib/workspace";
 import { nextReminderDate } from "@/lib/reminders";
 import { Badge, Btn, Card, download, inputClass } from "@/components/ui-bits";
 import { Bell, Check, Send, User } from "lucide-react";
+import { WebflowPublish } from "@/components/webflow-publish";
 
 export const Route = createFileRoute("/app/requests/$id")({
   staticData: { sitemap: false },
@@ -162,6 +163,7 @@ function RequestPage() {
           <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-webflow.csv`, webflowCsv(exp), "text/csv")}>CSV for Webflow</Btn>
           <Btn variant="outline" className="w-full" onClick={() => download(`${r.client_name}-framer.json`, framerJson(exp), "application/json")}>JSON for Framer</Btn>
           <p className="text-xs text-muted-foreground">Ready to import into Webflow CMS or Framer, organized by page.</p>
+          <WebflowPublish exp={exp} approved={new Set(d.submissions.filter((x) => x.status === "approved").map((x) => x.field_id))} />
         </Card>
         <Card>
           <p className="mb-2 text-sm font-medium">History</p>
