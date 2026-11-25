@@ -32,10 +32,12 @@ type Detail = Awaited<ReturnType<typeof getRequestDetail>>;
 
 const BUCKET = "client-uploads";
 
-async function signedUrl(path: string) {
-  const { data, error } = await getSupabase().storage.from(BUCKET).createSignedUrl(path, 60);
+// Authenticated download: storage rules check membership on every request,
+// so no shareable link exists that outlives a member's removal.
+async function downloadFile(path: string): Promise<Blob> {
+  const { data, error } = await getSupabase().storage.from(BUCKET).download(path);
   if (error || !data) throw new Error(error?.message ?? "File unavailable.");
-  return data.signedUrl;
+  return data;
 }
 
 function RequestPage() {
@@ -85,9 +87,10 @@ function RequestPage() {
       const files: Record<string, Uint8Array> = {};
       for (const t of texts) files[t.zipPath] = strToU8(t.content);
       for (const e of entries) {
-        const res = await fetch(await signedUrl(e.storagePath));
-        if (!res.ok) throw new Error(`Could not download ${e.zipPath}.`);
-        files[e.zipPath] = new Uint8Array(await res.arrayBuffer());
+        const blob = await downloadFile(e.storagePath).catch(() => {
+          throw new Error(`Could not download ${e.zipPath}.`);
+        });
+        files[e.zipPath] = new Uint8Array(await blob.arrayBuffer());
       }
       const blob = new Blob([zipSync(files, { level: 0 }) as Uint8Array<ArrayBuffer>], { type: "application/zip" });
       const url = URL.createObjectURL(blob);
@@ -218,7 +221,11 @@ function FieldReview({ field, sub, files, onDone }: { field: Detail["fields"][nu
 
   const open = async (path: string) => {
     try {
-      window.open(await signedUrl(path), "_blank", "noopener");
+      const win = window.open("", "_blank");
+      const url = URL.createObjectURL(await downloadFile(path));
+      if (win) win.location.href = url;
+      else window.location.href = url;
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
     } catch (e) {
       setError(friendlyError(e));
     }
