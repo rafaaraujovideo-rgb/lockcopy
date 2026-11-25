@@ -18,6 +18,20 @@ describe("Transactional email sender", () => {
     expect(api.slice(i, i + 800)).toContain("flushNotifications");
   });
 
+  it("sends queued emails without waiting for an external scheduler", () => {
+    const api = readFileSync("src/lib/api.functions.ts", "utf8");
+    expect(api).toContain("async function flushPendingEmails()");
+    // A failed email must never break the page.
+    const helper = api.slice(api.indexOf("async function flushPendingEmails"), api.indexOf("async function flushPendingEmails") + 600);
+    expect(helper).toContain("catch");
+    // Opening the app, reviewing a field and pressing remind all flush the queue.
+    for (const fn of ["export const getWorkspace", "export const reviewField", "export const sendReminder"]) {
+      const at = api.indexOf(fn);
+      expect(at, fn).toBeGreaterThan(-1);
+      expect(api.slice(at, at + 1200), fn).toContain("flushPendingEmails()");
+    }
+  });
+
   it("sends team invites from the same sender", () => {
     const team = readFileSync("src/lib/team.functions.ts", "utf8");
     expect(team).toContain(`Lockcopy <${SENDER}>`);

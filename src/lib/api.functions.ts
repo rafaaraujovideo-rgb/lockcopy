@@ -11,11 +11,28 @@ const uuid = z.string().uuid();
 const email = z.string().trim().email().max(200);
 const text = (max: number) => z.string().trim().max(max);
 
+/**
+ * Sends queued emails (deadline reminders queued by Supabase's daily job)
+ * as soon as an agency opens the app, so nothing waits on an external
+ * scheduler. Errors are swallowed: a failed email must never break the page.
+ */
+async function flushPendingEmails() {
+  try {
+    const { createAdminSupabase } = await import("@/integrations/supabase/client.server");
+    const { flushNotifications } = await import("@/lib/notify-flush.server");
+    await flushNotifications(createAdminSupabase(), 5);
+  } catch (e) {
+    console.error("queued emails failed", e);
+  }
+}
+
 /** Org + plan + limits of the signed-in user. */
 export const getWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
+
+    await flushPendingEmails();
 
     const { data: membership, error: membershipError } = await supabase
       .from("org_members")
@@ -256,6 +273,8 @@ export const reviewField = createServerFn({ method: "POST" })
     });
 
     if (error) throw new Error(error.message);
+    // The client gets the change note now, not on the next daily run.
+    await flushPendingEmails();
     return result as { status: string; note: string | null };
   });
 
@@ -300,6 +319,8 @@ export const sendReminder = createServerFn({ method: "POST" })
     });
 
     if (error) throw new Error(error.message);
+    // The reminder goes out on this click, not on the next daily run.
+    await flushPendingEmails();
     return result as { missing: number; queued: boolean };
   });
 
