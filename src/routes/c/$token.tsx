@@ -197,13 +197,14 @@ function FieldInput({ token, field, sub }: { token: string; field: PortalField; 
         lastSaved.current = text;
         setStatus(r.status as SubmissionStatus);
         setSaved("saved");
+        void qc.invalidateQueries({ queryKey: ["portal", token] });
       } catch (e) {
         setSaved("error saving");
         setErrors([friendlyError(e)]);
       }
     }, 800);
     return () => clearTimeout(t);
-  }, [text, token, field.id, locked]);
+  }, [text, token, field.id, locked, qc]);
 
   const onFiles = async (list: FileList | null) => {
     if (!list) return;
