@@ -102,39 +102,7 @@ function RequestPage() {
       URL.revokeObjectURL(url);
     });
 
-  return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <div className="space-y-5">
-        <div>
-          <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Requests</Link>
-          <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">{r.client_name}</h1>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${total ? Math.round((done / total) * 100) : 0}%` }} /></div>
-            <span className="font-mono text-xs tabular-nums text-muted-foreground">{total ? Math.round((done / total) * 100) : 0}% done</span>
-          </div>
-        </div>
-        {d.sections.map((s) => (
-          <Card key={s.id}>
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <h2 className="font-display text-xl font-semibold">{s.title}</h2>
-              {(() => {
-                const pending = d.fields.filter((f) => f.section_id === s.id && subs.get(f.id)?.status === "submitted");
-                return pending.length > 0 ? (
-                  <Btn variant="outline" className="px-3 py-1 text-xs" disabled={!!busy} onClick={() => run(`all-${s.id}`, async () => { for (const f of pending) await reviewField({ data: { fieldId: f.id, decision: "approve", note: "" } }); }, `${pending.length} fields approved.`)}>
-                    {busy === `all-${s.id}` ? "Approving…" : `Approve all (${pending.length})`}
-                  </Btn>
-                ) : null;
-              })()}
-            </div>
-            {d.fields.filter((f) => f.section_id === s.id).map((f) => (
-              <FieldReview key={f.id} field={f} sub={subs.get(f.id)} files={d.files.filter((x) => x.field_id === f.id)} onDone={refresh} />
-            ))}
-          </Card>
-        ))}
-      </div>
-
-      <aside className="space-y-4">
+  const linkCard = (
         <Card className="space-y-2">
           <div className="flex items-center justify-between"><p className="text-sm font-medium">Client link</p><Badge s={ls} /></div>
           <p className="break-all rounded bg-muted p-2 text-xs">{link}</p>
@@ -157,6 +125,43 @@ function RequestPage() {
           )}
           {msg && <p className="text-xs text-muted-foreground">{msg}</p>}
         </Card>
+  );
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+      <div className="space-y-5">
+        <div>
+          <Link to="/app" className="text-sm text-muted-foreground hover:underline">← Requests</Link>
+          <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">{r.client_name}</h1>
+          <p className="mt-1 font-mono text-xs text-muted-foreground">{r.title} · {done}/{total} fields · due {fmtDate(r.due_date)}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${total ? Math.round((done / total) * 100) : 0}%` }} /></div>
+            <span className="font-mono text-xs tabular-nums text-muted-foreground">{total ? Math.round((done / total) * 100) : 0}% done</span>
+          </div>
+        </div>
+        <div className="lg:hidden">{linkCard}</div>
+        {d.sections.map((s) => (
+          <Card key={s.id}>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h2 className="font-display text-xl font-semibold">{s.title}</h2>
+              {(() => {
+                const pending = d.fields.filter((f) => f.section_id === s.id && subs.get(f.id)?.status === "submitted");
+                return pending.length > 0 ? (
+                  <Btn variant="outline" className="px-3 py-1 text-xs" disabled={!!busy} onClick={() => run(`all-${s.id}`, async () => { for (const f of pending) await reviewField({ data: { fieldId: f.id, decision: "approve", note: "" } }); }, `${pending.length} fields approved.`)}>
+                    {busy === `all-${s.id}` ? "Approving…" : `Approve all (${pending.length})`}
+                  </Btn>
+                ) : null;
+              })()}
+            </div>
+            {d.fields.filter((f) => f.section_id === s.id).map((f) => (
+              <FieldReview key={f.id} field={f} sub={subs.get(f.id)} files={d.files.filter((x) => x.field_id === f.id)} onDone={refresh} />
+            ))}
+          </Card>
+        ))}
+      </div>
+
+      <aside className="space-y-4">
+        <div className="hidden lg:block">{linkCard}</div>
         <Card className="space-y-2">
           <p className="text-sm font-medium">Export</p>
           <Btn variant="outline" className="w-full" disabled={!!busy} onClick={zip}>{busy === "zip" ? "Preparing ZIP…" : "ZIP per page"}</Btn>

@@ -6,7 +6,7 @@ import { getSupabase } from "@/lib/supabase-browser";
 import { createRequest } from "@/lib/api.functions";
 import { workspaceKey } from "@/lib/workspace";
 import { friendlyError } from "@/lib/lockcopy";
-import { Btn, Card, inputClass } from "@/components/ui-bits";
+import { Btn, Card } from "@/components/ui-bits";
 
 type Org = { id: string; name: string; logo_url: string | null; brand_color: string | null };
 
@@ -24,6 +24,23 @@ export function Onboarding({ org, email }: { org: Org; email: string }) {
   const run = async (key: string, fn: () => Promise<void>) => {
     setBusy(key); setError("");
     try { await fn(); } catch (e) { setError(friendlyError(e)); } finally { setBusy(""); }
+  };
+
+  const [uploading, setUploading] = useState(false);
+  const uploadLogo = async (file: File | undefined) => {
+    if (!file) return;
+    setError("");
+    if (!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)) { setError("Use a PNG, JPG, WebP or SVG file."); return; }
+    if (file.size > 2 * 1024 * 1024) { setError("The logo must be under 2 MB."); return; }
+    setUploading(true);
+    try {
+      const sb = getSupabase();
+      const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+      const path = `${org.id}/logo-${Date.now()}.${ext}`;
+      const { error: upErr } = await sb.storage.from("brand-logos").upload(path, file, { contentType: file.type, upsert: true });
+      if (upErr) throw new Error(upErr.message);
+      setLogo(sb.storage.from("brand-logos").getPublicUrl(path).data.publicUrl);
+    } catch (e) { setError(friendlyError(e)); } finally { setUploading(false); }
   };
 
   const saveBrand = () => run("brand", async () => {
@@ -70,14 +87,18 @@ export function Onboarding({ org, email }: { org: Org; email: string }) {
                   <div className="space-y-3">
                     <p className="text-sm text-muted-foreground">Your clients see this on the portal, so it feels like your studio, not ours.</p>
                     <div className="flex flex-col gap-2 sm:flex-row">
-                      <input className={inputClass} placeholder="Logo link (https://…, optional)" value={logo} onChange={(e) => setLogo(e.target.value)} />
+                      <label className="flex flex-1 cursor-pointer items-center gap-2 rounded-md border border-input bg-card px-3 py-2 text-sm hover:bg-muted">
+                        {logo ? <img src={logo} alt="" className="h-5 max-w-[80px] object-contain" /> : null}
+                        <span>{uploading ? "Uploading…" : logo ? "Replace logo" : "Upload logo (optional)"}</span>
+                        <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" className="hidden" disabled={uploading} onChange={(e) => { void uploadLogo(e.target.files?.[0]); e.target.value = ""; }} />
+                      </label>
                       <label className="flex shrink-0 items-center gap-2 rounded-md border border-input bg-card px-3 text-sm">
                         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-6 w-6 cursor-pointer border-0 bg-transparent p-0" aria-label="Brand colour" />
                         <span className="font-mono text-xs">{color}</span>
                       </label>
                     </div>
                     <div className="flex gap-2">
-                      <Btn onClick={saveBrand} disabled={busy === "brand"}>{busy === "brand" ? "Saving…" : "Save brand"}</Btn>
+                      <Btn onClick={saveBrand} disabled={busy === "brand" || uploading}>{busy === "brand" ? "Saving…" : "Save brand"}</Btn>
                       <Btn variant="ghost" onClick={() => setBrandDone(true)}>Skip</Btn>
                     </div>
                   </div>
