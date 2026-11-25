@@ -35,6 +35,7 @@ function AppLayout() {
   const { ready, session } = useSession();
   const nav = useNavigate();
   const ws = useWorkspace();
+  const path = useRouterState({ select: (r) => r.location.pathname.replace(/\/$/, "") || "/app" });
 
   useEffect(() => {
     if (ready && !session) nav({ to: "/login", search: { mode: "signin", next: "/app" } });
@@ -68,9 +69,11 @@ function AppLayout() {
           <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border bg-background/85 px-3 backdrop-blur-md">
             <SidebarTrigger aria-label="Toggle sidebar" />
             <Crumb />
+{path !== "/app/new" && (
             <Link to="/app/new" className="ml-auto inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground shadow-btn hover:opacity-90">
               <Plus className="h-3.5 w-3.5" /> New request
             </Link>
+            )}
           </header>
           <PlanBanner alert={planAlert(org)} />
           <main className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 sm:py-10">{body}</main>

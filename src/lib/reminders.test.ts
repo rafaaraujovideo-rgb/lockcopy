@@ -26,3 +26,9 @@ describe("next automatic reminder", () => {
   it("is none once every reminder has gone out", () => expect(nextAt(base, "2026-12-13")).toBeNull());
   it("is none for completed requests", () => expect(nextAt({ ...base, status: "completed" }, "2026-12-01")).toBeNull());
 });
+
+describe("requests the client has not opened yet", () => {
+  const unopened = { id: "x", status: "draft", due_date: "2026-12-10", revoked_at: null, expires_at: "2027-01-10T00:00:00Z" };
+  it("still get the 3-day reminder", () => expect(reminderOffsetFor(unopened, "2026-12-07")).toBe(3));
+  it("show the next reminder date", () => expect(nextAt(unopened, "2026-11-25")).toBe("2026-12-07"));
+});

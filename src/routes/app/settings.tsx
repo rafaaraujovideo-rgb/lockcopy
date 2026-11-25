@@ -34,6 +34,7 @@ function Settings() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!org) return;
@@ -45,7 +46,6 @@ function Settings() {
   if (!org) return null;
   const validLogo = /^https:\/\//.test(logo.trim());
 
-  const [uploading, setUploading] = useState(false);
   const uploadLogo = async (file: File | undefined) => {
     if (!file) return;
     setError(""); setMsg("");

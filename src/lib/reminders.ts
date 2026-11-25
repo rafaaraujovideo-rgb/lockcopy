@@ -14,7 +14,7 @@ const DAY = 864e5;
 /** Which reminder (days before the deadline) is due today for this request, if any. */
 export function reminderOffsetFor(r: ReminderRequest, today: string): number | null {
   if (!r.due_date || r.revoked_at) return null;
-  if (r.status === "archived" || r.status === "completed" || r.status === "draft") return null;
+  if (r.status === "archived" || r.status === "completed") return null;
   if (new Date(r.expires_at).getTime() <= new Date(`${today}T00:00:00Z`).getTime()) return null;
   const diff = Math.round((Date.parse(`${r.due_date}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / DAY);
   return (REMINDER_OFFSETS as readonly number[]).includes(diff) ? diff : null;
@@ -39,7 +39,7 @@ export function reminderEmail(offset: number, title: string, agency: string, mis
 /** Date (YYYY-MM-DD) of the next automatic reminder on or after `today`, or null if none is left. */
 export function nextReminderDate(r: ReminderRequest, today: string): string | null {
   if (!r.due_date || r.revoked_at) return null;
-  if (r.status === "archived" || r.status === "completed" || r.status === "draft") return null;
+  if (r.status === "archived" || r.status === "completed") return null;
   const due = Date.parse(`${r.due_date}T00:00:00Z`);
   const now = Date.parse(`${today}T00:00:00Z`);
   const expires = new Date(r.expires_at).getTime();

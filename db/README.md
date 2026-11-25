@@ -122,3 +122,7 @@ Falta:
 2. Em Database → Webhooks cria um webhook: tabela `notifications`, evento INSERT, método POST,
    URL `https://lockcopy.com/api/public/cron/notifications`, header `Authorization: Bearer <CRON_SECRET>`.
    Assim cada email (lembrete, convite, aviso) sai assim que é criado.
+
+## 0021 — Lembretes também para clientes que ainda não abriram o link
+
+Corre `db/0021_reminders_unopened.sql` no SQL Editor. O agendamento diário de 0020 mantém-se.
