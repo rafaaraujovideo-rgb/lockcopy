@@ -149,7 +149,7 @@ function RequestPage() {
           </div>
           {ls === "active" ? (
             <>
-              <Btn variant="outline" className="w-full" disabled={!!busy} onClick={() => run("rem", () => sendReminder({ data: { requestId: r.id } }), "Reminder sent to the client.")}>Send reminder</Btn>
+              <Btn variant="outline" className="w-full" disabled={!!busy} onClick={() => run("rem", async () => { const res = await sendReminder({ data: { requestId: r.id } }); const t = res.queued ? "Reminder sent to the client." : "Nothing missing, so no reminder was sent."; setMsg(t); toast.success(t); })}>Send reminder</Btn>
               <Btn variant="ghost" className="w-full text-destructive" disabled={!!busy} onClick={() => run("link", () => setRequestLink({ data: { requestId: r.id, revoke: true } }), "Link switched off.")}>Switch off link</Btn>
             </>
           ) : (
