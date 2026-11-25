@@ -50,9 +50,9 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       {checkout === "ok" && (
-        <Card className="bg-accent text-sm text-accent-foreground">Plan saved. It can take a few seconds to show up here.</Card>
+        <Card className="bg-accent text-sm text-accent-foreground">Card added. It can take a few seconds for Stripe to confirm.</Card>
       )}
-      {checkout === "cancel" && <Card className="text-sm text-muted-foreground">Trial setup was cancelled. Nothing was charged.</Card>}
+      {checkout === "cancel" && <Card className="text-sm text-muted-foreground">No card was added. Nothing was charged.</Card>}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-display text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Requests</h1>
