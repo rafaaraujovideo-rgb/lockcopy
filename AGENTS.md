@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Project rules
+- Public comparison pages use SiteShell and opt into the route-derived sitemap; reuse HeroStage for product demonstrations to avoid divergent mockups.
 - Database is the user's external Supabase; schema lives in `db/*.sql` (run manually by the user), never Lovable Cloud — the user chose to own the backend.
 - Agency pages under `/app` gate on the browser session and call server functions in `src/lib/*.functions.ts` with the bearer middleware — RLS then applies as the signed-in user.
 - The client portal (`/c/$token`) uses only token-checked RPCs and a separate session-less anon client for uploads — so an agency session in the same browser never widens client access.

@@ -29,6 +29,7 @@ import { Route as AppTeamRouteImport } from './routes/app/team'
 import { Route as CTokenRouteImport } from './routes/c/$token'
 import { Route as CompareContentSnareRouteImport } from './routes/compare/content-snare'
 import { Route as CompareFileRequestProRouteImport } from './routes/compare/file-request-pro'
+import { Route as CompareGoogleDocsRouteImport } from './routes/compare/google-docs'
 import { Route as GuidesClientContentEmailTemplatesRouteImport } from './routes/guides/client-content-email-templates'
 import { Route as GuidesCollectWebsiteContentRouteImport } from './routes/guides/collect-website-content'
 import { Route as GuidesSeoWebsiteQuestionnaireRouteImport } from './routes/guides/seo-website-questionnaire'
@@ -138,6 +139,11 @@ const CompareFileRequestProRoute = CompareFileRequestProRouteImport.update({
   path: '/compare/file-request-pro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareGoogleDocsRoute = CompareGoogleDocsRouteImport.update({
+  id: '/compare/google-docs',
+  path: '/compare/google-docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesClientContentEmailTemplatesRoute =
   GuidesClientContentEmailTemplatesRouteImport.update({
     id: '/guides/client-content-email-templates',
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/compare/google-docs': typeof CompareGoogleDocsRoute
   '/guides/client-content-email-templates': typeof GuidesClientContentEmailTemplatesRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/guides/seo-website-questionnaire': typeof GuidesSeoWebsiteQuestionnaireRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/compare/google-docs': typeof CompareGoogleDocsRoute
   '/guides/client-content-email-templates': typeof GuidesClientContentEmailTemplatesRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/guides/seo-website-questionnaire': typeof GuidesSeoWebsiteQuestionnaireRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/compare/google-docs': typeof CompareGoogleDocsRoute
   '/guides/client-content-email-templates': typeof GuidesClientContentEmailTemplatesRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/guides/seo-website-questionnaire': typeof GuidesSeoWebsiteQuestionnaireRoute
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/compare/google-docs'
     | '/guides/client-content-email-templates'
     | '/guides/collect-website-content'
     | '/guides/seo-website-questionnaire'
@@ -324,6 +334,7 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/compare/google-docs'
     | '/guides/client-content-email-templates'
     | '/guides/collect-website-content'
     | '/guides/seo-website-questionnaire'
@@ -354,6 +365,7 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/compare/google-docs'
     | '/guides/client-content-email-templates'
     | '/guides/collect-website-content'
     | '/guides/seo-website-questionnaire'
@@ -380,6 +392,7 @@ export interface RootRouteChildren {
   CTokenRoute: typeof CTokenRoute
   CompareContentSnareRoute: typeof CompareContentSnareRoute
   CompareFileRequestProRoute: typeof CompareFileRequestProRoute
+  CompareGoogleDocsRoute: typeof CompareGoogleDocsRoute
   GuidesClientContentEmailTemplatesRoute: typeof GuidesClientContentEmailTemplatesRoute
   GuidesCollectWebsiteContentRoute: typeof GuidesCollectWebsiteContentRoute
   GuidesSeoWebsiteQuestionnaireRoute: typeof GuidesSeoWebsiteQuestionnaireRoute
@@ -531,6 +544,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareFileRequestProRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare/google-docs': {
+      id: '/compare/google-docs'
+      path: '/compare/google-docs'
+      fullPath: '/compare/google-docs'
+      preLoaderRoute: typeof CompareGoogleDocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/client-content-email-templates': {
       id: '/guides/client-content-email-templates'
       path: '/guides/client-content-email-templates'
@@ -627,6 +647,7 @@ const rootRouteChildren: RootRouteChildren = {
   CTokenRoute: CTokenRoute,
   CompareContentSnareRoute: CompareContentSnareRoute,
   CompareFileRequestProRoute: CompareFileRequestProRoute,
+  CompareGoogleDocsRoute: CompareGoogleDocsRoute,
   GuidesClientContentEmailTemplatesRoute:
     GuidesClientContentEmailTemplatesRoute,
   GuidesCollectWebsiteContentRoute: GuidesCollectWebsiteContentRoute,

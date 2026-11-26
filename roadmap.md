@@ -32,6 +32,7 @@
 - [x] Bloco 3 — (campos personalizados no pedido ficam para depois: precisam de SQL novo) Pedido editável, portal por páginas com progresso, upload múltiplo, copiar campo na revisão.
 
 ## Auditoria dentro/fora da app
+- [x] Criar comparação Google Docs/Drive com conteúdo honesto, demonstração, ligações internas e metadados SEO.
 - [x] Texto dos preços do teste corrigido (Solo completo, sem cartão).
 - [x] Equipa: página Team, convites por email, aceitar em /join (db/0010_team_invites.sql).
 - [ ] Correr db/0010_team_invites.sql no Supabase (utilizador).
