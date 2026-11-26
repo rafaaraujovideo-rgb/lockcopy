@@ -29,7 +29,9 @@ import { Route as AppTeamRouteImport } from './routes/app/team'
 import { Route as CTokenRouteImport } from './routes/c/$token'
 import { Route as CompareContentSnareRouteImport } from './routes/compare/content-snare'
 import { Route as CompareFileRequestProRouteImport } from './routes/compare/file-request-pro'
+import { Route as GuidesClientContentEmailTemplatesRouteImport } from './routes/guides/client-content-email-templates'
 import { Route as GuidesCollectWebsiteContentRouteImport } from './routes/guides/collect-website-content'
+import { Route as GuidesSeoWebsiteQuestionnaireRouteImport } from './routes/guides/seo-website-questionnaire'
 import { Route as JoinTokenRouteImport } from './routes/join/$token'
 import { Route as TemplatesSlugRouteImport } from './routes/templates_.$slug'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
@@ -136,10 +138,22 @@ const CompareFileRequestProRoute = CompareFileRequestProRouteImport.update({
   path: '/compare/file-request-pro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesClientContentEmailTemplatesRoute =
+  GuidesClientContentEmailTemplatesRouteImport.update({
+    id: '/guides/client-content-email-templates',
+    path: '/guides/client-content-email-templates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const GuidesCollectWebsiteContentRoute =
   GuidesCollectWebsiteContentRouteImport.update({
     id: '/guides/collect-website-content',
     path: '/guides/collect-website-content',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const GuidesSeoWebsiteQuestionnaireRoute =
+  GuidesSeoWebsiteQuestionnaireRouteImport.update({
+    id: '/guides/seo-website-questionnaire',
+    path: '/guides/seo-website-questionnaire',
     getParentRoute: () => rootRouteImport,
   } as any)
 const JoinTokenRoute = JoinTokenRouteImport.update({
@@ -189,7 +203,9 @@ export interface FileRoutesByFullPath {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/guides/client-content-email-templates': typeof GuidesClientContentEmailTemplatesRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
+  '/guides/seo-website-questionnaire': typeof GuidesSeoWebsiteQuestionnaireRoute
   '/join/$token': typeof JoinTokenRoute
   '/templates/$slug': typeof TemplatesSlugRoute
   '/app/': typeof AppIndexRoute
@@ -216,7 +232,9 @@ export interface FileRoutesByTo {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/guides/client-content-email-templates': typeof GuidesClientContentEmailTemplatesRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
+  '/guides/seo-website-questionnaire': typeof GuidesSeoWebsiteQuestionnaireRoute
   '/join/$token': typeof JoinTokenRoute
   '/templates/$slug': typeof TemplatesSlugRoute
   '/app': typeof AppIndexRoute
@@ -245,7 +263,9 @@ export interface FileRoutesById {
   '/c/$token': typeof CTokenRoute
   '/compare/content-snare': typeof CompareContentSnareRoute
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
+  '/guides/client-content-email-templates': typeof GuidesClientContentEmailTemplatesRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
+  '/guides/seo-website-questionnaire': typeof GuidesSeoWebsiteQuestionnaireRoute
   '/join/$token': typeof JoinTokenRoute
   '/templates_/$slug': typeof TemplatesSlugRoute
   '/app/': typeof AppIndexRoute
@@ -275,7 +295,9 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/guides/client-content-email-templates'
     | '/guides/collect-website-content'
+    | '/guides/seo-website-questionnaire'
     | '/join/$token'
     | '/templates/$slug'
     | '/app/'
@@ -302,7 +324,9 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/guides/client-content-email-templates'
     | '/guides/collect-website-content'
+    | '/guides/seo-website-questionnaire'
     | '/join/$token'
     | '/templates/$slug'
     | '/app'
@@ -330,7 +354,9 @@ export interface FileRouteTypes {
     | '/c/$token'
     | '/compare/content-snare'
     | '/compare/file-request-pro'
+    | '/guides/client-content-email-templates'
     | '/guides/collect-website-content'
+    | '/guides/seo-website-questionnaire'
     | '/join/$token'
     | '/templates_/$slug'
     | '/app/'
@@ -354,7 +380,9 @@ export interface RootRouteChildren {
   CTokenRoute: typeof CTokenRoute
   CompareContentSnareRoute: typeof CompareContentSnareRoute
   CompareFileRequestProRoute: typeof CompareFileRequestProRoute
+  GuidesClientContentEmailTemplatesRoute: typeof GuidesClientContentEmailTemplatesRoute
   GuidesCollectWebsiteContentRoute: typeof GuidesCollectWebsiteContentRoute
+  GuidesSeoWebsiteQuestionnaireRoute: typeof GuidesSeoWebsiteQuestionnaireRoute
   JoinTokenRoute: typeof JoinTokenRoute
   TemplatesSlugRoute: typeof TemplatesSlugRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
@@ -503,11 +531,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareFileRequestProRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/client-content-email-templates': {
+      id: '/guides/client-content-email-templates'
+      path: '/guides/client-content-email-templates'
+      fullPath: '/guides/client-content-email-templates'
+      preLoaderRoute: typeof GuidesClientContentEmailTemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/collect-website-content': {
       id: '/guides/collect-website-content'
       path: '/guides/collect-website-content'
       fullPath: '/guides/collect-website-content'
       preLoaderRoute: typeof GuidesCollectWebsiteContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guides/seo-website-questionnaire': {
+      id: '/guides/seo-website-questionnaire'
+      path: '/guides/seo-website-questionnaire'
+      fullPath: '/guides/seo-website-questionnaire'
+      preLoaderRoute: typeof GuidesSeoWebsiteQuestionnaireRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join/$token': {
@@ -585,7 +627,10 @@ const rootRouteChildren: RootRouteChildren = {
   CTokenRoute: CTokenRoute,
   CompareContentSnareRoute: CompareContentSnareRoute,
   CompareFileRequestProRoute: CompareFileRequestProRoute,
+  GuidesClientContentEmailTemplatesRoute:
+    GuidesClientContentEmailTemplatesRoute,
   GuidesCollectWebsiteContentRoute: GuidesCollectWebsiteContentRoute,
+  GuidesSeoWebsiteQuestionnaireRoute: GuidesSeoWebsiteQuestionnaireRoute,
   JoinTokenRoute: JoinTokenRoute,
   TemplatesSlugRoute: TemplatesSlugRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
