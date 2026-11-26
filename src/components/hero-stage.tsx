@@ -146,7 +146,7 @@ function Studio({ fields, st, review }: { fields: F[]; st: Record<string, St>; r
         </div>
         <div className="space-y-1.5 rounded-lg border border-border p-3">
           <p className="text-xs font-medium">Export</p>
-          {["ZIP (WebP)", "Webflow CSV", "Framer JSON"].map((x) => <p key={x} className="rounded-md border border-border px-2 py-1 font-mono text-[10px] text-muted-foreground">{x}</p>)}
+          {["Webflow CMS (API)", "ZIP (WebP)", "Webflow CSV", "Framer JSON"].map((x) => <p key={x} className="rounded-md border border-border px-2 py-1 font-mono text-[10px] text-muted-foreground">{x}</p>)}
         </div>
       </aside>
     </div>
