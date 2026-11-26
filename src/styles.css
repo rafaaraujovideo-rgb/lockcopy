@@ -217,6 +217,24 @@ body { font-family: var(--font-sans); background: var(--background); color: var(
 @keyframes lc-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @utility animate-lc-in { animation: lc-in .45s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes lc-bar { from { width: 0; } to { width: 100%; } }
+.demo-limit-bar { transition: width .2s ease-out, background-color .2s; }
+.demo-review-row { transition: background-color .3s; }
+.demo-review-row[data-approved="true"] { background-color: color-mix(in oklch, var(--seal) 7%, transparent); }
+@keyframes demo-count { from { transform: translateY(2px); opacity: .65; } to { transform: none; opacity: 1; } }
+@keyframes demo-save { 50% { transform: scale(1.45); opacity: .6; } }
+@keyframes demo-lock { 0% { transform: scale(.94); opacity: .5; } 65% { transform: scale(1.025); } 100% { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .demo-count { animation: demo-count .2s ease-out; }
+  .demo-save-dot { animation: demo-save .45s ease-out; }
+  .demo-conversion-bar { animation: lc-bar .65s cubic-bezier(.2,.7,.2,1) forwards; }
+  .demo-photo-ready { animation: lc-in .3s ease-out; }
+  .demo-lock-stamp { animation: demo-lock .35s cubic-bezier(.2,.7,.2,1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .demo-limit-bar, .demo-review-row { transition: none; }
+  .demo-conversion-bar { width: 100%; }
+  .animate-lc-in { animation: none; }
+}
 @keyframes lc-caret { 50% { opacity: 0; } }
 @utility animate-caret { animation: lc-caret 1s steps(1) infinite; }
 

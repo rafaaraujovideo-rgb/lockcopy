@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { Check, Copy, Lock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, Copy, Lock, Upload } from "lucide-react";
 import { Badge, inputClass } from "@/components/ui-bits";
+import { Button } from "@/components/ui/button";
 
 /** Mirrors the real portal (/c/$token) and review page (/app/requests/$id) with one shared state. */
 type St = "empty" | "sent" | "approved" | "adjust";
-type F = { id: string; page: number; label: string; kind: "text" | "file"; value: string };
+type F = { id: string; page: number; label: string; kind: "text" | "file"; value: string; limit?: number };
 const PAGES = ["Home", "About", "Contact"];
 const START: F[] = [
-  { id: "h", page: 0, label: "Hero headline", kind: "text", value: "" },
+  { id: "h", page: 0, label: "Hero headline", kind: "text", value: "", limit: 90 },
   { id: "c", page: 0, label: "Cover photo", kind: "file", value: "" },
-  { id: "s", page: 1, label: "Your story", kind: "text", value: "Three generations of bakers on Elm Street." },
+  { id: "s", page: 1, label: "Your story", kind: "text", value: "Three generations of bakers on Elm Street.", limit: 1200 },
   { id: "t", page: 1, label: "Team photos", kind: "file", value: "team-1.jpg, team-2.jpg · 2.4 MB → 412 KB WebP" },
-  { id: "o", page: 2, label: "Opening hours", kind: "text", value: "Mon–Sat · 7:00–19:00" },
+  { id: "o", page: 2, label: "Opening hours", kind: "text", value: "Mon–Sat · 7:00–19:00", limit: 120 },
 ];
 const LINK = "lockcopy.com/c/8f3a2c1e-4d7b-4a6f-b05e-92c1e7d4b71d";
 
@@ -20,8 +21,11 @@ export function HeroStage() {
   const [fields, setFields] = useState(START);
   const [st, setSt] = useState<Record<string, St>>({ h: "empty", c: "empty", s: "sent", t: "sent", o: "approved" });
   const set = (id: string, value: string) => {
-    setFields((fs) => fs.map((f) => (f.id === id ? { ...f, value } : f)));
-    setSt((s) => ({ ...s, [id]: value ? "sent" : "empty" }));
+    const field = fields.find((f) => f.id === id);
+    if (!field || st[id] === "approved") return;
+    const bounded = field.limit ? value.slice(0, field.limit) : value;
+    setFields((fs) => fs.map((f) => (f.id === id ? { ...f, value: bounded } : f)));
+    setSt((s) => ({ ...s, [id]: bounded ? "sent" : "empty" }));
   };
   const review = (id: string, s: St) => setSt((x) => ({ ...x, [id]: s }));
   return (
@@ -55,6 +59,16 @@ const done = (s: St | undefined) => s === "sent" || s === "approved";
 function Client({ fields, st, set, onSend }: { fields: F[]; st: Record<string, St>; set: (id: string, v: string) => void; onSend: () => void }) {
   const [tab, setTab] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
+  useEffect(() => {
+    if (!busy) return;
+    const timer = window.setTimeout(() => {
+      set(busy, "storefront.jpg · 3.1 MB → 486 KB WebP");
+      setBusy(null);
+    }, 650);
+    return () => window.clearTimeout(timer);
+    // A sample conversion is local to this view and is cancelled on unmount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busy]);
   const pct = Math.round((fields.filter((f) => done(st[f.id])).length / fields.length) * 100);
   return (
     <div>
@@ -82,13 +96,19 @@ function Client({ fields, st, set, onSend }: { fields: F[]; st: Record<string, S
           const locked = st[f.id] === "approved";
           return (
             <div key={f.id} className="space-y-1.5">
-              <div className="flex items-center justify-between gap-2"><span className="text-sm font-medium">{f.label}</span>{locked ? <span className="inline-flex items-center gap-1 text-[11px] text-seal"><Lock className="h-3 w-3" />Approved — locked</span> : st[f.id] === "sent" && <span className="font-mono text-[10px] text-seal">● saved</span>}</div>
+              <div className="flex items-center justify-between gap-2"><label htmlFor={`demo-${f.id}`} className="text-sm font-medium">{f.label}</label>{locked ? <span className="inline-flex items-center gap-1 text-[11px] text-seal"><Lock className="h-3 w-3" />Approved — locked</span> : st[f.id] === "sent" && <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-seal"><span key={f.value} aria-hidden className="demo-save-dot h-1.5 w-1.5 rounded-full bg-seal" />saved</span>}</div>
               {f.kind === "text" ? (
-                <input className={inputClass} disabled={locked} value={f.value} placeholder="Type here. It saves automatically." onChange={(e) => set(f.id, e.target.value)} />
+                <div>
+                  <input id={`demo-${f.id}`} className={inputClass} disabled={locked} maxLength={f.limit} value={f.value} placeholder="Type here. It saves automatically." onChange={(e) => set(f.id, e.target.value)} />
+                  {f.limit && <div className={"mt-2 flex items-center gap-3 transition-colors duration-200 " + (f.value.length === f.limit ? "text-destructive" : f.value.length >= f.limit * 0.9 ? "text-warn-foreground" : "text-seal")}>
+                    <div aria-hidden className="h-0.5 flex-1 overflow-hidden rounded-full bg-muted"><div className="demo-limit-bar h-full rounded-full bg-current" style={{ width: `${f.value.length / f.limit * 100}%` }} /></div>
+                    <span className="flex w-32 shrink-0 justify-end gap-1 font-mono text-[10px] tabular-nums"><span key={f.value.length} className="demo-count inline-block">{f.value.length}</span>/{f.limit}{f.value.length === f.limit && <Lock aria-label="Character limit reached" className="h-3 w-3" />}</span>
+                  </div>}
+                </div>
               ) : f.value ? (
-                <p className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs">{f.value}</p>
+                <div role="status" className="demo-photo-ready flex min-h-16 items-center gap-2 rounded-md border border-seal/30 bg-accent/40 px-3 py-2 text-xs"><Check aria-hidden className="h-4 w-4 shrink-0 text-seal" /><div className="min-w-0"><p className="break-words">{f.value}</p><p className="mt-1 font-mono text-[10px] text-muted-foreground">Sample photo</p></div></div>
               ) : (
-                <button type="button" disabled={busy === f.id} onClick={() => { setBusy(f.id); window.setTimeout(() => { set(f.id, "storefront.jpg · 3.1 MB → 486 KB WebP"); setBusy(null); }, 650); }} className="relative w-full overflow-hidden rounded-md border border-dashed border-border px-3 py-4 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-foreground disabled:border-primary">{busy === f.id ? <><span className="text-foreground">Converting to WebP…</span><span aria-hidden className="absolute bottom-0 left-0 h-0.5 bg-primary" style={{ animation: "lc-bar .65s cubic-bezier(.2,.7,.2,1) forwards" }} /></> : "Click to upload a sample photo"}</button>
+                <Button id={`demo-${f.id}`} type="button" variant="outline" disabled={busy !== null} onClick={() => setBusy(f.id)} className="relative h-16 w-full overflow-hidden whitespace-normal border-dashed bg-card px-3 text-xs text-muted-foreground hover:border-primary hover:text-foreground disabled:border-primary disabled:opacity-100">{busy === f.id ? <><span role="status" className="text-foreground">Converting sample to WebP…</span><span aria-hidden className="demo-conversion-bar absolute bottom-0 left-0 h-0.5 bg-seal" /></> : <><Upload aria-hidden />Click to upload a sample photo</>}</Button>
               )}
             </div>
           );
@@ -122,15 +142,15 @@ function Studio({ fields, st, review }: { fields: F[]; st: Record<string, St>; r
             {fields.filter((f) => f.page === i).map((f) => {
               const s = st[f.id] ?? "empty";
               return (
-                <div key={f.id} className="flex flex-wrap items-center gap-2 border-t border-border py-2 first:border-t-0">
+                <div key={f.id} data-approved={s === "approved"} className="demo-review-row flex min-h-16 flex-wrap items-center gap-2 border-t border-border py-2 first:border-t-0">
                   <div className="min-w-0 flex-1"><p className="text-[11px] text-muted-foreground">{f.label}</p><p className="truncate text-sm">{f.value || <span className="text-muted-foreground">Not sent yet</span>}</p></div>
                   {s === "sent" ? (
                     <div className="flex gap-1.5">
                       <button type="button" onClick={() => review(f.id, "adjust")} className="rounded-md border border-border px-2 py-1 text-[11px] hover:bg-muted">Request change</button>
-                      <button type="button" onClick={() => review(f.id, "approved")} className="press rounded-md bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground shadow-btn">Approve</button>
+                      <Button type="button" size="sm" onClick={() => review(f.id, "approved")} className="press h-7 px-2 text-[11px] shadow-btn"><Check aria-hidden className="h-3 w-3" />Approve</Button>
                     </div>
                   ) : s === "approved" ? (
-                    <button type="button" onClick={() => review(f.id, "sent")} title="Unlock" className="animate-lc-in"><Badge s="approved" /></button>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => review(f.id, "sent")} aria-label={`Unlock ${f.label}`} title="Unlock" className="demo-lock-stamp h-7 px-1"><Badge s="approved" /></Button>
                   ) : <Badge s={s} />}
                 </div>
               );
