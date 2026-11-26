@@ -35,7 +35,7 @@ function Landing() {
       <SiteHeader />
 
       <section className="relative overflow-hidden border-b border-border">
-        <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
+        <div className="bg-grid-fine pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black_20%,transparent_80%)]" />
         <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-16 md:pt-24">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-card"><span className="h-1.5 w-1.5 rounded-full bg-seal" />Client content collection for website projects</span>
@@ -51,7 +51,7 @@ function Landing() {
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">14 days free · no credit card</p>
           </div>
-          <div className="mt-14"><HeroStage /></div>
+          <div className="relative mt-14"><div aria-hidden className="hero-spotlight pointer-events-none absolute -inset-x-16 -top-24 bottom-0" /><div className="relative"><HeroStage /></div></div>
         </div>
       </section>
 
