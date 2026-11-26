@@ -51,7 +51,7 @@ function Landing() {
             </div>
             <p className="mt-4 font-mono text-[11px] text-muted-foreground">14 days free · no credit card</p>
           </div>
-          <div className="relative mt-14"><div aria-hidden className="hero-spotlight pointer-events-none absolute -inset-x-16 -top-24 bottom-0" /><div className="relative"><HeroStage /></div></div>
+          <div className="relative mt-14"><div aria-hidden className="hero-spotlight pointer-events-none absolute -inset-x-16 -top-24 bottom-0" /><div aria-hidden className="pointer-events-none absolute -inset-x-3 -inset-y-3 hidden sm:block"><span className="hero-crop absolute left-0 top-0" /><span className="hero-crop absolute right-0 top-0 rotate-90" /><span className="hero-crop absolute bottom-0 right-0 rotate-180" /><span className="hero-crop absolute bottom-0 left-0 -rotate-90" /><span className="absolute -top-5 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-wider text-muted-foreground/70">content locked to your layout</span><span className="hero-guide absolute -left-px top-6 bottom-6" /><span className="hero-guide absolute -right-px top-6 bottom-6" /></div><div className="relative"><HeroStage /></div></div>
         </div>
       </section>
 
