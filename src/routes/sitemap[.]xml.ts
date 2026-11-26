@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getRouterInstance } from "@tanstack/react-start";
+import { SEO_TEMPLATES } from "@/lib/seo-templates";
 import { sitemapStaticPaths, sitemapXML, type SitemapEntry } from "@/lib/sitemap";
 
 const BASE_URL = "https://lockcopy.com";
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const router = await getRouterInstance();
         const entries: SitemapEntry[] = sitemapStaticPaths(router).map((path) => ({ path }));
+        for (const t of SEO_TEMPLATES) entries.push({ path: `/templates/${t.slug}` });
         if (entries.length === 0) {
           return new Response("No pages are included in this sitemap.", { status: 404, headers: { "Cache-Control": "no-store" } });
         }

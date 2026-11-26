@@ -9,9 +9,9 @@ export const Route = createFileRoute("/compare/content-snare")({
   head: () => ({
     meta: [
       { title: "Content Snare alternative for Webflow & Framer agencies — Lockcopy" },
-      { name: "description", content: "Looking for a Content Snare alternative? Compare price, Webflow CSV and Framer JSON exports, and account-free client portals side by side." },
+      { name: "description", content: "Content Snare alternative for Webflow and Framer designers: enforced character limits, WebP images, direct Webflow CMS publishing, from $19/month." },
       { property: "og:title", content: "Content Snare alternative for Webflow & Framer agencies — Lockcopy" },
-      { property: "og:description", content: "Looking for a Content Snare alternative? Compare price, Webflow CSV and Framer JSON exports, and account-free client portals side by side." },
+      { property: "og:description", content: "Content Snare alternative for Webflow and Framer designers: enforced character limits, WebP images, direct Webflow CMS publishing, from $19/month." },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "https://lockcopy.com/compare/content-snare" },
@@ -24,9 +24,11 @@ export const Route = createFileRoute("/compare/content-snare")({
 });
 
 const rows: [string, string, string][] = [
-  ["Entry price", "Affordable solo plan, with a 14-day trial", "Plans start at higher price points"],
+  ["Entry price", "Solo $19/month, Agency $39/month, 14-day trial", "Plans start at higher price points"],
+  ["Character limits", "Enforced: the client cannot type past the limit", "Check their current features"],
+  ["Images", "Converted to WebP (max 2048px) in the client's browser", "Check their current features"],
   ["Client portal", "Direct link, no account, with deadline and reminders", "Also account-free, with reminders"],
-  ["Export to Webflow", "CSV in Webflow's import format, per page", "Generic exports; Webflow via integration"],
+  ["Send to Webflow", "Creates CMS drafts directly via the Webflow API, or CSV", "Generic exports; Webflow via integration"],
   ["Export to Framer", "JSON ready to paste into Framer", "Not a focus of the product"],
   ["Organized ZIP", "Files grouped by page and field", "File download per request"],
   ["Field-by-field approval", "Approve or request a change with a note, field by field", "Approval per section/field"],
@@ -70,8 +72,8 @@ function Comparar() {
       <section className="mt-12 space-y-4 text-sm leading-relaxed text-muted-foreground">
         <h2 className="font-display text-xl font-semibold text-foreground">When to choose Lockcopy</h2>
         <p>
-          If your workflow ends in Webflow or Framer, Lockcopy saves the reformatting step: the CSV comes out in Webflow's
-          import format and the JSON is ready for Framer, with files organized by page in a ZIP.
+          If your workflow ends in Webflow or Framer, Lockcopy saves the reformatting step: approved content goes straight into Webflow CMS as
+          drafts and the JSON is ready for Framer, with files organized by page in a ZIP.
         </p>
         <h2 className="font-display text-xl font-semibold text-foreground">When Content Snare may make more sense</h2>
         <p>

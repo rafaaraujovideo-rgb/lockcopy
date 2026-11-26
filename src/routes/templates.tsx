@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { downloadTemplate, FREE_TEMPLATES } from "@/lib/free-templates";
 import { Card } from "@/components/ui-bits";
+import { SEO_TEMPLATES } from "@/lib/seo-templates";
 
 export const Route = createFileRoute("/templates")({
   staticData: { sitemap: true },
@@ -46,6 +47,15 @@ function Modelos() {
               Download CSV
             </button>
           </Card>
+        ))}
+      </div>
+      <h2 className="mt-14 font-display text-2xl font-semibold">Field-by-field guides</h2>
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        {SEO_TEMPLATES.map((t) => (
+          <Link key={t.slug} to="/templates/$slug" params={{ slug: t.slug }} className="rounded-lg border border-border bg-card p-5 shadow-card hover:border-foreground/30">
+            <h3 className="font-display text-base font-semibold">{t.keyword}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{t.fields.length} fields with character limits</p>
+          </Link>
         ))}
       </div>
       <div className="mt-12 rounded-lg border border-border bg-card p-8 shadow-card">

@@ -31,6 +31,7 @@ import { Route as CompareContentSnareRouteImport } from './routes/compare/conten
 import { Route as CompareFileRequestProRouteImport } from './routes/compare/file-request-pro'
 import { Route as GuidesCollectWebsiteContentRouteImport } from './routes/guides/collect-website-content'
 import { Route as JoinTokenRouteImport } from './routes/join/$token'
+import { Route as TemplatesSlugRouteImport } from './routes/templates_.$slug'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as AppRequestsIdRouteImport } from './routes/app/requests/$id'
 import { Route as ApiPublicCronNotificationsRouteImport } from './routes/api/public/cron/notifications'
@@ -146,6 +147,11 @@ const JoinTokenRoute = JoinTokenRouteImport.update({
   path: '/join/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TemplatesSlugRoute = TemplatesSlugRouteImport.update({
+  id: '/templates_/$slug',
+  path: '/templates/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
   id: '/api/public/stripe-webhook',
   path: '/api/public/stripe-webhook',
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/join/$token': typeof JoinTokenRoute
+  '/templates/$slug': typeof TemplatesSlugRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/requests/$id': typeof AppRequestsIdRoute
@@ -211,6 +218,7 @@ export interface FileRoutesByTo {
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/join/$token': typeof JoinTokenRoute
+  '/templates/$slug': typeof TemplatesSlugRoute
   '/app': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/requests/$id': typeof AppRequestsIdRoute
@@ -239,6 +247,7 @@ export interface FileRoutesById {
   '/compare/file-request-pro': typeof CompareFileRequestProRoute
   '/guides/collect-website-content': typeof GuidesCollectWebsiteContentRoute
   '/join/$token': typeof JoinTokenRoute
+  '/templates_/$slug': typeof TemplatesSlugRoute
   '/app/': typeof AppIndexRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/app/requests/$id': typeof AppRequestsIdRoute
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/compare/file-request-pro'
     | '/guides/collect-website-content'
     | '/join/$token'
+    | '/templates/$slug'
     | '/app/'
     | '/api/public/stripe-webhook'
     | '/app/requests/$id'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/compare/file-request-pro'
     | '/guides/collect-website-content'
     | '/join/$token'
+    | '/templates/$slug'
     | '/app'
     | '/api/public/stripe-webhook'
     | '/app/requests/$id'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/compare/file-request-pro'
     | '/guides/collect-website-content'
     | '/join/$token'
+    | '/templates_/$slug'
     | '/app/'
     | '/api/public/stripe-webhook'
     | '/app/requests/$id'
@@ -344,6 +356,7 @@ export interface RootRouteChildren {
   CompareFileRequestProRoute: typeof CompareFileRequestProRoute
   GuidesCollectWebsiteContentRoute: typeof GuidesCollectWebsiteContentRoute
   JoinTokenRoute: typeof JoinTokenRoute
+  TemplatesSlugRoute: typeof TemplatesSlugRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicCronNotificationsRoute: typeof ApiPublicCronNotificationsRoute
 }
@@ -504,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/templates_/$slug': {
+      id: '/templates_/$slug'
+      path: '/templates/$slug'
+      fullPath: '/templates/$slug'
+      preLoaderRoute: typeof TemplatesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/stripe-webhook': {
       id: '/api/public/stripe-webhook'
       path: '/api/public/stripe-webhook'
@@ -567,6 +587,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompareFileRequestProRoute: CompareFileRequestProRoute,
   GuidesCollectWebsiteContentRoute: GuidesCollectWebsiteContentRoute,
   JoinTokenRoute: JoinTokenRoute,
+  TemplatesSlugRoute: TemplatesSlugRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicCronNotificationsRoute: ApiPublicCronNotificationsRoute,
 }
