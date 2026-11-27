@@ -69,7 +69,7 @@ export function SiteFooter() {
           <li><Link to="/compare/content-snare" className={fl}>Lockcopy vs Content Snare</Link></li>
           <li><Link to="/compare/file-request-pro" className={fl}>Lockcopy vs File Request Pro</Link></li>
           <li><Link to="/compare/google-docs" className={fl}>Google Docs alternative</Link></li>
-          <li><a href="mailto:rafaaraujo.video@gmail.com" className={fl}>Contact support</a></li>
+          <li><a href="mailto:support@lockcopy.com" className={fl}>Contact support</a></li>
         </FooterCol>
         <FooterCol title="Legal">
           <li><Link to="/privacy" className={fl}>Privacy</Link></li>
