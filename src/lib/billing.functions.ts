@@ -81,8 +81,15 @@ export const startCheckout = createServerFn({ method: "POST" })
     body.set("success_url", `${origin}/app/billing?checkout=ok`);
     body.set("cancel_url", `${origin}/app/billing?checkout=cancel`);
     if (trialDays >= 1) body.set("subscription_data[trial_period_days]", String(trialDays));
+    // Stripe Tax: VAT by customer country (reverse charge for EU B2B) and VAT/NIF collection.
+    body.set("automatic_tax[enabled]", "true");
+    body.set("tax_id_collection[enabled]", "true");
+    body.set("billing_address_collection", "required");
     if (org.stripe_customer_id) {
       body.set("customer", org.stripe_customer_id);
+      // Existing customers: let Checkout save the address and tax ID back to the customer.
+      body.set("customer_update[address]", "auto");
+      body.set("customer_update[name]", "auto");
     } else {
       const { data: sessionUser } = await context.supabase.auth.getUser(context.accessToken);
       const email = sessionUser.user?.email;

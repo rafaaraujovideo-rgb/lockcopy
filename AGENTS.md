@@ -41,3 +41,4 @@ use the editor.
 - Owner-only admin pages check the verified Auth user's email on the server (src/lib/admin.ts) before any privileged read — UI hiding is cosmetic.
 - Everything users can see (pages, URLs, search params, sample data, errors, emails) is English; database error codes are translated in friendlyError — src/test/english-only.test.ts guards it.
 - Browser code uses `getSupabase()` from `src/lib/supabase-browser.ts`, never the generated `src/integrations/supabase/client.ts` — the integration regenerates that file and would wipe custom exports.
+- Checkout always enables Stripe Tax (automatic_tax, tax_id_collection, required billing address) — VAT and EU reverse charge are computed by Stripe, never in app code.
